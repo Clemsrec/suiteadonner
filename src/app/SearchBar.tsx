@@ -5,9 +5,9 @@ import styles from "./page.module.css";
 
 const FILTERS = [
   { key: "toutes", label: "Toutes" },
-  { key: "sans-suite", label: "Sans suite" },
-  { key: "debattue", label: "Débattues" },
-  { key: "en-attente", label: "En attente" },
+  { key: "classee", label: "Classées" },
+  { key: "archivee", label: "Archivées" },
+  { key: "ouverte", label: "En cours" },
 ] as const;
 
 export default function SearchBar() {
