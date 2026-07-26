@@ -118,13 +118,16 @@ async function writeToFirestore(petitions, stats) {
 }
 
 async function syncToAlgolia(petitions) {
-  const appId = process.env.ALGOLIA_APP_ID;
+  // App ID et index name ne sont pas secrets : on réutilise les variables
+  // NEXT_PUBLIC_* déjà renseignées pour le client plutôt que d'en dupliquer
+  // des équivalentes non préfixées.
+  const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
   const adminKey = process.env.ALGOLIA_ADMIN_KEY;
-  const indexName = process.env.ALGOLIA_INDEX_NAME || "petitions";
+  const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "petitions";
 
   if (!appId || !adminKey) {
     console.log(
-      "\nAlgolia non configuré (ALGOLIA_APP_ID / ALGOLIA_ADMIN_KEY absents) — synchronisation ignorée."
+      "\nAlgolia non configuré (NEXT_PUBLIC_ALGOLIA_APP_ID / ALGOLIA_ADMIN_KEY absents) — synchronisation ignorée."
     );
     return;
   }
