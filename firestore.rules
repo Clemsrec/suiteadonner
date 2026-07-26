@@ -1,0 +1,19 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Données publiques (pétitions Assemblée nationale, open data) : lecture
+    // libre, écriture réservée au script d'import (Admin SDK, hors règles).
+    match /petitions/{petitionId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /meta/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
