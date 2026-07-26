@@ -8,10 +8,14 @@
 //   node scripts/import-petitions.mjs            # importe dans Firestore
 //   node scripts/import-petitions.mjs --dry-run   # parse et affiche un résumé, sans écrire
 //
-// Auth : nécessite des credentials Google Cloud avec accès au projet Firestore
-// "suiteadonner" — soit `gcloud auth application-default login`, soit la
-// variable d'env GOOGLE_APPLICATION_CREDENTIALS pointant vers une clé de
+// Auth Firestore : nécessite des credentials Google Cloud avec accès au
+// projet "suiteadonner" — soit `gcloud auth application-default login`, soit
+// la variable d'env GOOGLE_APPLICATION_CREDENTIALS pointant vers une clé de
 // compte de service.
+//
+// Auth Algolia (recherche plein texte) : variables d'env ALGOLIA_APP_ID et
+// ALGOLIA_ADMIN_KEY (clé Admin, jamais la clé Search côté client). Si
+// absentes, la synchronisation Algolia est simplement ignorée.
 
 import { parse } from "csv-parse/sync";
 
@@ -113,6 +117,47 @@ async function writeToFirestore(petitions, stats) {
     .set({ ...stats, updatedAt: Timestamp.now() });
 }
 
+async function syncToAlgolia(petitions) {
+  const appId = process.env.ALGOLIA_APP_ID;
+  const adminKey = process.env.ALGOLIA_ADMIN_KEY;
+  const indexName = process.env.ALGOLIA_INDEX_NAME || "petitions";
+
+  if (!appId || !adminKey) {
+    console.log(
+      "\nAlgolia non configuré (ALGOLIA_APP_ID / ALGOLIA_ADMIN_KEY absents) — synchronisation ignorée."
+    );
+    return;
+  }
+
+  const { algoliasearch } = await import("algoliasearch");
+  const client = algoliasearch(appId, adminKey);
+
+  await client.setSettings({
+    indexName,
+    indexSettings: {
+      searchableAttributes: ["titre", "commission", "unordered(description)"],
+      attributesForFaceting: ["statut"],
+      customRanking: ["desc(nbVotes)"],
+    },
+  });
+
+  const records = petitions.map((p) => ({
+    objectID: p.identifiant,
+    titre: p.titre,
+    description: p.description.slice(0, 2000),
+    statut: p.statut,
+    statutLabel: p.statutLabel,
+    commission: p.commission,
+    nbVotes: p.nbVotes,
+    datePublication: p.datePublication,
+    url: p.url,
+  }));
+
+  console.log(`\nSynchronisation Algolia (index "${indexName}")...`);
+  await client.saveObjects({ indexName, objects: records, waitForTasks: false });
+  console.log(`  ${records.length} objets envoyés.`);
+}
+
 async function main() {
   console.log(`Téléchargement du jeu de données : ${DATASET_URL}`);
   const petitions = await fetchPetitions();
@@ -129,7 +174,10 @@ async function main() {
 
   console.log("\nÉcriture dans Firestore (collection `petitions` + `meta/stats`)...");
   await writeToFirestore(petitions, stats);
-  console.log("Import terminé.");
+
+  await syncToAlgolia(petitions);
+
+  console.log("\nImport terminé.");
 }
 
 main().catch((err) => {

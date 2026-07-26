@@ -41,3 +41,20 @@ env:
     availability:
       - BUILD
       - RUNTIME
+  # Algolia (recherche) — clé Search publique, sans danger à exposer côté
+  # client. À renseigner avant déploiement (Algolia > Settings > API Keys).
+  - variable: NEXT_PUBLIC_ALGOLIA_APP_ID
+    value: "TODO_A_RENSEIGNER"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_ALGOLIA_SEARCH_KEY
+    value: "TODO_A_RENSEIGNER"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_ALGOLIA_INDEX_NAME
+    value: petitions
+    availability:
+      - BUILD
+      - RUNTIME
