@@ -149,6 +149,10 @@
   outline: 2px solid var(--accent);
   outline-offset: -4px;
 }
+.searchForm button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
 .filters {
   display: flex;
   gap: 8px;
@@ -169,6 +173,23 @@
   border-color: var(--rule-strong);
   background: var(--surface);
   font-weight: 600;
+}
+
+.searchResults {
+  margin-top: 18px;
+  border-top: 1px solid var(--rule);
+}
+.searchMeta {
+  font-size: 0.76rem;
+  color: var(--ink-faint);
+  font-family: var(--font-mono);
+  padding: 12px 0 2px;
+}
+.searchHint {
+  font-size: 0.84rem;
+  color: var(--ink-faint);
+  font-style: italic;
+  padding: 14px 0;
 }
 
 /* ledger */
@@ -245,6 +266,10 @@
 .tagNone {
   background: var(--status-none-bg);
   color: var(--status-none-ink);
+}
+.tagExamined {
+  background: var(--status-examined-bg);
+  color: var(--status-examined-ink);
 }
 .petitionMeta {
   display: flex;

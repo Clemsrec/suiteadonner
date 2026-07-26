@@ -95,7 +95,7 @@ export default async function Home() {
             >
               <div className={styles.petitionTop}>
                 <div className={styles.petitionTitle}>{p.titre}</div>
-                <span className={`${styles.tag} ${styles.tagNone}`}>{p.statutLabel}</span>
+                <span className={`${styles.tag} ${styles.tagExamined}`}>{p.statutLabel}</span>
               </div>
               <div className={styles.petitionMeta}>
                 <span>
