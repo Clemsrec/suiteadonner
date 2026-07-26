@@ -10,6 +10,7 @@
     "import:petitions": "node scripts/import-petitions.mjs"
   },
   "dependencies": {
+    "algoliasearch": "^5.56.0",
     "csv-parse": "^7.0.1",
     "firebase": "^12.16.0",
     "next": "16.2.12",

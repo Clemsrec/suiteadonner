@@ -70,36 +70,6 @@ export async function getFlagshipPetitions(max = 6): Promise<Petition[]> {
   return snap.docs.map((d) => d.data() as Petition);
 }
 
-function normalize(value: string): string {
-  return value
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase();
-}
-
-export type SearchFilter = PetitionStatut | "toutes";
-
-// Firestore ne fait pas de recherche plein texte : on filtre par statut côté
-// requête (indexé), puis on affine par mot-clé côté serveur/client sur le
-// sous-ensemble récupéré (titre + commission).
-export async function searchPetitions(
-  filter: SearchFilter,
-  keyword: string,
-  max = 400
-): Promise<{ results: Petition[]; scanned: number }> {
-  const base = collection(db, "petitions");
-  const q =
-    filter === "toutes"
-      ? query(base, orderBy("nbVotes", "desc"), limit(max))
-      : query(base, where("statut", "==", filter), orderBy("nbVotes", "desc"), limit(max));
-
-  const snap = await getDocs(q);
-  const scanned = snap.docs.length;
-  const needle = normalize(keyword.trim());
-
-  const matches = snap.docs
-    .map((d) => d.data() as Petition)
-    .filter((p) => !needle || normalize(p.titre).includes(needle) || normalize(p.commission).includes(needle));
-
-  return { results: matches.slice(0, 30), scanned };
-}
+// La recherche plein texte (mot-clé + filtre par statut) est gérée par
+// Algolia — voir src/lib/algolia.ts — Firestore ne fait pas de recherche
+// plein texte et ne sert ici qu'aux requêtes structurées (stats, palmarès).
