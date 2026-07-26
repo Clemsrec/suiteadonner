@@ -1,17 +1,51 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #e8eef0;
+  --surface: #ffffff;
+  --surface-sunk: #dee6e9;
+  --ink: #172228;
+  --ink-muted: #51636b;
+  --ink-faint: #7c8b92;
+  --accent: #1e3a5f;
+  --accent-ink: #ffffff;
+  --rule: rgba(23, 34, 40, 0.16);
+  --rule-strong: rgba(23, 34, 40, 0.32);
+  --status-done-bg: #e4eee7;
+  --status-done-ink: #24593d;
+  --status-pending-bg: #ece7da;
+  --status-pending-ink: #6b5518;
+  --status-none-bg: #f3e2de;
+  --status-none-ink: #8b342a;
+
+  --font-serif: Georgia, "Iowan Old Style", "Palatino Linotype", "URW Palladio L", P052, serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg: #0f171b;
+    --surface: #162126;
+    --surface-sunk: #0b1215;
+    --ink: #e8eff1;
+    --ink-muted: #9fb1b8;
+    --ink-faint: #6e7f86;
+    --accent: #7fa6d1;
+    --accent-ink: #0f171b;
+    --rule: rgba(232, 239, 241, 0.16);
+    --rule-strong: rgba(232, 239, 241, 0.32);
+    --status-done-bg: #1b2e22;
+    --status-done-ink: #7fcb9c;
+    --status-pending-bg: #2b2417;
+    --status-pending-ink: #d9b968;
+    --status-none-bg: #301c19;
+    --status-none-ink: #e29184;
   }
 }
 
-html {
-  height: 100%;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html,
@@ -20,30 +54,26 @@ body {
   overflow-x: hidden;
 }
 
+html {
+  height: 100%;
+  color-scheme: light dark;
+}
+
 body {
   min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
 a {
   color: inherit;
-  text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+.sr-only {
+  position: absolute;
+  left: -9999px;
 }
