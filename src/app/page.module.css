@@ -5,18 +5,53 @@
 }
 
 /* header */
+/* La page est longue et faite de sections indépendantes : l'en-tête reste
+   accessible pour qu'on sache toujours où l'on est et qu'on puisse sauter
+   ailleurs sans remonter tout le document. */
 .site {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   border-bottom: 1px solid var(--rule);
   background: var(--surface);
 }
+/* Sans cette marge, un lien d'ancre place le titre de section sous l'en-tête
+   collant, qui le recouvre. */
+.ledger,
+.constat,
+.methode,
+.search {
+  scroll-margin-top: 84px;
+}
+/* Sur mobile le menu passe sur deux lignes : la barre atteint 135 px, soit
+   près d'un cinquième de l'écran retenu en permanence. Le gain de navigation
+   ne vaut pas ce prix — on la laisse défiler. */
+@media (max-width: 640px) {
+  .site {
+    position: static;
+  }
+  .ledger,
+  .constat,
+  .methode,
+  .search {
+    scroll-margin-top: 12px;
+  }
+}
+/* Plus large que la colonne de texte (780 px) : le menu compte six entrées et
+   saturait exactement la largeur disponible, ce qui faisait passer chaque
+   libellé sur deux lignes. La barre peut déborder de la colonne sans gêne,
+   c'est un usage courant pour un en-tête. */
 .siteInner {
-  max-width: 780px;
+  max-width: 1120px;
   margin: 0 auto;
   padding: 16px 18px;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 12px;
+  gap: 12px 24px;
+  /* Sous ~900 px, le menu passe proprement à la ligne suivante au lieu
+     d'écraser les libellés. */
+  flex-wrap: wrap;
 }
 .wordmark {
   display: flex;
@@ -44,13 +79,16 @@
 }
 .siteNav {
   display: flex;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 8px 18px;
   font-size: 0.82rem;
 }
 .siteNav a {
   text-decoration: none;
   color: var(--ink-muted);
   border-bottom: 1px solid transparent;
+  /* Un libellé de menu ne doit jamais se casser en deux. */
+  white-space: nowrap;
 }
 .siteNav a:hover,
 .siteNav a:focus-visible {
@@ -319,6 +357,94 @@
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--ink);
+}
+
+/* Passage en commission : un bloc par pétition, avec sa frise de réunions. */
+.passage {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.passage:last-child {
+  border-bottom: none;
+}
+.passage .petitionTitle {
+  text-decoration: none;
+  color: inherit;
+}
+.passage .petitionTitle:hover,
+.passage .petitionTitle:focus-visible {
+  color: var(--accent);
+}
+.frise {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0 0 0 14px;
+  border-left: 2px solid var(--rule-strong);
+}
+.frise li {
+  position: relative;
+  padding: 0 0 12px 0;
+  display: grid;
+  gap: 2px;
+}
+.frise li:last-child {
+  padding-bottom: 0;
+}
+/* Pastille sur la ligne de temps, alignée sur le filet de gauche. */
+.frise li::before {
+  content: "";
+  position: absolute;
+  left: -19px;
+  top: 5px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.friseDate {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+}
+/* L'acte en français courant : c'est lui qu'on lit, pas le texte réglementaire. */
+.friseActe {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.4;
+}
+/* Provenance du rapprochement, affichée sous chaque étape. */
+.preuve {
+  font-size: 0.74rem;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.friseDetail {
+  margin-top: 4px;
+  font-size: 0.8rem;
+}
+.friseDetail summary {
+  cursor: pointer;
+  color: var(--ink-faint);
+  font-size: 0.74rem;
+  width: fit-content;
+}
+.friseDetail summary:hover,
+.friseDetail summary:focus-visible {
+  color: var(--accent);
+}
+.friseDetail p {
+  margin: 6px 0 0;
+  padding: 10px 12px;
+  background: var(--surface-sunk);
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+.friseCr {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink-faint);
 }
 
 .ledgerFoot {

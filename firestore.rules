@@ -18,6 +18,12 @@ service cloud.firestore {
       allow read: if true;
       allow write: if false;
     }
+    // Réunions de commission où une pétition figure à l'ordre du jour,
+    // extraites par scripts/fetch-reunions.mjs.
+    match /reunions/{petitionId} {
+      allow read: if true;
+      allow write: if false;
+    }
     match /{document=**} {
       allow read, write: if false;
     }

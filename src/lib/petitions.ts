@@ -18,13 +18,16 @@ export type Petition = {
   decisionPubliee: boolean;
   signaturesCloses: boolean;
   statutObsolete: boolean;
+  classementDOffice: boolean;
   url: string;
 };
 
 export const STATUS_LABELS: Record<PetitionStatut, string> = {
   ouverte: "En cours de signature",
   archivee: "Classée d'office",
-  classee: "Classée après examen",
+  // Pas « après examen » : le jeu de données n'atteste aucun examen, et 890
+  // pétitions marquées « classee » portent un texte disant l'inverse.
+  classee: "Classée",
   expiree: "Expirée",
 };
 
@@ -53,6 +56,10 @@ export type Stats = {
   formulationsDistinctes: number;
   clotureesEnMasse: number;
   dateClotureMasse: string | null;
+  nbClotureMasse: number;
+  classeesHorsSeuil: number;
+  classeesHorsSeuilSansTexte: number;
+  closesSansTexte: number;
   updatedAt: string | null;
 };
 
@@ -78,8 +85,45 @@ export async function getStats(): Promise<Stats | null> {
     formulationsDistinctes: data.formulationsDistinctes ?? 0,
     clotureesEnMasse: data.clotureesEnMasse ?? 0,
     dateClotureMasse: data.dateClotureMasse ?? null,
+    nbClotureMasse: data.nbClotureMasse ?? 0,
+    classeesHorsSeuil: data.classeesHorsSeuil ?? 0,
+    classeesHorsSeuilSansTexte: data.classeesHorsSeuilSansTexte ?? 0,
+    closesSansTexte: data.closesSansTexte ?? 0,
     updatedAt: data.updatedAt?.toDate?.().toISOString() ?? null,
   };
+}
+
+// Réunion de commission où une pétition a figuré à l'ordre du jour.
+export type ReunionCommission = {
+  date: string;
+  compteRenduRef: string | null;
+  intitule: string;
+  // « numero » : la commission a cité le numéro de la pétition — correspondance
+  // certaine. « titre » : elle a cité son intitulé exact, sans numéro.
+  appariement: "numero" | "titre";
+};
+
+export type PassageEnCommission = {
+  identifiant: string;
+  titre: string;
+  nbVotes: number;
+  statut: string;
+  commission: string;
+  decisionPubliee: boolean;
+  url: string;
+  nbReunions: number;
+  premiereReunion: string;
+  derniereReunion: string;
+  reunions: ReunionCommission[];
+};
+
+// Contrairement au rapprochement pétition ↔ débat en séance, qui reste un
+// recoupement thématique, ces passages sont établis à partir de l'ordre du jour
+// officiel des commissions, qui désigne la pétition par son numéro ou son titre.
+export async function getPassagesEnCommission(max = 6): Promise<PassageEnCommission[]> {
+  const q = query(collection(db, "reunions"), orderBy("nbVotes", "desc"), limit(max));
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => d.data() as PassageEnCommission);
 }
 
 // Pétitions dont le recueil de signatures est terminé depuis longtemps mais que
