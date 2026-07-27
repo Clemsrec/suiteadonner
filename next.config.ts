@@ -1,12 +1,17 @@
 import type { NextConfig } from "next";
 
-// Le site sert des données publiques : pas de compte, pas de formulaire, pas de
-// cookie. La surface d'attaque se limite donc à l'injection de contenu et au
+// Le site sert des données publiques : pas de compte, pas de formulaire. La
+// surface d'attaque se limite donc à l'injection de contenu et au
 // détournement d'affichage — c'est ce que verrouille la CSP.
 //
 // Domaines tiers réellement appelés depuis le navigateur :
 //   *.googleapis.com / *.firebaseio.com  → lecture Firestore (SDK client)
 //   *.algolia.net / *.algolianet.com     → recherche plein texte
+//   *.googletagmanager.com / *.google-analytics.com / *.analytics.google.com
+//     → mesure d'audience GA4, chargée uniquement après consentement
+//       (src/app/MesureAudience.tsx) ; domaines tirés de la doc CSP officielle
+//       de gtag.js. Autorisés ici en permanence, sollicités seulement si le
+//       visiteur accepte.
 // Toute nouvelle intégration côté client devra être ajoutée ici, sinon elle
 // sera silencieusement bloquée par le navigateur.
 // React s'appuie sur eval() en développement pour reconstruire les piles
@@ -18,11 +23,11 @@ const CSP = [
   "default-src 'self'",
   // Next injecte ses scripts d'hydratation en inline ; 'unsafe-inline' reste
   // nécessaire tant qu'un nonce n'est pas mis en place via un middleware.
-  `script-src 'self' 'unsafe-inline'${devEval}`,
+  `script-src 'self' 'unsafe-inline' https://*.googletagmanager.com${devEval}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data:",
+  "img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com",
   "font-src 'self'",
-  "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.algolia.net https://*.algolianet.com",
+  "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.algolia.net https://*.algolianet.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
   "form-action 'self'",
   "frame-ancestors 'none'",
   "base-uri 'self'",

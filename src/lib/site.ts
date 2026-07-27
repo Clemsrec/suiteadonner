@@ -7,6 +7,12 @@ export const SITE_TITRE = "Suite à donner — Observatoire des pétitions citoy
 export const SITE_DESCRIPTION =
   "Ce que deviennent réellement les pétitions déposées à l'Assemblée nationale, à partir des données ouvertes.";
 
+// Mesure d'audience Google Analytics 4 — propriété 547145394, flux
+// « suiteadonner » 15327433459. Le script n'est JAMAIS chargé sans un
+// consentement explicite : voir src/app/MesureAudience.tsx et la politique de
+// cookies, qui documentent ce comportement publiquement.
+export const GA_MESURE_ID = "G-RHQGYZ242D";
+
 // RELEVÉ MANUEL SUR LA PLATEFORME OFFICIELLE — valeurs observées, non calculées.
 //
 // La plateforme propose un filtre « Sort de la pétition » à trois issues. Les

@@ -1,0 +1,82 @@
+/* Bannière de consentement — mêmes exigences que le reste du site : sobre,
+   lisible, et un refus strictement aussi accessible que l'acceptation (les
+   deux boutons partagent la même classe, donc le même poids visuel). */
+
+.banniere {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 100;
+  background: var(--surface);
+  border-top: 1px solid var(--rule-strong);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.contenu {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 0.9rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.texte {
+  flex: 1 1 28rem;
+  font-size: 0.86rem;
+  color: var(--ink-muted);
+}
+
+.texte strong {
+  color: var(--ink);
+}
+
+.lien {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.boutons {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.bouton {
+  font: inherit;
+  font-size: 0.86rem;
+  padding: 0.45rem 1.1rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.bouton:hover {
+  background: var(--surface-sunk);
+}
+
+.bouton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Bouton « Modifier mon choix » de la politique de cookies : même style que
+   les boutons de la bannière, posé dans le corps du document. */
+.gerer {
+  composes: bouton;
+  margin-top: 0.35rem;
+}
+
+@media (max-width: 40rem) {
+  .boutons {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .bouton {
+    flex: 1 1 0;
+  }
+}
