@@ -17,10 +17,13 @@ export default function PolitiqueConfidentialite() {
 
       <div className={styles.encadre}>
         <p>
-          <strong>En résumé :</strong> ce site ne vous demande rien. Pas de compte, pas de
-          formulaire, pas de cookie, pas de mesure d&apos;audience, pas de profilage. Les seules
-          données vous concernant qui transitent sont celles que tout serveur web reçoit
-          nécessairement pour vous répondre.
+          <strong>En résumé :</strong>{" "}
+          ce site ne vous demande rien. Pas de compte, pas de
+          formulaire, pas de profilage. Une seule exception : une mesure d&apos;audience
+          (Google Analytics), activée uniquement si vous l&apos;acceptez via la bannière de
+          consentement. Sans acceptation de votre part, les seules données vous concernant
+          qui transitent sont celles que tout serveur web reçoit nécessairement pour vous
+          répondre.
         </p>
       </div>
 
@@ -39,8 +42,8 @@ export default function PolitiqueConfidentialite() {
       <ul>
         <li>Aucune création de compte, aucune authentification</li>
         <li>Aucun formulaire de contact, d&apos;inscription ou de commentaire</li>
-        <li>Aucun cookie, aucun stockage local dans votre navigateur</li>
-        <li>Aucun outil de mesure d&apos;audience, aucun pixel, aucun réseau publicitaire</li>
+        <li>Aucun cookie ni traceur sans votre consentement explicite et révocable</li>
+        <li>Aucun pixel publicitaire, aucun réseau publicitaire</li>
         <li>Aucun profilage, aucune décision automatisée vous concernant</li>
         <li>Aucune revente ni transmission commerciale de données</li>
       </ul>
@@ -55,8 +58,8 @@ export default function PolitiqueConfidentialite() {
       </p>
       <ul>
         <li>
-          <strong>Finalité :</strong> fonctionnement du service, sécurité, diagnostic
-          d&apos;incident
+          <strong>Finalité :</strong>{" "}
+          fonctionnement du service, sécurité, diagnostic d&apos;incident
         </li>
         <li>
           <strong>Base légale :</strong> intérêt légitime (article 6.1.f du RGPD) à maintenir un
@@ -67,7 +70,8 @@ export default function PolitiqueConfidentialite() {
           <code>{LEGAL.regionApplication}</code>
         </li>
         <li>
-          <strong>Conservation :</strong> selon la politique de rétention de Google Cloud
+          <strong>Conservation :</strong>{" "}
+          selon la politique de rétention de Google Cloud
           Platform ; ces journaux ne sont ni exploités, ni recoupés, ni exportés par
           l&apos;éditeur
         </li>
@@ -81,12 +85,44 @@ export default function PolitiqueConfidentialite() {
         cette requête, l&apos;éditeur ne la conserve pas et ne peut pas la relier à un visiteur.
       </p>
 
+      <h3>Mesure d&apos;audience — uniquement après consentement</h3>
+      <p>
+        Si vous acceptez la bannière de consentement, l&apos;outil{" "}
+        <strong>Google Analytics 4</strong>{" "}
+        collecte les pages consultées, le type
+        d&apos;appareil et de navigateur, et une localisation géographique approximative,
+        associés à un identifiant aléatoire propre à votre navigateur.
+      </p>
+      <ul>
+        <li>
+          <strong>Finalité :</strong> statistiques de fréquentation du site — volumes de
+          visites, pages lues, provenance
+        </li>
+        <li>
+          <strong>Base légale :</strong> votre consentement (article 6.1.a du RGPD),
+          librement retirable à tout moment depuis la{" "}
+          <Link href="/politique-cookies">politique de cookies</Link>
+        </li>
+        <li>
+          <strong>Sous-traitant :</strong> Google Ireland Limited (Google Analytics)
+        </li>
+        <li>
+          <strong>Conservation :</strong> cookies limités à 13 mois dans votre navigateur ;
+          données de mesure conservées au plus 14 mois dans Google Analytics
+        </li>
+      </ul>
+      <p>
+        Sans consentement, rien de tout cela n&apos;existe : le script n&apos;est même pas
+        chargé, et aucune requête ne part vers Google Analytics.
+      </p>
+
       <h2>4. Localisation et transferts hors Union européenne</h2>
       <p>
         L&apos;application est exécutée dans la région <code>{LEGAL.regionApplication}</code>. La
         base de données qui contient les pétitions est en revanche située en{" "}
         <code>{LEGAL.regionBaseDonnees}</code>. Cette base{" "}
-        <strong>ne contient aucune donnée relative aux visiteurs</strong> : elle ne stocke que
+        <strong>ne contient aucune donnée relative aux visiteurs</strong>{" "}
+      : elle ne stocke que
         des données publiques issues de l&apos;open data.
       </p>
       <p>
@@ -108,7 +144,8 @@ export default function PolitiqueConfidentialite() {
           pétition
         </li>
         <li>
-          <strong>Base légale :</strong> mission d&apos;intérêt public d&apos;information et
+          <strong>Base légale :</strong>{" "}
+          mission d&apos;intérêt public d&apos;information et
           intérêt légitime, dans le cadre du régime applicable aux traitements à des fins
           journalistiques et documentaires
         </li>
@@ -119,8 +156,9 @@ export default function PolitiqueConfidentialite() {
       </ul>
       <p>
         Si vous estimez qu&apos;une information vous concernant ne devrait pas figurer sur ce
-        site, écrivez à <a href={`mailto:${LEGAL.emailDonnees}`}>{LEGAL.emailDonnees}</a> : la
-        demande sera examinée au regard de l&apos;intérêt du public à l&apos;information. Notez
+        site, écrivez à <a href={`mailto:${LEGAL.emailDonnees}`}>{LEGAL.emailDonnees}</a>{" "}
+        : la demande sera examinée au regard de l&apos;intérêt du public à
+        l&apos;information. Notez
         que le retrait sur ce site ne modifie pas la source officielle, qu&apos;il convient de
         saisir séparément.
       </p>
@@ -133,13 +171,17 @@ export default function PolitiqueConfidentialite() {
       </p>
       <p>
         Ces droits s&apos;exercent auprès de{" "}
-        <a href={`mailto:${LEGAL.emailDonnees}`}>{LEGAL.emailDonnees}</a> ou par courrier à
-        l&apos;adresse du siège. Une réponse vous sera apportée dans un délai d&apos;un mois.
+        <a href={`mailto:${LEGAL.emailDonnees}`}>{LEGAL.emailDonnees}</a>{" "}
+        ou par courrier à l&apos;adresse du siège. Une réponse vous sera apportée dans un
+        délai d&apos;un mois.
       </p>
       <p>
-        En pratique, l&apos;absence de compte et de cookie fait qu&apos;aucune donnée de
-        navigation ne peut vous être rattachée : l&apos;éditeur n&apos;est pas en mesure de vous
-        identifier à partir des seuls journaux techniques.
+        En pratique, si vous n&apos;avez pas accepté la mesure d&apos;audience,
+        l&apos;absence de compte et de cookie fait qu&apos;aucune donnée de navigation ne
+        peut vous être rattachée : l&apos;éditeur n&apos;est pas en mesure de vous identifier
+        à partir des seuls journaux techniques. Si vous l&apos;avez acceptée, le retrait du
+        consentement et la suppression des cookies s&apos;effectuent depuis la{" "}
+        <Link href="/politique-cookies">politique de cookies</Link>.
       </p>
       <p>
         Vous pouvez à tout moment introduire une réclamation auprès de la{" "}

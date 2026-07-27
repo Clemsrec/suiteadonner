@@ -14,6 +14,7 @@
     "croiser": "node scripts/croiser-petitions-debats.mjs"
   },
   "dependencies": {
+    "@next/third-parties": "^16.2.12",
     "algoliasearch": "^5.56.0",
     "csv-parse": "^7.0.1",
     "firebase": "^12.16.0",

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+import MesureAudience from "./MesureAudience";
 import { SITE_DESCRIPTION as DESCRIPTION, SITE_NAME, SITE_TITRE as TITRE, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -32,7 +33,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body>{children}</body>
+      <body>
+        {children}
+        <MesureAudience />
+      </body>
     </html>
   );
 }

@@ -146,7 +146,9 @@ export default function MentionsLegales() {
       <h2>7. Données personnelles et cookies</h2>
       <p>
         Le site ne requiert aucune inscription, ne comporte aucun formulaire et{" "}
-        <strong>ne dépose aucun cookie</strong>. Le détail des traitements figure dans la{" "}
+        <strong>ne dépose aucun cookie sans votre consentement</strong>{" "}
+        — le seul traceur, une mesure d&apos;audience, est soumis à une bannière
+        d&apos;acceptation. Le détail des traitements figure dans la{" "}
         <Link href="/politique-de-confidentialite">politique de confidentialité</Link> et la{" "}
         <Link href="/politique-cookies">politique de cookies</Link>.
       </p>

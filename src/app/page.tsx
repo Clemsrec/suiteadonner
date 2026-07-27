@@ -421,8 +421,8 @@ export default async function Home() {
             </p>
             <p className={styles.blockLede}>
               Précision importante&nbsp;: <strong>la plateforme officielle,
-              elle, affiche bien la date limite</strong> et ne prétend pas que
-              le recueil se poursuit. Ce défaut ne concerne que le fichier
+              elle, affiche bien la date limite</strong>{" "}
+              et ne prétend pas que le recueil se poursuit. Ce défaut ne concerne que le fichier
               réutilisable — c&apos;est-à-dire celui dont se servent les
               chercheurs, les journalistes et ce site.
             </p>
@@ -679,7 +679,8 @@ export default async function Home() {
               affiche la date limite et le statut « Acceptées », et n&apos;emploie
               jamais la formule « en cours de signature ». <strong>Le défaut
               porte donc sur le fichier réutilisable, pas sur ce que voit un
-              citoyen.</strong> Nous le signalons parce que ce fichier est la
+              citoyen.</strong>{" "}
+              Nous le signalons parce que ce fichier est la
               source de tous les travaux qui s&apos;appuient dessus, dont le nôtre.
             </dd>
 
