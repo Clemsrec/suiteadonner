@@ -1,5 +1,5 @@
 import { liteClient } from "algoliasearch/lite";
-import type { PetitionStatut } from "./petitions";
+import type { StatutSource } from "./petitions";
 
 export const ALGOLIA_INDEX_NAME = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "petitions";
 
@@ -14,15 +14,15 @@ export type AlgoliaPetitionHit = {
   objectID: string;
   titre: string;
   description: string;
-  statut: PetitionStatut;
+  statutSource: StatutSource;
   statutLabel: string;
-  commission: string;
-  nbVotes: number;
+  commissionSource: string | null;
+  nbVotes: number | null;
   datePublication: string | null;
   url: string;
 };
 
-export type SearchFilter = PetitionStatut | "toutes";
+export type SearchFilter = StatutSource | "toutes";
 
 export async function searchPetitionsIndex(
   filter: SearchFilter,
@@ -37,7 +37,7 @@ export async function searchPetitionsIndex(
       {
         indexName: ALGOLIA_INDEX_NAME,
         query: keyword,
-        filters: filter === "toutes" ? undefined : `statut:${filter}`,
+        filters: filter === "toutes" ? undefined : `statutSource:${filter}`,
         hitsPerPage: 30,
       },
     ],

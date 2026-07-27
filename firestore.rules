@@ -12,12 +12,6 @@ service cloud.firestore {
       allow read: if true;
       allow write: if false;
     }
-    // Recoupements thématiques pétition ↔ débats en séance, calculés hors ligne
-    // par scripts/croiser-petitions-debats.mjs.
-    match /recoupements/{petitionId} {
-      allow read: if true;
-      allow write: if false;
-    }
     // Réunions de commission où une pétition figure à l'ordre du jour,
     // extraites par scripts/fetch-reunions.mjs.
     match /reunions/{petitionId} {

@@ -24,12 +24,14 @@
 //   node scripts/croiser-petitions-debats.mjs                  # toutes les pétitions classées à fort soutien
 //   node scripts/croiser-petitions-debats.mjs --petition 5158  # un cas précis, en mode verbeux
 //   node scripts/croiser-petitions-debats.mjs --seuil 5000     # abaisse le seuil de signatures
-//   node scripts/croiser-petitions-debats.mjs --push           # écrit aussi dans Firestore
 //
-// Sortie : .corpus/recoupements.json, et collection `recoupements` avec --push.
+// Sortie : .corpus/recoupements.json — LOCAL UNIQUEMENT.
 //
-// Auth pour --push : mêmes credentials que scripts/import-petitions.mjs
-// (`gcloud auth application-default login` ou GOOGLE_APPLICATION_CREDENTIALS).
+// Ces rapprochements sont thématiques, donc indiciaires. Le site affirme ne pas
+// les publier : ils ne doivent donc être écrits nulle part de public. L'option
+// --push a été retirée le 27/07/2026, après avoir constaté que la collection
+// Firestore `recoupements` était lisible publiquement alors que rien ne la
+// consommait — ce qui contredisait directement ce qu'on écrit aux visiteurs.
 
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -54,7 +56,6 @@ const opt = (nom) => {
 };
 const petitionCible = opt("petition");
 const seuilSignatures = Number(opt("seuil") ?? SEUIL_SIGNATURES_DEFAUT);
-const push = args.includes("--push");
 
 // --- Normalisation lexicale ----------------------------------------------
 
@@ -409,31 +410,6 @@ function afficher(r, verbeux) {
   }
 }
 
-// Même pattern d'écriture que scripts/import-petitions.mjs : Admin SDK,
-// credentials par défaut, un document par pétition.
-async function ecrireDansFirestore(resultats, couverture) {
-  const { initializeApp, applicationDefault, getApps } = await import("firebase-admin/app");
-  const { getFirestore, Timestamp } = await import("firebase-admin/firestore");
-
-  if (!getApps().length) {
-    initializeApp({ credential: applicationDefault(), projectId: "suiteadonner" });
-  }
-  const db = getFirestore();
-
-  const batch = db.batch();
-  for (const r of resultats) {
-    batch.set(db.collection("recoupements").doc(r.identifiant), r);
-  }
-  batch.set(db.collection("meta").doc("recoupements"), {
-    couverture,
-    fenetreMois: FENETRE_MOIS,
-    nbPetitions: resultats.length,
-    updatedAt: Timestamp.now(),
-  });
-  await batch.commit();
-  console.log(`  ${resultats.length} recoupements écrits dans Firestore.`);
-}
-
 async function main() {
   const [interventions, petitions] = await Promise.all([chargerCorpus(), chargerPetitions()]);
   const index = construireIndex(interventions);
@@ -490,10 +466,6 @@ async function main() {
   await writeFile(sortie, JSON.stringify({ couverture, fenetreMois: FENETRE_MOIS, resultats }, null, 2));
   console.log(`→ ${sortie}`);
 
-  if (push) {
-    console.log("\nÉcriture dans Firestore (collection `recoupements`)...");
-    await ecrireDansFirestore(resultats, couverture);
-  }
 }
 
 main().catch((err) => {
