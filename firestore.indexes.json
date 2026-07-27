@@ -4,7 +4,7 @@
       "collectionGroup": "petitions",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "statut", "order": "ASCENDING" },
+        { "fieldPath": "statutSource", "order": "ASCENDING" },
         { "fieldPath": "nbVotes", "order": "DESCENDING" }
       ]
     },
@@ -12,8 +12,8 @@
       "collectionGroup": "petitions",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "statut", "order": "ASCENDING" },
-        { "fieldPath": "decisionPubliee", "order": "ASCENDING" },
+        { "fieldPath": "statutSource", "order": "ASCENDING" },
+        { "fieldPath": "motifClassement", "order": "ASCENDING" },
         { "fieldPath": "nbVotes", "order": "DESCENDING" }
       ]
     },
@@ -21,7 +21,7 @@
       "collectionGroup": "petitions",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "statutObsolete", "order": "ASCENDING" },
+        { "fieldPath": "ecartStatutDates", "order": "ASCENDING" },
         { "fieldPath": "nbVotes", "order": "DESCENDING" }
       ]
     }

@@ -6,12 +6,13 @@ import {
   getPassagesEnCommission,
   getSansDecision,
   getStats,
-  getStatutObsolete,
+  getEcartStatutDates,
+  formatSignatures,
   type PassageEnCommission,
   type Petition,
   type Stats,
 } from "@/lib/petitions";
-import { LEGAL } from "@/lib/site";
+import { LEGAL, SORT_PETITION, lienSortPetition } from "@/lib/site";
 
 // Les ordres du jour sont rédigés en langue administrative : « Nomination d'un
 // rapporteur, en application de l'article 148 alinéa 2 du Règlement, sur une
@@ -77,7 +78,7 @@ async function loadData(): Promise<PageData> {
     getStats(),
     getFlagshipPetitions(6),
     getSansDecision(8),
-    getStatutObsolete(5),
+    getEcartStatutDates(5),
     getPassagesEnCommission(6),
   ]);
 
@@ -142,8 +143,9 @@ export default async function Home() {
           <nav className={styles.siteNav}>
             <a href="#constat">Le constat</a>
             <a href="#recherche">Rechercher</a>
+            <a href="#suivi">Le suivi</a>
             <a href="#commission">En commission</a>
-            <a href="#statut-obsolete">Statut figé</a>
+            <a href="#statut-obsolete">Fichier non à jour</a>
             <a href="#sans-decision">Sans décision</a>
             <a href="#methode">Méthode</a>
           </nav>
@@ -173,8 +175,8 @@ export default async function Home() {
                 <div className={styles.l}>classées d&apos;office</div>
               </div>
               <div className={`${styles.stat} ${styles.statFlag}`}>
-                <div className={styles.n}>{stats.fortSoutienSansSuite.toLocaleString("fr-FR")}</div>
-                <div className={styles.l}>classées après avoir dépassé 10&nbsp;000 signatures</div>
+                <div className={styles.n}>{stats.seuilAtteint.toLocaleString("fr-FR")}</div>
+                <div className={styles.l}>ont dépassé 10&nbsp;000 signatures</div>
               </div>
             </div>
           ) : (
@@ -223,7 +225,7 @@ export default async function Home() {
 
               <div className={styles.fait}>
                 <div className={styles.faitN}>
-                  {stats.closesSansTexte.toLocaleString("fr-FR")}
+                  {stats.motifAbsent.toLocaleString("fr-FR")}
                 </div>
                 <p>
                   pétitions dont le recueil est terminé et pour lesquelles l&apos;emplacement
@@ -234,21 +236,21 @@ export default async function Home() {
 
               <div className={styles.fait}>
                 <div className={styles.faitN}>
-                  {(Math.round((stats.seuilDixMille / stats.total) * 1000) / 10)
+                  {(Math.round((stats.seuilAtteint / stats.total) * 1000) / 10)
                     .toLocaleString("fr-FR")}
                   &nbsp;%
                 </div>
                 <p>
                   des pétitions atteignent 10&nbsp;000 signatures, le seuil en dessous duquel
                   elles sont classées automatiquement, sans examen —{" "}
-                  {stats.seuilDixMille.toLocaleString("fr-FR")} sur{" "}
+                  {stats.seuilAtteint.toLocaleString("fr-FR")} sur{" "}
                   {stats.total.toLocaleString("fr-FR")}.
                 </p>
               </div>
 
               <div className={styles.fait}>
                 <div className={styles.faitN}>
-                  {stats.clotureesEnMasse.toLocaleString("fr-FR")}
+                  {stats.clotureGroupee.toLocaleString("fr-FR")}
                 </div>
                 <p>
                   pétitions dont le recueil s&apos;est arrêté le même jour que des centaines
@@ -308,9 +310,9 @@ export default async function Home() {
               </div>
               <div className={styles.petitionMeta}>
                 <span>
-                  <span className={styles.n}>{p.nbVotes.toLocaleString("fr-FR")}</span> soutiens
+                  <span className={styles.n}>{formatSignatures(p.nbVotes)}</span> soutiens
                 </span>
-                <span>{p.commission || "Commission non précisée"}</span>
+                <span>{p.commissionSource || "Commission non précisée"}</span>
                 <span>{formatFrDate(p.datePublication)}</span>
               </div>
             </a>
@@ -369,7 +371,7 @@ export default async function Home() {
                 </div>
                 <div className={styles.petitionMeta}>
                   <span>
-                    <span className={styles.n}>{p.nbVotes.toLocaleString("fr-FR")}</span> soutiens
+                    <span className={styles.n}>{formatSignatures(p.nbVotes)}</span> soutiens
                   </span>
                   <span>{p.commission || "Commission non précisée"}</span>
                 </div>
@@ -408,14 +410,21 @@ export default async function Home() {
         {statutObsolete.length > 0 && (
           <section className={styles.ledger} id="statut-obsolete">
             <div className={styles.sectionHead}>
-              <h2>Recueil terminé, statut jamais mis à jour</h2>
+              <h2>Le fichier public n&apos;est pas à jour</h2>
             </div>
 
             <p className={styles.blockLede}>
-              La date limite de signature de ces pétitions est passée, parfois
-              depuis des mois. Le jeu de données officiel les affiche pourtant
-              toujours comme « en cours de signature », sans décision de
-              commission.
+              La date limite de recueil des signatures de ces pétitions est
+              passée, parfois depuis des mois. Le fichier de données ouvertes
+              leur conserve pourtant le statut <code>ouverte</code>, sans
+              décision de commission.
+            </p>
+            <p className={styles.blockLede}>
+              Précision importante&nbsp;: <strong>la plateforme officielle,
+              elle, affiche bien la date limite</strong> et ne prétend pas que
+              le recueil se poursuit. Ce défaut ne concerne que le fichier
+              réutilisable — c&apos;est-à-dire celui dont se servent les
+              chercheurs, les journalistes et ce site.
             </p>
 
             {statutObsolete.map((p) => (
@@ -428,14 +437,14 @@ export default async function Home() {
               >
                 <div className={styles.petitionTop}>
                   <div className={styles.petitionTitle}>{p.titre}</div>
-                  <span className={`${styles.tag} ${styles.tagNone}`}>Statut non mis à jour</span>
+                  <span className={`${styles.tag} ${styles.tagNone}`}>Fichier non à jour</span>
                 </div>
                 <div className={styles.petitionMeta}>
                   <span>
-                    <span className={styles.n}>{p.nbVotes.toLocaleString("fr-FR")}</span> soutiens
+                    <span className={styles.n}>{formatSignatures(p.nbVotes)}</span> soutiens
                   </span>
                   <span>Date limite : {formatFrDate(p.dateLimiteVote)}</span>
-                  <span>{p.commission || "Commission non précisée"}</span>
+                  <span>{p.commissionSource || "Commission non précisée"}</span>
                 </div>
               </a>
             ))}
@@ -445,8 +454,8 @@ export default async function Home() {
         <section className={styles.ledger} id="sans-decision">
           <div className={styles.sectionHead}>
             <h2>Classées sans décision publiée</h2>
-            {stats?.sansDecision ? (
-              <span className={styles.meta}>{stats.sansDecision} au total</span>
+            {stats?.classeesHorsSeuilSansTexte ? (
+              <span className={styles.meta}>{stats.classeesHorsSeuilSansTexte} au total</span>
             ) : null}
           </div>
 
@@ -461,13 +470,13 @@ export default async function Home() {
               {stats ? (
                 <p className={styles.extrait}>
                   Les {sansDecision.length} plus signées parmi les{" "}
-                  {stats.sansDecision.toLocaleString("fr-FR")} pétitions concernées.
+                  {stats.classeesHorsSeuilSansTexte.toLocaleString("fr-FR")} pétitions concernées.
                 </p>
               ) : null}
-              {stats?.signaturesSansDecision ? (
+              {stats?.signaturesClasseesSansTexte ? (
                 <p className={styles.counter}>
                   <span className={styles.counterN}>
-                    {Math.round(stats.signaturesSansDecision).toLocaleString("fr-FR")}
+                    {Math.round(stats.signaturesClasseesSansTexte).toLocaleString("fr-FR")}
                   </span>{" "}
                   signatures cumulées, aucune motivation publiée
                 </p>
@@ -487,9 +496,9 @@ export default async function Home() {
                   </div>
                   <div className={styles.petitionMeta}>
                     <span>
-                      <span className={styles.n}>{p.nbVotes.toLocaleString("fr-FR")}</span> soutiens
+                      <span className={styles.n}>{formatSignatures(p.nbVotes)}</span> soutiens
                     </span>
-                    <span>{p.commission || "Commission non précisée"}</span>
+                    <span>{p.commissionSource || "Commission non précisée"}</span>
                     <span>{formatFrDate(p.dateLimiteVote)}</span>
                   </div>
                 </a>
@@ -500,6 +509,67 @@ export default async function Home() {
               Aucune pétition dans ce cas pour le moment.
             </p>
           )}
+        </section>
+
+        {/* Comparaison avec l'interface, et non chiffre du site : ces valeurs
+            sont relevées à la main sur la plateforme, qui n'est pour nous
+            qu'une source de contexte. D'où la présentation sobre et la date
+            en évidence, à distance du bloc « constat » bâti sur le fichier. */}
+        <section className={styles.comparaison} id="suivi">
+          <p className={styles.eyebrow}>
+            Comparaison avec l&apos;interface officielle · relevé du{" "}
+            {formatFrDate(SORT_PETITION.releveLe)}
+          </p>
+          <h2>
+            La plateforme sait dire ce qu&apos;est devenue une pétition. Elle ne l&apos;a jamais
+            fait, pas une seule fois.
+          </h2>
+
+          <p className={styles.constatLede}>
+            Cette section ne repose pas sur le fichier de données, mais sur ce que montre le
+            site officiel — nous l&apos;avons relevé à la main, il ne se met pas à jour tout
+            seul. Le site propose un filtre «&nbsp;Sort de la pétition&nbsp;» avec trois
+            issues possibles. Les trois renvoient zéro résultat. Ce n&apos;est pas une panne du
+            filtre&nbsp;: la recherche par statut, elle, fonctionne parfaitement — «&nbsp;Archivée&nbsp;»
+            renvoie 1&nbsp;454 pétitions, très exactement le nombre inscrit dans le fichier ouvert.
+          </p>
+
+          <ul className={styles.suivi}>
+            {SORT_PETITION.etats.map((e) => (
+              <li key={e.cle} className={e.nombre === 0 ? styles.suiviZero : undefined}>
+                <a href={lienSortPetition(e.cle)} target="_blank" rel="noopener noreferrer">
+                  {e.libelle}
+                </a>
+                <span className={styles.suiviN}>
+                  {e.nombre.toLocaleString("fr-FR")}
+                  {e.nombre === 0 ? "" : " pétitions"}
+                </span>
+              </li>
+            ))}
+          </ul>
+
+          <div className={styles.reserve}>
+            <h3>Ce que cela veut dire, et ce que cela ne veut pas dire</h3>
+            <p>
+              <strong>Cela ne signifie pas qu&apos;aucune pétition n&apos;a jamais été
+              examinée.</strong>{" "}
+              Nous démontrons le contraire plus bas, ordres du jour et comptes rendus à
+              l&apos;appui. Cela signifie que le suivi prévu pour l&apos;expliquer au citoyen
+              n&apos;est jamais renseigné&nbsp;: toutes les pétitions restent indéfiniment à
+              l&apos;état «&nbsp;Enregistrée&nbsp;».
+            </p>
+            <p>
+              Chiffres relevés à la main le {formatFrDate(SORT_PETITION.releveLe)}. La
+              plateforme refusant les requêtes automatisées, ils ne sont pas actualisés
+              automatiquement — cliquez sur les libellés ci-dessus, vous verrez la même chose.
+            </p>
+            <p>
+              Une précision d&apos;honnêteté&nbsp;: le compteur de la plateforme et celui du
+              fichier ouvert ne coïncident pas, et nous ne savons pas l&apos;expliquer. Seule
+              la catégorie «&nbsp;Archivée&nbsp;» correspond exactement de part et
+              d&apos;autre. Les trois zéros ci-dessus, eux, ne prêtent à aucune ambiguïté.
+            </p>
+          </div>
         </section>
 
         <section className={styles.methode} id="methode">
@@ -521,9 +591,41 @@ export default async function Home() {
               >
                 pétitions déposées à l&apos;Assemblée nationale
               </a>{" "}
-              et le compte rendu de tout ce qui se dit en séance, publié au
-              Journal officiel. Ce sont des documents ouverts, que
-              n&apos;importe qui peut télécharger et vérifier.
+              et l&apos;agenda des réunions de l&apos;Assemblée, qui contient
+              l&apos;ordre du jour des commissions. Ce sont des documents
+              ouverts, que n&apos;importe qui peut télécharger et vérifier.
+            </dd>
+            <dd>
+              Le fichier des pétitions est <strong>notre unique source de
+              référence</strong>. La plateforme officielle nous sert à comparer
+              et à mettre en contexte, jamais à établir un chiffre. Attention si
+              vous refaites nos calculs&nbsp;: plusieurs copies de ce fichier
+              circulent, et l&apos;une d&apos;elles avait un mois de retard
+              lorsque nous l&apos;avons contrôlée le 27 juillet 2026.
+            </dd>
+
+            <dt>Ce que nous ne calculons jamais</dt>
+            <dd>
+              Quand le fichier ne dit rien, nous n&apos;inventons pas. Un
+              nombre de signatures absent s&apos;affiche « non renseigné » et
+              non «&nbsp;0&nbsp;» — cela concerne {""}
+              {stats?.signaturesInconnues ?? 0}{" "}
+              pétitions. Une date manquante
+              ne devient pas une date par défaut. Un regroupement de clôtures
+              est constaté sans qu&apos;une cause lui soit attribuée.
+            </dd>
+
+            <dt>Les écarts que nous laissons tels quels</dt>
+            <dd>
+              Quand le fichier se contredit, nous le signalons au lieu de
+              choisir à sa place. Aujourd&apos;hui&nbsp;:{" "}
+              {stats?.ecartStatutDates ?? 0}{" "}
+              pétitions portent le statut
+              «&nbsp;ouverte&nbsp;» alors que leur date limite est passée, et{" "}
+              {stats ? stats.classee - stats.classeesHorsSeuil : 0}{" "}
+              pétitions marquées «&nbsp;classée&nbsp;» ont un texte de décision indiquant
+              en réalité un classement d&apos;office. C&apos;est pourquoi nous
+              lisons le motif dans le texte, et jamais dans le statut.
             </dd>
 
             <dt>À quel rythme</dt>
@@ -564,13 +666,21 @@ export default async function Home() {
               eu lieu.
             </dd>
 
-            <dt>« Statut jamais mis à jour »</dt>
+            <dt>« Le fichier public n&apos;est pas à jour »</dt>
             <dd>
-              Chaque pétition a une date de fin de récolte des signatures. Nous
-              vérifions si cette date est passée. Quand elle l&apos;est mais que
-              la pétition reste affichée « en cours de signature » sur le site
-              officiel, nous le signalons. C&apos;est le cas de la pétition la
-              plus signée de toute la plateforme, huit mois après sa clôture.
+              Chaque pétition a une date de fin de recueil des signatures. Nous
+              vérifions si cette date est passée. Quand elle l&apos;est alors que
+              le fichier de données ouvertes conserve le statut{" "}
+              <code>ouverte</code>, nous le signalons. C&apos;est le cas de la
+              pétition la plus signée de la plateforme, huit mois après sa date
+              limite.
+              <br />
+              Nous avons vérifié la page officielle de ces pétitions&nbsp;: elle
+              affiche la date limite et le statut « Acceptées », et n&apos;emploie
+              jamais la formule « en cours de signature ». <strong>Le défaut
+              porte donc sur le fichier réutilisable, pas sur ce que voit un
+              citoyen.</strong> Nous le signalons parce que ce fichier est la
+              source de tous les travaux qui s&apos;appuient dessus, dont le nôtre.
             </dd>
 
             <dt>« Classée sans décision publiée »</dt>

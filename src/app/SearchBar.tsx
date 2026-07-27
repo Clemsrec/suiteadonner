@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
-import { STATUS_LABELS, STATUS_TAG_CLASS } from "@/lib/petitions";
+import { STATUT_LABELS, STATUT_TAG, formatSignatures } from "@/lib/petitions";
 import { algoliaConfigured, searchPetitionsIndex, type AlgoliaPetitionHit, type SearchFilter } from "@/lib/algolia";
 
 const FILTERS: { key: SearchFilter; label: string }[] = [
@@ -133,15 +133,15 @@ export default function SearchBar() {
                   >
                     <div className={styles.petitionTop}>
                       <div className={styles.petitionTitle}>{p.titre}</div>
-                      <span className={`${styles.tag} ${TAG_STYLE_CLASS[STATUS_TAG_CLASS[p.statut]]}`}>
-                        {STATUS_LABELS[p.statut]}
+                      <span className={`${styles.tag} ${TAG_STYLE_CLASS[STATUT_TAG[p.statutSource]]}`}>
+                        {STATUT_LABELS[p.statutSource]}
                       </span>
                     </div>
                     <div className={styles.petitionMeta}>
                       <span>
-                        <span className={styles.n}>{p.nbVotes.toLocaleString("fr-FR")}</span> soutiens
+                        <span className={styles.n}>{formatSignatures(p.nbVotes)}</span> soutiens
                       </span>
-                      <span>{p.commission || "Commission non précisée"}</span>
+                      <span>{p.commissionSource || "Commission non précisée"}</span>
                       <span>{formatFrDate(p.datePublication)}</span>
                     </div>
                   </a>

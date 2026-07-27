@@ -7,6 +7,32 @@ export const SITE_TITRE = "Suite à donner — Observatoire des pétitions citoy
 export const SITE_DESCRIPTION =
   "Ce que deviennent réellement les pétitions déposées à l'Assemblée nationale, à partir des données ouvertes.";
 
+// RELEVÉ MANUEL SUR LA PLATEFORME OFFICIELLE — valeurs observées, non calculées.
+//
+// La plateforme propose un filtre « Sort de la pétition » à trois issues. Les
+// trois renvoient zéro résultat, alors que le mécanisme de filtrage fonctionne :
+// « Archivée » renvoie 1 454 pétitions, exactement le compte du fichier ouvert.
+// Le champ existe donc, et n'est jamais renseigné.
+//
+// Ces chiffres ne sont pas récupérés automatiquement : la plateforme rejette
+// les requêtes automatisées (HTTP 422). Ils sont relevés à la main, datés, et
+// chaque lien ci-dessous permet à quiconque de refaire la vérification.
+export const SORT_PETITION = {
+  releveLe: "2026-07-27",
+  base: "https://petitions.assemblee-nationale.fr/initiatives",
+  total: 1656,
+  etats: [
+    { cle: "published", libelle: "Enregistrée", nombre: 1656 },
+    { cle: "classified", libelle: "Classée par la commission", nombre: 0 },
+    { cle: "examinated", libelle: "Examinée en commission", nombre: 0 },
+    { cle: "debatted", libelle: "Débattue en séance publique", nombre: 0 },
+  ],
+} as const;
+
+export function lienSortPetition(cle: string): string {
+  return `${SORT_PETITION.base}?filter%5Bcustom_state%5D%5B%5D=${cle}`;
+}
+
 // Informations légales — source unique pour les trois pages réglementaires.
 // Les valeurs d'identification proviennent de l'éditeur ; les valeurs
 // techniques (régions d'hébergement) ont été relevées sur l'infrastructure.

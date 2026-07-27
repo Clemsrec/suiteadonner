@@ -19,6 +19,7 @@
    collant, qui le recouvre. */
 .ledger,
 .constat,
+.comparaison,
 .methode,
 .contribuer,
 .search {
@@ -33,7 +34,9 @@
   }
   .ledger,
   .constat,
+  .comparaison,
   .methode,
+  .contribuer,
   .search {
     scroll-margin-top: 12px;
   }
@@ -479,6 +482,17 @@
   background: var(--surface);
   border: 1px solid var(--rule-strong);
 }
+/* Même structure que .constat, traitement volontairement plus discret : ce
+   bloc n'est pas bâti sur le fichier source mais sur un relevé manuel de
+   l'interface. Il doit se lire comme une comparaison, pas comme un constat. */
+.comparaison {
+  composes: constat;
+  background: transparent;
+  border: 1px dashed var(--rule-strong);
+}
+.comparaison h2 {
+  font-size: 1.15rem;
+}
 .constat h2 {
   font-family: var(--font-serif);
   font-size: 1.35rem;
@@ -520,6 +534,48 @@
   line-height: 1.55;
   color: var(--ink-muted);
 }
+/* Les quatre issues possibles d'une pétition, avec leur compte réel. */
+.suivi {
+  list-style: none;
+  margin: 22px 0 0;
+  padding: 0;
+  border: 1px solid var(--rule);
+}
+.suivi li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.9rem;
+}
+.suivi li:last-child {
+  border-bottom: none;
+}
+.suivi a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule-strong);
+}
+.suivi a:hover,
+.suivi a:focus-visible {
+  color: var(--accent);
+  border-bottom-color: currentColor;
+}
+.suiviN {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--ink-muted);
+}
+/* Le zéro doit sauter aux yeux : c'est toute l'information. */
+.suiviZero .suiviN {
+  font-size: 1.5rem;
+  color: var(--status-none-ink);
+}
+
 .reserve {
   margin-top: 22px;
   padding-top: 18px;

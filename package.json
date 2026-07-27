@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "import:petitions": "node --env-file=.env.local scripts/import-petitions.mjs",
+    "import:petitions": "npm run verifier && node --env-file=.env.local scripts/import-petitions.mjs",
+    "verifier": "node scripts/verifier-coherence.mjs",
     "fetch:debats": "node scripts/fetch-debats.mjs",
     "fetch:reunions": "node scripts/fetch-reunions.mjs",
     "croiser": "node scripts/croiser-petitions-debats.mjs"
