@@ -13,6 +13,14 @@ export const SITE_DESCRIPTION =
 // cookies, qui documentent ce comportement publiquement.
 export const GA_MESURE_ID = "G-RHQGYZ242D";
 
+// Jeton de vérification Google Search Console (méthode « balise HTML » d'une
+// propriété avec préfixe d'URL). C'est le `content` de la balise
+// google-site-verification — une valeur publique, visible dans le <head> de
+// chaque page. Vide tant que la propriété n'est pas créée : le layout n'émet
+// alors pas la balise. Ne pas retirer une fois la vérification passée :
+// Google revérifie périodiquement.
+export const GOOGLE_SITE_VERIFICATION = "";
+
 // RELEVÉ MANUEL SUR LA PLATEFORME OFFICIELLE — valeurs observées, non calculées.
 //
 // La plateforme propose un filtre « Sort de la pétition » à trois issues. Les
