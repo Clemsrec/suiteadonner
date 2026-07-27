@@ -2,7 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import MesureAudience from "./MesureAudience";
-import { SITE_DESCRIPTION as DESCRIPTION, SITE_NAME, SITE_TITRE as TITRE, SITE_URL } from "@/lib/site";
+import {
+  SITE_DESCRIPTION as DESCRIPTION,
+  GOOGLE_SITE_VERIFICATION,
+  SITE_NAME,
+  SITE_TITRE as TITRE,
+  SITE_URL,
+} from "@/lib/site";
 
 export const metadata: Metadata = {
   // Sans metadataBase, les champs d'URL relatifs (Open Graph, canonique) ne
@@ -24,6 +30,11 @@ export const metadata: Metadata = {
     title: TITRE,
     description: DESCRIPTION,
   },
+  // Balise émise seulement une fois le jeton renseigné dans site.ts — sinon
+  // Next rendrait une balise au contenu vide, que Google refuse.
+  verification: GOOGLE_SITE_VERIFICATION
+    ? { google: GOOGLE_SITE_VERIFICATION }
+    : undefined,
 };
 
 export default function RootLayout({
