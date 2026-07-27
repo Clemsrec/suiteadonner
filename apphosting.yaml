@@ -2,8 +2,13 @@
 # https://firebase.google.com/docs/app-hosting/configure
 
 runConfig:
+  # minInstances 0 : un démarrage à froid après inactivité, mais aucun coût au
+  # repos. Acceptable parce que la page est désormais servie depuis le cache ISR.
   minInstances: 0
-  maxInstances: 1
+  # maxInstances 1 était un plafond de débit : la file d'attente se formait dès
+  # le premier pic et le site paraissait hors service sans qu'aucune attaque
+  # n'ait eu lieu.
+  maxInstances: 5
 
 env:
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY

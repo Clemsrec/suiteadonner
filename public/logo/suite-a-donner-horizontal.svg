@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="222" height="48" viewBox="0 0 222 48">
+  <g transform="translate(0,6)">
+    <circle cx="18" cy="18" r="13.5" fill="none" stroke="#172228" stroke-width="2.7" stroke-dasharray="4.72 3.76" stroke-dashoffset="2.36"></circle>
+    <line x1="11.8" y1="18" x2="24.2" y2="18" stroke="#1e3a5f" stroke-width="2.5"></line>
+  </g>
+  <text x="48" y="33" font-family="Georgia, &#39;Times New Roman&#39;, serif" font-size="25" letter-spacing="0.4" fill="#172228">Suite à donner</text>
+</svg>

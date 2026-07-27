@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styles from "./page.module.css";
 import SearchBar from "./SearchBar";
 import {
@@ -9,7 +10,12 @@ import {
   type Stats,
 } from "@/lib/petitions";
 
-export const dynamic = "force-dynamic";
+// Les données source ne changent qu'une fois par semaine (republication du
+// lundi côté data.gouv.fr) : rendre la page à chaque visite faisait 20 lectures
+// Firestore par visiteur pour un résultat identique. En ISR, la page est servie
+// depuis le cache et régénérée au plus une fois par heure — le trafic n'a plus
+// d'effet sur Firestore, et une seule instance encaisse n'importe quel pic.
+export const revalidate = 3600;
 
 function formatFrDate(iso: string | null): string {
   if (!iso) return "—";
@@ -58,10 +64,44 @@ export default async function Home() {
       <header className={styles.site}>
         <div className={styles.siteInner}>
           <a className={styles.wordmark} href="#">
-            Suite à donner
-            <small>Observatoire des pétitions citoyennes</small>
+            {/* Symbole inline plutôt qu'un <img> vers public/logo : les deux
+                traits reprennent les variables de thème, donc la bascule
+                clair/sombre est exacte sans second fichier ni requête. Les SVG
+                de public/logo restent le jeu distribuable (presse, réseaux). */}
+            <svg
+              className={styles.mark}
+              viewBox="0 0 32 32"
+              width="26"
+              height="26"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <circle
+                cx="16"
+                cy="16"
+                r="12"
+                fill="none"
+                stroke="var(--ink)"
+                strokeWidth="2.4"
+                strokeDasharray="4.2 3.34"
+                strokeDashoffset="2.1"
+              />
+              <line
+                x1="10.5"
+                y1="16"
+                x2="21.5"
+                y2="16"
+                stroke="var(--accent)"
+                strokeWidth="2.2"
+              />
+            </svg>
+            <span className={styles.wordmarkText}>
+              Suite à donner
+              <small>Observatoire des pétitions citoyennes</small>
+            </span>
           </a>
           <nav className={styles.siteNav}>
+            <a href="#constat">Le constat</a>
             <a href="#recherche">Rechercher</a>
             <a href="#statut-obsolete">Statut figé</a>
             <a href="#sans-decision">Sans décision</a>
@@ -90,7 +130,7 @@ export default async function Home() {
                 <div className={styles.n}>
                   {(stats.archivee + stats.expiree).toLocaleString("fr-FR")}
                 </div>
-                <div className={styles.l}>classées d&apos;office, seuil non atteint</div>
+                <div className={styles.l}>classées d&apos;office, sans examen</div>
               </div>
               <div className={`${styles.stat} ${styles.statFlag}`}>
                 <div className={styles.n}>{stats.fortSoutienSansSuite.toLocaleString("fr-FR")}</div>
@@ -100,13 +140,101 @@ export default async function Home() {
           ) : (
             <p className={styles.demoNote} style={{ marginTop: 28 }}>
               {error
-                ? "Données indisponibles pour le moment — vérifiez la connexion à Firestore."
-                : "Aucun import n'a encore été exécuté (npm run import:petitions)."}
+                ? "Les données ne sont pas accessibles pour le moment. Merci de réessayer dans quelques minutes."
+                : "Les données sont en cours de préparation et seront affichées prochainement."}
             </p>
           )}
         </section>
 
         <SearchBar />
+
+        {stats && (
+          <section className={styles.constat} id="constat">
+            <p className={styles.eyebrow}>Le constat d&apos;ensemble</p>
+            <h2>
+              Sur {stats.total.toLocaleString("fr-FR")}{" "}
+              pétitions déposées, aucune n&apos;a reçu de réponse expliquant la décision prise.
+            </h2>
+
+            <p className={styles.constatLede}>
+              Signer une pétition à l&apos;Assemblée nationale n&apos;ouvre droit à aucune
+              réponse motivée. Ce n&apos;est pas un dysfonctionnement&nbsp;: le règlement ne
+              l&apos;impose pas. Les chiffres ci-dessous sont issus du fichier officiel et
+              chacun peut les recompter.
+            </p>
+
+            <div className={styles.faits}>
+              <div className={styles.fait}>
+                <div className={styles.faitN}>
+                  {stats.formulationsDistinctes.toLocaleString("fr-FR")}
+                </div>
+                <p>
+                  formulations différentes pour l&apos;ensemble des{" "}
+                  {stats.textesDecision.toLocaleString("fr-FR")}{" "}
+                  décisions rédigées. Elles ne varient que par la date et le nom de la
+                  commission — aucune n&apos;énonce de motif.
+                </p>
+              </div>
+
+              <div className={styles.fait}>
+                <div className={styles.faitN}>
+                  {stats.sansTexteDecision.toLocaleString("fr-FR")}
+                </div>
+                <p>
+                  pétitions pour lesquelles l&apos;emplacement prévu pour la décision est resté
+                  entièrement vide, soit{" "}
+                  {Math.round((stats.sansTexteDecision / stats.total) * 100)} % du total.
+                </p>
+              </div>
+
+              <div className={styles.fait}>
+                <div className={styles.faitN}>
+                  {(Math.round((stats.seuilDixMille / stats.total) * 1000) / 10)
+                    .toLocaleString("fr-FR")}
+                  &nbsp;%
+                </div>
+                <p>
+                  des pétitions atteignent 10&nbsp;000 signatures, le seuil en dessous duquel
+                  elles sont classées automatiquement, sans examen —{" "}
+                  {stats.seuilDixMille.toLocaleString("fr-FR")} sur{" "}
+                  {stats.total.toLocaleString("fr-FR")}.
+                </p>
+              </div>
+
+              <div className={styles.fait}>
+                <div className={styles.faitN}>
+                  {stats.clotureesEnMasse.toLocaleString("fr-FR")}
+                </div>
+                <p>
+                  pétitions interrompues non pas à leur propre échéance, mais toutes le même
+                  jour, à la fin d&apos;une législature
+                  {stats.dateClotureMasse
+                    ? ` — dont la plus grande vague le ${formatFrDate(stats.dateClotureMasse)}`
+                    : ""}
+                  . Leur nombre de signatures n&apos;y change rien.
+                </p>
+              </div>
+            </div>
+
+            <div className={styles.reserve}>
+              <h3>Ce que ces chiffres ne disent pas</h3>
+              <p>
+                Ils ne prouvent pas que rien n&apos;a été fait. Une commission a pu auditionner,
+                échanger, tenir compte d&apos;une pétition dans un travail législatif sans
+                qu&apos;aucune trace publique n&apos;en subsiste. Ce que les données établissent,
+                c&apos;est qu&apos;<strong>un citoyen qui signe n&apos;a aucun moyen de le
+                savoir</strong>.
+              </p>
+              <p>
+                Ils ne désignent personne non plus. Le droit de pétition tel qu&apos;il est
+                organisé n&apos;oblige à aucune réponse individualisée, et les fins de
+                législature interrompent les pétitions en cours sans procédure de reprise. Ce
+                sont des règles, pas des négligences — et ce sont elles que ces chiffres
+                décrivent.
+              </p>
+            </div>
+          </section>
+        )}
 
         <section className={styles.ledger}>
           <div className={styles.sectionHead}>
@@ -115,6 +243,13 @@ export default async function Home() {
               <span className={styles.meta}>maj {formatFrDate(stats.updatedAt.slice(0, 10))}</span>
             )}
           </div>
+          {stats ? (
+            <p className={styles.extrait}>
+              Les {flagship.length} plus signées parmi les{" "}
+              {stats.classee.toLocaleString("fr-FR")} pétitions classées. Les autres sont
+              accessibles par la recherche ci-dessus.
+            </p>
+          ) : null}
 
           {flagship.map((p) => (
             <a
@@ -202,6 +337,12 @@ export default async function Home() {
 
           {sansDecision.length ? (
             <>
+              {stats ? (
+                <p className={styles.extrait}>
+                  Les {sansDecision.length} plus signées parmi les{" "}
+                  {stats.sansDecision.toLocaleString("fr-FR")} pétitions concernées.
+                </p>
+              ) : null}
               {stats?.signaturesSansDecision ? (
                 <p className={styles.counter}>
                   <span className={styles.counterN}>
@@ -235,54 +376,104 @@ export default async function Home() {
             </>
           ) : (
             <p className={styles.demoNote}>
-              Pas encore de données à afficher ici — relancez l&apos;import
-              (npm run import:petitions) pour calculer ce champ.
+              Aucune pétition dans ce cas pour le moment.
             </p>
           )}
         </section>
 
         <section className={styles.methode} id="methode">
-          <h2>Méthode</h2>
+          <h2>Comment nous travaillons</h2>
+          <p className={styles.methodeLede}>
+            Nous n&apos;enquêtons pas et nous n&apos;interprétons rien. Nous
+            republions ce que l&apos;Assemblée nationale publie elle-même, en
+            rendant visible ce qui s&apos;y trouve — ou ce qui devrait s&apos;y
+            trouver et n&apos;y est pas.
+          </p>
           <dl>
-            <dt>Source</dt>
+            <dt>D&apos;où viennent les chiffres</dt>
             <dd>
-              Jeu de données{" "}
-              <a href="https://www.data.gouv.fr/datasets/petitions-de-lassemblee-nationale">
-                Pétitions de l&apos;Assemblée nationale
-              </a>
-              , publié sur data.gouv.fr sous Licence Ouverte 2.0
+              De deux fichiers publiés par l&apos;État : la liste officielle des{" "}
+              <a
+                href="https://www.data.gouv.fr/datasets/petitions-de-lassemblee-nationale"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                pétitions déposées à l&apos;Assemblée nationale
+              </a>{" "}
+              et le compte rendu de tout ce qui se dit en séance, publié au
+              Journal officiel. Ce sont des documents ouverts, que
+              n&apos;importe qui peut télécharger et vérifier.
             </dd>
-            <dt>Mise à jour</dt>
-            <dd>Chaque lundi matin côté source ; import dans Suite à donner exécuté manuellement pour l&apos;instant</dd>
-            <dt>Statut non mis à jour</dt>
+
+            <dt>À quel rythme</dt>
             <dd>
-              Nous comparons le champ <code>statut</code> à la{" "}
-              <code>date_limite_vote</code>. Quand une pétition est encore
-              annoncée « en cours de signature » alors que sa date limite est
-              passée, nous le signalons. Le calcul est refait à chaque import.
+              La liste des pétitions est actualisée chaque lundi matin par
+              l&apos;Assemblée. Nous la récupérons ensuite pour mettre le site à
+              jour. La date de dernière mise à jour est affichée en haut de
+              chaque tableau.
             </dd>
-            <dt>Décision non publiée</dt>
+
+            <dt>Ce que veut dire « classée d&apos;office »</dt>
             <dd>
-              Le jeu de données comporte un champ{" "}
-              <code>decision_commission</code> destiné à motiver le classement.
-              Nous listons les pétitions pour lesquelles ce champ est vide.
-              C&apos;est un constat brut, pas une interprétation : nous ne
-              savons pas si une décision a été prise sans être publiée, ou si
-              aucune ne l&apos;a été.
+              Deux situations très différentes portent la même étiquette. La
+              plupart de ces pétitions n&apos;ont pas réuni assez de signatures
+              dans le délai imparti. Mais un grand nombre a simplement été
+              interrompu par la fin d&apos;une législature&nbsp;: quand
+              l&apos;Assemblée est renouvelée, les pétitions en cours
+              s&apos;arrêtent toutes le même jour, y compris celles qui avaient
+              largement dépassé le seuil. La plus signée d&apos;entre elles en
+              comptait plus de 260&nbsp;000.
             </dd>
-            <dt>Limites</dt>
+
+            <dt>Ce que veut dire « classée »</dt>
             <dd>
-              Le statut « classée » signifie que la pétition a été examinée par
-              le bureau de la commission compétente, pas nécessairement
-              débattue en séance : le jeu de données ne documente pas les
-              auditions ni les suites parlementaires ultérieures.
+              Une pétition qui a réuni assez de signatures est transmise à une
+              commission de députés, qui décide de la suite à lui donner.
+              Lorsqu&apos;elle décide de ne pas aller plus loin, la pétition est
+              dite « classée ». Cela ne signifie pas qu&apos;elle a été débattue
+              devant les députés en séance : le plus souvent, elle ne l&apos;a
+              pas été.
+            </dd>
+
+            <dt>« Statut jamais mis à jour »</dt>
+            <dd>
+              Chaque pétition a une date de fin de récolte des signatures. Nous
+              vérifions si cette date est passée. Quand elle l&apos;est mais que
+              la pétition reste affichée « en cours de signature » sur le site
+              officiel, nous le signalons. C&apos;est le cas de la pétition la
+              plus signée de toute la plateforme, huit mois après sa clôture.
+            </dd>
+
+            <dt>« Classée sans décision publiée »</dt>
+            <dd>
+              Le fichier officiel prévoit un emplacement pour expliquer pourquoi
+              une pétition a été classée. Nous listons celles pour lesquelles
+              cet emplacement a été laissé vide. Nous constatons une absence,
+              nous n&apos;en déduisons rien : nous ignorons si une décision a été
+              prise sans être rendue publique, ou si aucune ne l&apos;a été.
+            </dd>
+
+            <dt>Ce que nous ne pouvons pas savoir</dt>
+            <dd>
+              Rien ne relie officiellement une pétition à un débat parlementaire
+              — aucun numéro commun, aucun renvoi. Quand nous rapprochons les
+              deux, c&apos;est par les mots employés et par les dates : c&apos;est
+              un indice, jamais une preuve qu&apos;un débat a eu lieu à cause
+              d&apos;une pétition. De même, les fichiers publics ne disent rien
+              des auditions ni des échanges internes aux commissions : un travail
+              a pu avoir lieu sans laisser de trace consultable.
             </dd>
           </dl>
         </section>
 
         <footer className={styles.footer}>
           <span>Suite à donner — projet indépendant, non affilié à l&apos;Assemblée nationale</span>
-          <a href="#methode">Sources &amp; méthode</a>
+          <nav className={styles.footerNav}>
+            <a href="#methode">Sources &amp; méthode</a>
+            <Link href="/mentions-legales">Mentions légales</Link>
+            <Link href="/politique-de-confidentialite">Confidentialité</Link>
+            <Link href="/politique-cookies">Cookies</Link>
+          </nav>
         </footer>
       </div>
     </>

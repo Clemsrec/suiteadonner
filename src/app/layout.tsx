@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-const SITE_URL = "https://suiteadonner.nucom.fr";
-const TITRE = "Suite à donner — Observatoire des pétitions citoyennes";
-const DESCRIPTION =
-  "Ce que deviennent réellement les pétitions déposées à l'Assemblée nationale, à partir des données ouvertes.";
+import { SITE_DESCRIPTION as DESCRIPTION, SITE_NAME, SITE_TITRE as TITRE, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   // Sans metadataBase, les champs d'URL relatifs (Open Graph, canonique) ne
@@ -17,7 +14,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "fr_FR",
     url: "/",
-    siteName: "Suite à donner",
+    siteName: SITE_NAME,
     title: TITRE,
     description: DESCRIPTION,
   },

@@ -46,6 +46,13 @@ export type Stats = {
   signaturesSansDecision: number;
   statutObsolete: number;
   signaturesStatutObsolete: number;
+  signaturesTotal: number;
+  seuilDixMille: number;
+  sansTexteDecision: number;
+  textesDecision: number;
+  formulationsDistinctes: number;
+  clotureesEnMasse: number;
+  dateClotureMasse: string | null;
   updatedAt: string | null;
 };
 
@@ -64,6 +71,13 @@ export async function getStats(): Promise<Stats | null> {
     signaturesSansDecision: data.signaturesSansDecision ?? 0,
     statutObsolete: data.statutObsolete ?? 0,
     signaturesStatutObsolete: data.signaturesStatutObsolete ?? 0,
+    signaturesTotal: data.signaturesTotal ?? 0,
+    seuilDixMille: data.seuilDixMille ?? 0,
+    sansTexteDecision: data.sansTexteDecision ?? 0,
+    textesDecision: data.textesDecision ?? 0,
+    formulationsDistinctes: data.formulationsDistinctes ?? 0,
+    clotureesEnMasse: data.clotureesEnMasse ?? 0,
+    dateClotureMasse: data.dateClotureMasse ?? null,
     updatedAt: data.updatedAt?.toDate?.().toISOString() ?? null,
   };
 }

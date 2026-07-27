@@ -1,0 +1,177 @@
+.wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 20px 64px;
+}
+
+.site {
+  border-bottom: 1px solid var(--rule-strong);
+  background: var(--surface);
+}
+.siteInner {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.wordmark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.mark {
+  flex: none;
+}
+.retour {
+  font-size: 0.82rem;
+  text-decoration: none;
+  color: var(--ink-muted);
+}
+.retour:hover,
+.retour:focus-visible {
+  color: var(--ink);
+}
+
+.doc {
+  padding-top: 36px;
+}
+.doc h1 {
+  font-family: var(--font-serif);
+  font-size: 1.85rem;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.maj {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--ink-faint);
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--rule-strong);
+}
+.doc h2 {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  margin: 34px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule);
+}
+.doc h3 {
+  font-size: 0.92rem;
+  font-weight: 700;
+  margin: 20px 0 6px;
+}
+.doc p,
+.doc li {
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--ink-muted);
+}
+.doc p {
+  margin: 10px 0;
+}
+.doc ul {
+  margin: 10px 0 10px 20px;
+}
+.doc li {
+  margin: 5px 0;
+}
+.doc a {
+  color: var(--accent);
+}
+.doc strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.doc code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--surface-sunk);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
+/* Tableau d'identification — deux colonnes, libellé à gauche. */
+.fiche {
+  margin: 14px 0;
+  display: grid;
+  grid-template-columns: minmax(140px, 34%) 1fr;
+  gap: 0;
+  border-top: 1px solid var(--rule);
+}
+.fiche dt,
+.fiche dd {
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+.fiche dt {
+  font-weight: 600;
+  color: var(--ink);
+  padding-right: 14px;
+}
+.fiche dd {
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
+/* Encadré pour les constats qui engagent : « ce site ne dépose aucun cookie ». */
+.encadre {
+  margin: 18px 0;
+  padding: 14px 16px;
+  background: var(--surface-sunk);
+  border-left: 3px solid var(--accent);
+}
+.encadre p {
+  margin: 0;
+}
+.encadre p + p {
+  margin-top: 8px;
+}
+
+.footer {
+  margin-top: 48px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule-strong);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  justify-content: space-between;
+  font-size: 0.76rem;
+  color: var(--ink-faint);
+}
+.footer a {
+  color: var(--ink-muted);
+  text-decoration: none;
+}
+.footer a:hover,
+.footer a:focus-visible {
+  color: var(--ink);
+}
+.footerNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+@media (max-width: 560px) {
+  .fiche {
+    grid-template-columns: 1fr;
+  }
+  .fiche dt {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  .fiche dd {
+    padding-top: 2px;
+  }
+}

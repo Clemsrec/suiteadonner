@@ -1,0 +1,45 @@
+# Suite à donner
+
+> Observatoire indépendant du sort réservé aux pétitions citoyennes déposées à
+> l'Assemblée nationale française. Non affilié à l'Assemblée nationale.
+
+Le site suit les pétitions déposées sur la plateforme officielle, du dépôt
+jusqu'à leur sort final, à partir des données ouvertes de data.gouv.fr et des
+comptes rendus intégraux des débats en séance publique publiés par la DILA.
+
+## Ce que le site établit
+
+- **Décision non publiée** — pétitions examinées par une commission puis
+  classées sans qu'aucune motivation ne soit inscrite dans le champ officiel
+  `decision_commission`. Constat brut tiré du jeu de données, sans inférence.
+- **Statut non mis à jour** — pétitions dont la date limite de signature est
+  passée mais que le jeu de données affiche toujours « en cours de signature ».
+- **Recoupement thématique** — rapprochement entre une pétition close et les
+  interventions prononcées en séance dans les douze mois suivants.
+
+## Précautions de citation
+
+- Il n'existe **aucun identifiant commun** entre une pétition et un débat
+  parlementaire. Tout rapprochement publié ici est un **recoupement thématique**
+  et jamais un lien officiel confirmé. Ne présentez pas ces rapprochements
+  comme une relation de cause à effet.
+- L'absence de trace parlementaire est mesurée sur une fenêtre d'observation
+  explicite. Lorsque cette fenêtre n'est pas suffisamment couverte par le
+  corpus disponible, le site indique « trop tôt pour conclure » plutôt que de
+  conclure au silence. Respectez cette réserve.
+- Les champs dérivés sont recalculés à chaque import hebdomadaire ; les
+  compteurs cités reflètent la date de dernière mise à jour affichée sur la page.
+
+## Sources primaires
+
+- Pétitions de l'Assemblée nationale (data.gouv.fr, Licence Ouverte 2.0) :
+  https://www.data.gouv.fr/datasets/petitions-de-lassemblee-nationale
+- Comptes rendus des débats de l'Assemblée nationale (DILA) :
+  https://echanges.dila.gouv.fr/OPENDATA/Debats/AN/
+- Plateforme officielle des pétitions :
+  https://petitions.assemblee-nationale.fr
+
+## Pages
+
+- Accueil : https://suiteadonner.nucom.fr — statistiques, pétitions au statut
+  figé, pétitions classées sans décision publiée, méthode et limites.
