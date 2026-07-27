@@ -24,7 +24,11 @@ const DATASET_URL =
 
 const STATUS_LABELS = {
   ouverte: "En cours de signature",
-  archivee: "Classée d'office (seuil non atteint)",
+  // Volontairement sans motif : « seuil non atteint » serait faux pour les
+  // 1 748 pétitions interrompues en bloc par une fin de législature, dont
+  // plusieurs dépassaient largement le seuil (263 867 signatures pour la plus
+  // signée d'entre elles).
+  archivee: "Classée d'office",
   classee: "Classée après examen",
   expiree: "Expirée",
 };
@@ -107,7 +111,45 @@ function computeStats(petitions) {
     signaturesSansDecision: 0, // total des signatures concernées
     statutObsolete: 0, // recueil terminé, statut resté « en cours de signature »
     signaturesStatutObsolete: 0,
+    signaturesTotal: 0,
+    seuilDixMille: 0, // pétitions ayant franchi 10 000 signatures
+    sansTexteDecision: 0, // aucun texte de décision, tous statuts confondus
+    textesDecision: 0, // pétitions avec un texte de décision
+    formulationsDistinctes: 0, // nombre de rédactions différentes parmi ces textes
+    clotureesEnMasse: 0, // pétitions closes le même jour que des centaines d'autres
+    dateClotureMasse: null, // la plus grosse de ces dates
   };
+
+  // Une date de clôture PASSÉE partagée par des centaines de pétitions n'est
+  // pas une échéance individuelle : c'est une fin de législature qui les
+  // interrompt toutes le même jour, quel que soit leur nombre de signatures.
+  // On les détecte par leur nombre plutôt qu'en codant les dates en dur.
+  //
+  // Le filtre sur `signaturesCloses` est indispensable : sans lui, les 1 366
+  // pétitions encore ouvertes — qui partagent toutes la fin de la législature
+  // à venir — étaient comptées comme interrompues.
+  const SEUIL_MASSE = 100;
+  const parDateLimite = new Map();
+  const formulations = new Set();
+
+  for (const p of petitions) {
+    if (p.dateLimiteVote && p.signaturesCloses) {
+      parDateLimite.set(p.dateLimiteVote, (parDateLimite.get(p.dateLimiteVote) ?? 0) + 1);
+    }
+    if (p.decisionPubliee) {
+      formulations.add(p.decisionCommission.replace(/\s+/g, " ").trim());
+    }
+  }
+  stats.formulationsDistinctes = formulations.size;
+
+  let plusGrosseMasse = 0;
+  for (const [date, n] of parDateLimite) {
+    if (n >= SEUIL_MASSE && n > plusGrosseMasse) {
+      plusGrosseMasse = n;
+      stats.dateClotureMasse = date;
+    }
+  }
+
   for (const p of petitions) {
     if (stats[p.statut] !== undefined) stats[p.statut] += 1;
     if (p.statut === "classee" && p.nbVotes >= 10000) stats.fortSoutienSansSuite += 1;
@@ -118,6 +160,16 @@ function computeStats(petitions) {
     if (p.statutObsolete) {
       stats.statutObsolete += 1;
       stats.signaturesStatutObsolete += p.nbVotes;
+    }
+    stats.signaturesTotal += p.nbVotes;
+    if (p.nbVotes >= 10000) stats.seuilDixMille += 1;
+    if (p.decisionPubliee) stats.textesDecision += 1;
+    else stats.sansTexteDecision += 1;
+    if (
+      p.signaturesCloses &&
+      (parDateLimite.get(p.dateLimiteVote) ?? 0) >= SEUIL_MASSE
+    ) {
+      stats.clotureesEnMasse += 1;
     }
   }
   return stats;
