@@ -44,12 +44,12 @@ env:
   # Algolia (recherche) — clé Search publique, sans danger à exposer côté
   # client. À renseigner avant déploiement (Algolia > Settings > API Keys).
   - variable: NEXT_PUBLIC_ALGOLIA_APP_ID
-    value: "TODO_A_RENSEIGNER"
+    value: B8GIER7BSB
     availability:
       - BUILD
       - RUNTIME
   - variable: NEXT_PUBLIC_ALGOLIA_SEARCH_KEY
-    value: "TODO_A_RENSEIGNER"
+    value: 18f6c21f33f71338434d84df22622a80
     availability:
       - BUILD
       - RUNTIME

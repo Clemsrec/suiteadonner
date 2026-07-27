@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "import:petitions": "node --env-file=.env.local scripts/import-petitions.mjs"
+    "import:petitions": "node --env-file=.env.local scripts/import-petitions.mjs",
+    "fetch:debats": "node scripts/fetch-debats.mjs",
+    "croiser": "node scripts/croiser-petitions-debats.mjs"
   },
   "dependencies": {
     "algoliasearch": "^5.56.0",

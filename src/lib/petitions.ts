@@ -15,6 +15,9 @@ export type Petition = {
   commission: string;
   legislature: string;
   decisionCommission: string;
+  decisionPubliee: boolean;
+  signaturesCloses: boolean;
+  statutObsolete: boolean;
   url: string;
 };
 
@@ -39,6 +42,10 @@ export type Stats = {
   classee: number;
   expiree: number;
   fortSoutienSansSuite: number;
+  sansDecision: number;
+  signaturesSansDecision: number;
+  statutObsolete: number;
+  signaturesStatutObsolete: number;
   updatedAt: string | null;
 };
 
@@ -53,8 +60,42 @@ export async function getStats(): Promise<Stats | null> {
     classee: data.classee ?? 0,
     expiree: data.expiree ?? 0,
     fortSoutienSansSuite: data.fortSoutienSansSuite ?? 0,
+    sansDecision: data.sansDecision ?? 0,
+    signaturesSansDecision: data.signaturesSansDecision ?? 0,
+    statutObsolete: data.statutObsolete ?? 0,
+    signaturesStatutObsolete: data.signaturesStatutObsolete ?? 0,
     updatedAt: data.updatedAt?.toDate?.().toISOString() ?? null,
   };
+}
+
+// Pétitions dont le recueil de signatures est terminé depuis longtemps mais que
+// le jeu de données affiche toujours « en cours de signature ». Elles échappent
+// à toute requête filtrant sur le statut — or ce sont les deux plus signées de
+// la plateforme.
+export async function getStatutObsolete(max = 5): Promise<Petition[]> {
+  const q = query(
+    collection(db, "petitions"),
+    where("statutObsolete", "==", true),
+    orderBy("nbVotes", "desc"),
+    limit(max)
+  );
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => d.data() as Petition);
+}
+
+// Pétitions examinées puis classées sans qu'aucune motivation ne soit publiée.
+// Contrairement au rapprochement pétition ↔ débat, qui reste un recoupement
+// thématique, il n'y a ici aucune interprétation : le champ officiel est vide.
+export async function getSansDecision(max = 8): Promise<Petition[]> {
+  const q = query(
+    collection(db, "petitions"),
+    where("statut", "==", "classee"),
+    where("decisionPubliee", "==", false),
+    orderBy("nbVotes", "desc"),
+    limit(max)
+  );
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => d.data() as Petition);
 }
 
 // Le cœur de la thèse du produit : des pétitions ayant franchi le seuil de
