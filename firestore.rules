@@ -12,6 +12,12 @@ service cloud.firestore {
       allow read: if true;
       allow write: if false;
     }
+    // Recoupements thématiques pétition ↔ débats en séance, calculés hors ligne
+    // par scripts/croiser-petitions-debats.mjs.
+    match /recoupements/{petitionId} {
+      allow read: if true;
+      allow write: if false;
+    }
     match /{document=**} {
       allow read, write: if false;
     }

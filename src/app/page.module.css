@@ -285,6 +285,29 @@
   color: var(--ink);
   font-weight: 600;
 }
+.blockLede {
+  font-size: 0.86rem;
+  color: var(--ink-muted);
+  line-height: 1.55;
+  margin: 12px 0 0;
+  max-width: 62ch;
+}
+.counter {
+  margin: 14px 0 4px;
+  padding: 12px 14px;
+  background: var(--surface-sunk);
+  border-left: 3px solid var(--accent);
+  font-size: 0.84rem;
+  color: var(--ink-muted);
+}
+.counterN {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
 .ledgerFoot {
   padding-top: 14px;
   text-align: center;

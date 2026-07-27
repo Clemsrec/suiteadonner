@@ -42,19 +42,41 @@ function toNumber(value) {
   return Number.isFinite(n) ? n : 0;
 }
 
+// Date de référence figée au lancement de l'import : les champs dérivés
+// ci-dessous sont un instantané, pas une vérité perpétuelle. Ils se
+// rafraîchissent au prochain `npm run import:petitions`.
+const AUJOURDHUI = new Date().toISOString().slice(0, 10);
+
 function mapRow(row) {
+  const decisionCommission = row.decision_commission.trim();
+  const dateLimiteVote = toIsoDate(row.date_limite_vote);
+  const statut = row.statut.trim();
+  // Le recueil de signatures est terminé quand la date limite est passée,
+  // indépendamment de ce que raconte le champ `statut`.
+  const signaturesCloses = Boolean(dateLimiteVote && dateLimiteVote < AUJOURDHUI);
   return {
     identifiant: row.identifiant.trim(),
     titre: row.titre.trim(),
     description: row.description.trim(),
     datePublication: toIsoDate(row.date_publication),
-    dateLimiteVote: toIsoDate(row.date_limite_vote),
+    dateLimiteVote,
     nbVotes: toNumber(row.nb_votes),
-    statut: row.statut.trim(),
-    statutLabel: STATUS_LABELS[row.statut.trim()] ?? row.statut.trim(),
+    statut,
+    statutLabel: STATUS_LABELS[statut] ?? statut,
     commission: row.commission.trim(),
     legislature: row.legislature.trim(),
-    decisionCommission: row.decision_commission.trim(),
+    decisionCommission,
+    // Le fait le plus dur du jeu de données : une pétition peut être examinée
+    // puis classée sans qu'aucune motivation ne soit publiée. Aucune inférence
+    // ici, c'est le champ officiel qui est vide. Stocké en booléen pour être
+    // interrogeable côté Firestore, qui ne sait pas filtrer sur « chaîne vide ».
+    decisionPubliee: decisionCommission.length > 0,
+    signaturesCloses,
+    // Le statut officiel dit « en cours de signature » alors que la date limite
+    // est passée depuis des mois. Sans ce champ, ces pétitions échappent à
+    // toutes nos requêtes — et ce sont les deux plus signées du jeu de données,
+    // dont Duplomb et ses 2,1 millions de signatures.
+    statutObsolete: statut === "ouverte" && signaturesCloses,
     url: row.url.trim(),
   };
 }
@@ -81,10 +103,22 @@ function computeStats(petitions) {
     classee: 0,
     expiree: 0,
     fortSoutienSansSuite: 0, // classée, mais avec au moins 10 000 signatures
+    sansDecision: 0, // classée sans aucune motivation publiée
+    signaturesSansDecision: 0, // total des signatures concernées
+    statutObsolete: 0, // recueil terminé, statut resté « en cours de signature »
+    signaturesStatutObsolete: 0,
   };
   for (const p of petitions) {
     if (stats[p.statut] !== undefined) stats[p.statut] += 1;
     if (p.statut === "classee" && p.nbVotes >= 10000) stats.fortSoutienSansSuite += 1;
+    if (p.statut === "classee" && !p.decisionPubliee) {
+      stats.sansDecision += 1;
+      stats.signaturesSansDecision += p.nbVotes;
+    }
+    if (p.statutObsolete) {
+      stats.statutObsolete += 1;
+      stats.signaturesStatutObsolete += p.nbVotes;
+    }
   }
   return stats;
 }
