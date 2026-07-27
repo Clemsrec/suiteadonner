@@ -3,9 +3,11 @@ import styles from "./page.module.css";
 import SearchBar from "./SearchBar";
 import {
   getFlagshipPetitions,
+  getPassagesEnCommission,
   getSansDecision,
   getStats,
   getStatutObsolete,
+  type PassageEnCommission,
   type Petition,
   type Stats,
 } from "@/lib/petitions";
@@ -16,6 +18,39 @@ import {
 // depuis le cache et régénérée au plus une fois par heure — le trafic n'a plus
 // d'effet sur Firestore, et une seule instance encaisse n'importe quel pic.
 export const revalidate = 3600;
+
+// Les ordres du jour sont rédigés en langue administrative : « Nomination d'un
+// rapporteur, en application de l'article 148 alinéa 2 du Règlement, sur une
+// pétition renvoyée à la Commission, en vue de sa présentation ». On en extrait
+// l'acte en français courant, le texte officiel restant consultable en entier.
+//
+// Chercher les mots-clés n'importe où dans le texte donnait de faux résultats :
+// ces intitulés annoncent souvent l'étape suivante (« en vue de sa présentation »,
+// « décision de classement ou d'examen »), si bien qu'un même point contient
+// plusieurs mots d'action. L'acte réellement accompli est toujours le PREMIER
+// mot de l'intitulé — c'est donc lui seul qu'on teste.
+const ACTES: Array<[RegExp, string]> = [
+  [/^(nomination|d[ée]signation)/, "Nomination d’un rapporteur"],
+  [/^pr[ée]sentation/, "Présentation devant la commission"],
+  [/^examen/, "Examen par la commission"],
+  [/^d[ée]cision/, "Décision sur son classement"],
+  [/^(audition|table ronde)/, "Audition"],
+];
+
+function acteCommission(intitule: string): string {
+  const debut = intitule
+    .replace(/^[\s\-–—•]+/, "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "");
+  for (const [motif, libelle] of ACTES) {
+    if (motif.test(debut)) return libelle;
+  }
+  // Cas restant : la pétition est évoquée au sein d'une réunion consacrée à
+  // autre chose, typiquement l'audition de son initiateur.
+  if (/audition|table ronde/.test(debut)) return "Audition";
+  return "Évoquée en réunion";
+}
 
 function formatFrDate(iso: string | null): string {
   if (!iso) return "—";
@@ -29,6 +64,7 @@ type PageData = {
   flagship: Petition[];
   sansDecision: Petition[];
   statutObsolete: Petition[];
+  commission: PassageEnCommission[];
   error: boolean;
 };
 
@@ -36,14 +72,15 @@ type PageData = {
 // et un index Firestore encore en construction ne doit pas vider les sections
 // qui, elles, fonctionnent. Chaque bloc dégrade indépendamment.
 async function loadData(): Promise<PageData> {
-  const [stats, flagship, sansDecision, statutObsolete] = await Promise.allSettled([
+  const [stats, flagship, sansDecision, statutObsolete, commission] = await Promise.allSettled([
     getStats(),
     getFlagshipPetitions(6),
     getSansDecision(8),
     getStatutObsolete(5),
+    getPassagesEnCommission(6),
   ]);
 
-  for (const r of [stats, flagship, sansDecision, statutObsolete]) {
+  for (const r of [stats, flagship, sansDecision, statutObsolete, commission]) {
     if (r.status === "rejected") console.error("Lecture Firestore impossible :", r.reason);
   }
 
@@ -52,12 +89,13 @@ async function loadData(): Promise<PageData> {
     flagship: flagship.status === "fulfilled" ? flagship.value : [],
     sansDecision: sansDecision.status === "fulfilled" ? sansDecision.value : [],
     statutObsolete: statutObsolete.status === "fulfilled" ? statutObsolete.value : [],
+    commission: commission.status === "fulfilled" ? commission.value : [],
     error: stats.status === "rejected",
   };
 }
 
 export default async function Home() {
-  const { stats, flagship, sansDecision, statutObsolete, error } = await loadData();
+  const { stats, flagship, sansDecision, statutObsolete, commission, error } = await loadData();
 
   return (
     <>
@@ -103,6 +141,7 @@ export default async function Home() {
           <nav className={styles.siteNav}>
             <a href="#constat">Le constat</a>
             <a href="#recherche">Rechercher</a>
+            <a href="#commission">En commission</a>
             <a href="#statut-obsolete">Statut figé</a>
             <a href="#sans-decision">Sans décision</a>
             <a href="#methode">Méthode</a>
@@ -130,11 +169,11 @@ export default async function Home() {
                 <div className={styles.n}>
                   {(stats.archivee + stats.expiree).toLocaleString("fr-FR")}
                 </div>
-                <div className={styles.l}>classées d&apos;office, sans examen</div>
+                <div className={styles.l}>classées d&apos;office</div>
               </div>
               <div className={`${styles.stat} ${styles.statFlag}`}>
                 <div className={styles.n}>{stats.fortSoutienSansSuite.toLocaleString("fr-FR")}</div>
-                <div className={styles.l}>fort soutien (10&nbsp;000+ signatures), classées sans suite</div>
+                <div className={styles.l}>classées après avoir dépassé 10&nbsp;000 signatures</div>
               </div>
             </div>
           ) : (
@@ -152,15 +191,19 @@ export default async function Home() {
           <section className={styles.constat} id="constat">
             <p className={styles.eyebrow}>Le constat d&apos;ensemble</p>
             <h2>
-              Sur {stats.total.toLocaleString("fr-FR")}{" "}
-              pétitions déposées, aucune n&apos;a reçu de réponse expliquant la décision prise.
+              Quand une pétition est classée pour une autre raison que le nombre de signatures,
+              l&apos;Assemblée n&apos;explique pas pourquoi&nbsp;:{" "}
+              {stats.classeesHorsSeuilSansTexte.toLocaleString("fr-FR")} fois sur{" "}
+              {stats.classeesHorsSeuil.toLocaleString("fr-FR")}.
             </h2>
 
             <p className={styles.constatLede}>
-              Signer une pétition à l&apos;Assemblée nationale n&apos;ouvre droit à aucune
-              réponse motivée. Ce n&apos;est pas un dysfonctionnement&nbsp;: le règlement ne
-              l&apos;impose pas. Les chiffres ci-dessous sont issus du fichier officiel et
-              chacun peut les recompter.
+              L&apos;immense majorité des pétitions sont classées automatiquement faute
+              d&apos;avoir réuni 10&nbsp;000 signatures, et le fichier officiel le dit
+              clairement. Mais dès qu&apos;une pétition franchit ce seuil et qu&apos;une
+              commission doit se prononcer, l&apos;emplacement prévu pour motiver la décision
+              reste presque toujours vide. Tous les chiffres ci-dessous proviennent du fichier
+              officiel et peuvent être recomptés.
             </p>
 
             <div className={styles.faits}>
@@ -171,19 +214,20 @@ export default async function Home() {
                 <p>
                   formulations différentes pour l&apos;ensemble des{" "}
                   {stats.textesDecision.toLocaleString("fr-FR")}{" "}
-                  décisions rédigées. Elles ne varient que par la date et le nom de la
-                  commission — aucune n&apos;énonce de motif.
+                  décisions rédigées. Ce sont des formules types, qui ne varient que par la date
+                  et le nom de la commission&nbsp;: aucune n&apos;est écrite pour la pétition
+                  qu&apos;elle concerne.
                 </p>
               </div>
 
               <div className={styles.fait}>
                 <div className={styles.faitN}>
-                  {stats.sansTexteDecision.toLocaleString("fr-FR")}
+                  {stats.closesSansTexte.toLocaleString("fr-FR")}
                 </div>
                 <p>
-                  pétitions pour lesquelles l&apos;emplacement prévu pour la décision est resté
-                  entièrement vide, soit{" "}
-                  {Math.round((stats.sansTexteDecision / stats.total) * 100)} % du total.
+                  pétitions dont le recueil est terminé et pour lesquelles l&apos;emplacement
+                  prévu pour la décision est resté entièrement vide. Les pétitions encore en
+                  cours de signature ne sont pas comptées ici.
                 </p>
               </div>
 
@@ -206,10 +250,10 @@ export default async function Home() {
                   {stats.clotureesEnMasse.toLocaleString("fr-FR")}
                 </div>
                 <p>
-                  pétitions interrompues non pas à leur propre échéance, mais toutes le même
-                  jour, à la fin d&apos;une législature
+                  pétitions dont le recueil s&apos;est arrêté le même jour que des centaines
+                  d&apos;autres, et non à une échéance qui leur soit propre
                   {stats.dateClotureMasse
-                    ? ` — dont la plus grande vague le ${formatFrDate(stats.dateClotureMasse)}`
+                    ? ` — la plus grosse vague en regroupe ${stats.nbClotureMasse.toLocaleString("fr-FR")} le ${formatFrDate(stats.dateClotureMasse)}`
                     : ""}
                   . Leur nombre de signatures n&apos;y change rien.
                 </p>
@@ -238,7 +282,7 @@ export default async function Home() {
 
         <section className={styles.ledger}>
           <div className={styles.sectionHead}>
-            <h2>Fort soutien, classées sans suite visible</h2>
+            <h2>Fort soutien, puis classées</h2>
             {stats?.updatedAt && (
               <span className={styles.meta}>maj {formatFrDate(stats.updatedAt.slice(0, 10))}</span>
             )}
@@ -283,6 +327,84 @@ export default async function Home() {
             </a>
           </div>
         </section>
+
+        {commission.length > 0 && (
+          <section className={styles.ledger} id="commission">
+            <div className={styles.sectionHead}>
+              <h2>Ce que la commission a fait</h2>
+            </div>
+
+            <p className={styles.blockLede}>
+              Ces rapprochements ne sont pas des déductions de notre part&nbsp;:
+              la commission a inscrit ces pétitions à son ordre du jour en les
+              désignant elle-même, par leur numéro ou par leur titre exact. Chaque
+              étape ci-dessous indique laquelle des deux, et donne accès au texte
+              officiel intégral pour que vous puissiez le vérifier.
+            </p>
+            <p className={styles.blockLede}>
+              Nous écartons volontairement tout rapprochement incertain&nbsp;:
+              lorsque plusieurs pétitions portent le même titre et qu&apos;aucun
+              numéro n&apos;est cité, nous préférons une lacune à une attribution
+              douteuse. Cette liste est donc un minimum, pas un total.
+            </p>
+            <p className={styles.blockLede}>
+              <strong>
+                Pour aucune d&apos;entre elles, le fichier public ne mentionne la
+                moindre décision.
+              </strong>{" "}
+              Le travail a eu lieu&nbsp;; le signataire n&apos;en saura rien.
+            </p>
+
+            {commission.map((p) => (
+              <div className={styles.passage} key={p.identifiant}>
+                <div className={styles.petitionTop}>
+                  <a
+                    className={styles.petitionTitle}
+                    href={p.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {p.titre}
+                  </a>
+                  <span className={`${styles.tag} ${styles.tagNone}`}>Décision non publiée</span>
+                </div>
+                <div className={styles.petitionMeta}>
+                  <span>
+                    <span className={styles.n}>{p.nbVotes.toLocaleString("fr-FR")}</span> soutiens
+                  </span>
+                  <span>{p.commission || "Commission non précisée"}</span>
+                </div>
+
+                <ol className={styles.frise}>
+                  {p.reunions.map((r) => (
+                    <li key={`${r.date}-${r.compteRenduRef ?? r.intitule.slice(0, 20)}`}>
+                      <span className={styles.friseDate}>{formatFrDate(r.date)}</span>
+                      <span className={styles.friseActe}>{acteCommission(r.intitule)}</span>
+                      {/* Comment le lien a été établi : le visiteur doit pouvoir
+                          juger lui-même de la solidité de chaque rapprochement. */}
+                      <span className={styles.preuve}>
+                        {r.appariement === "numero"
+                          ? "La commission cite le numéro de la pétition"
+                          : "La commission cite le titre exact de la pétition"}
+                      </span>
+                      {/* <details> natif : le texte officiel n'est jamais tronqué,
+                          il est replié. Fonctionne sans JavaScript. */}
+                      <details className={styles.friseDetail}>
+                        <summary>Texte officiel</summary>
+                        <p>{r.intitule}</p>
+                        {r.compteRenduRef && (
+                          <p className={styles.friseCr}>
+                            Compte rendu de la réunion : {r.compteRenduRef}
+                          </p>
+                        )}
+                      </details>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ))}
+          </section>
+        )}
 
         {statutObsolete.length > 0 && (
           <section className={styles.ledger} id="statut-obsolete">
@@ -415,24 +537,32 @@ export default async function Home() {
 
             <dt>Ce que veut dire « classée d&apos;office »</dt>
             <dd>
-              Deux situations très différentes portent la même étiquette. La
-              plupart de ces pétitions n&apos;ont pas réuni assez de signatures
-              dans le délai imparti. Mais un grand nombre a simplement été
-              interrompu par la fin d&apos;une législature&nbsp;: quand
-              l&apos;Assemblée est renouvelée, les pétitions en cours
-              s&apos;arrêtent toutes le même jour, y compris celles qui avaient
-              largement dépassé le seuil. La plus signée d&apos;entre elles en
-              comptait plus de 260&nbsp;000.
+              Cela signifie qu&apos;une pétition a été écartée sans qu&apos;une
+              commission ait eu à se prononcer, le plus souvent parce
+              qu&apos;elle n&apos;a pas réuni 10&nbsp;000 signatures dans le
+              délai imparti. Dans ce cas, le fichier officiel indique bien ce
+              motif&nbsp;: c&apos;est la seule situation où une explication est
+              systématiquement donnée.
+            </dd>
+
+            <dt>Les clôtures groupées</dt>
+            <dd>
+              Certaines dates voient des centaines de pétitions s&apos;arrêter
+              en même temps, quel que soit leur nombre de signatures. La plus
+              importante regroupe 892 pétitions au 9 juin 2024. Nous constatons
+              ce regroupement dans les données&nbsp;; nous n&apos;affirmons pas
+              sa cause, faute d&apos;information officielle qui la documente.
             </dd>
 
             <dt>Ce que veut dire « classée »</dt>
             <dd>
-              Une pétition qui a réuni assez de signatures est transmise à une
-              commission de députés, qui décide de la suite à lui donner.
-              Lorsqu&apos;elle décide de ne pas aller plus loin, la pétition est
-              dite « classée ». Cela ne signifie pas qu&apos;elle a été débattue
-              devant les députés en séance : le plus souvent, elle ne l&apos;a
-              pas été.
+              La pétition est écartée et ne connaîtra pas de suite. Attention
+              toutefois&nbsp;: le fichier officiel emploie cette étiquette y
+              compris pour des pétitions dont le texte de décision indique
+              qu&apos;elles ont en réalité été classées d&apos;office, faute de
+              signatures. Nous n&apos;écrivons donc jamais « classée après
+              examen », car rien dans les données ne prouve qu&apos;un examen a
+              eu lieu.
             </dd>
 
             <dt>« Statut jamais mis à jour »</dt>
@@ -453,15 +583,31 @@ export default async function Home() {
               prise sans être rendue publique, ou si aucune ne l&apos;a été.
             </dd>
 
+            <dt>Ce que nous publions, et ce que nous gardons pour nous</dt>
+            <dd>
+              <strong>
+                Tout ce qui figure sur ce site est soit une lecture directe du
+                fichier officiel, soit un rapprochement que l&apos;Assemblée a
+                elle-même établi.
+              </strong>{" "}
+              Quand une commission inscrit une pétition à son ordre du jour, elle
+              la désigne par son numéro ou son titre exact&nbsp;: nous indiquons
+              à chaque étape laquelle des deux, avec le texte officiel intégral.
+              <br />
+              Nous calculons par ailleurs des rapprochements entre pétitions et
+              débats en séance publique, par mots-clés et par dates. Rien ne
+              reliant officiellement les deux, ce ne sont que des indices —
+              c&apos;est pourquoi <strong>nous ne les affichons pas</strong>. Ils
+              servent à orienter nos recherches, pas à établir des faits.
+            </dd>
+
             <dt>Ce que nous ne pouvons pas savoir</dt>
             <dd>
-              Rien ne relie officiellement une pétition à un débat parlementaire
-              — aucun numéro commun, aucun renvoi. Quand nous rapprochons les
-              deux, c&apos;est par les mots employés et par les dates : c&apos;est
-              un indice, jamais une preuve qu&apos;un débat a eu lieu à cause
-              d&apos;une pétition. De même, les fichiers publics ne disent rien
-              des auditions ni des échanges internes aux commissions : un travail
-              a pu avoir lieu sans laisser de trace consultable.
+              L&apos;ordre du jour d&apos;une réunion dit qu&apos;une pétition a
+              été examinée, pas ce qui s&apos;y est dit. Les échanges, les
+              arguments et le sens du vote ne figurent pas dans les données que
+              nous exploitons. Un travail réel a donc pu avoir lieu sans que nous
+              puissions le décrire.
             </dd>
           </dl>
         </section>

@@ -9,6 +9,7 @@
     "lint": "eslint",
     "import:petitions": "node --env-file=.env.local scripts/import-petitions.mjs",
     "fetch:debats": "node scripts/fetch-debats.mjs",
+    "fetch:reunions": "node scripts/fetch-reunions.mjs",
     "croiser": "node scripts/croiser-petitions-debats.mjs"
   },
   "dependencies": {

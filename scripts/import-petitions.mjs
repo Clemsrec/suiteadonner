@@ -25,11 +25,13 @@ const DATASET_URL =
 const STATUS_LABELS = {
   ouverte: "En cours de signature",
   // Volontairement sans motif : « seuil non atteint » serait faux pour les
-  // 1 748 pétitions interrompues en bloc par une fin de législature, dont
-  // plusieurs dépassaient largement le seuil (263 867 signatures pour la plus
-  // signée d'entre elles).
+  // pétitions interrompues en bloc, dont plusieurs dépassaient largement le
+  // seuil (263 867 signatures pour la plus signée d'entre elles). Le motif réel,
+  // quand il est écrit, est repris depuis le texte de décision (classementDOffice).
   archivee: "Classée d'office",
-  classee: "Classée après examen",
+  // « après examen » n'est pas vérifiable : le jeu de données n'atteste aucun
+  // examen. On se contente de constater le classement.
+  classee: "Classée",
   expiree: "Expirée",
 };
 
@@ -58,6 +60,15 @@ function mapRow(row) {
   // Le recueil de signatures est terminé quand la date limite est passée,
   // indépendamment de ce que raconte le champ `statut`.
   const signaturesCloses = Boolean(dateLimiteVote && dateLimiteVote < AUJOURDHUI);
+
+  // Le statut seul ne dit pas la vérité : 890 pétitions marquées « classee »
+  // portent un texte de décision qui indique explicitement un classement
+  // d'office faute d'avoir atteint le seuil de signatures. Les étiqueter
+  // « classée après examen » serait faux — leur propre décision dit le
+  // contraire. On lit donc le motif dans le texte plutôt que de le déduire.
+  const classementDOffice =
+    /office/i.test(decisionCommission) || /n'a pas atteint le nombre de signatures/i.test(decisionCommission);
+
   return {
     identifiant: row.identifiant.trim(),
     titre: row.titre.trim(),
@@ -66,7 +77,10 @@ function mapRow(row) {
     dateLimiteVote,
     nbVotes: toNumber(row.nb_votes),
     statut,
-    statutLabel: STATUS_LABELS[statut] ?? statut,
+    statutLabel: classementDOffice
+      ? "Classée d’office (seuil non atteint)"
+      : (STATUS_LABELS[statut] ?? statut),
+    classementDOffice,
     commission: row.commission.trim(),
     legislature: row.legislature.trim(),
     decisionCommission,
@@ -118,6 +132,18 @@ function computeStats(petitions) {
     formulationsDistinctes: 0, // nombre de rédactions différentes parmi ces textes
     clotureesEnMasse: 0, // pétitions closes le même jour que des centaines d'autres
     dateClotureMasse: null, // la plus grosse de ces dates
+    nbClotureMasse: 0, // combien de pétitions à cette date
+    // Le cœur du constat, énoncé de façon vérifiable : parmi les pétitions
+    // classées SANS que le motif du seuil soit invoqué, combien n'ont aucune
+    // décision publiée. Dire « aucune pétition n'a de motivation » serait faux :
+    // 1 550 portent un texte qui donne bien un motif, celui du seuil non atteint.
+    classeesHorsSeuil: 0,
+    classeesHorsSeuilSansTexte: 0,
+    // Sans texte de décision ET dont le recueil est terminé. Le total brut des
+    // champs vides (2 443) inclut les 1 366 pétitions encore ouvertes, qui n'ont
+    // pas de décision pour la simple raison qu'elles sont en cours : les
+    // compter reviendrait à gonfler le constat.
+    closesSansTexte: 0,
   };
 
   // Une date de clôture PASSÉE partagée par des centaines de pétitions n'est
@@ -142,10 +168,9 @@ function computeStats(petitions) {
   }
   stats.formulationsDistinctes = formulations.size;
 
-  let plusGrosseMasse = 0;
   for (const [date, n] of parDateLimite) {
-    if (n >= SEUIL_MASSE && n > plusGrosseMasse) {
-      plusGrosseMasse = n;
+    if (n >= SEUIL_MASSE && n > stats.nbClotureMasse) {
+      stats.nbClotureMasse = n;
       stats.dateClotureMasse = date;
     }
   }
@@ -161,10 +186,17 @@ function computeStats(petitions) {
       stats.statutObsolete += 1;
       stats.signaturesStatutObsolete += p.nbVotes;
     }
+    if (p.statut === "classee" && !p.classementDOffice) {
+      stats.classeesHorsSeuil += 1;
+      if (!p.decisionPubliee) stats.classeesHorsSeuilSansTexte += 1;
+    }
     stats.signaturesTotal += p.nbVotes;
     if (p.nbVotes >= 10000) stats.seuilDixMille += 1;
     if (p.decisionPubliee) stats.textesDecision += 1;
-    else stats.sansTexteDecision += 1;
+    else {
+      stats.sansTexteDecision += 1;
+      if (p.statut !== "ouverte") stats.closesSansTexte += 1;
+    }
     if (
       p.signaturesCloses &&
       (parDateLimite.get(p.dateLimiteVote) ?? 0) >= SEUIL_MASSE
