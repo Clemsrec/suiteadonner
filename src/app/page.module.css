@@ -20,6 +20,7 @@
 .ledger,
 .constat,
 .methode,
+.contribuer,
 .search {
   scroll-margin-top: 84px;
 }
@@ -587,6 +588,36 @@
   font-size: 0.78rem;
   color: var(--ink-faint);
   font-style: italic;
+}
+
+.contribuer {
+  margin-top: 44px;
+  padding: 24px 22px;
+  background: var(--surface-sunk);
+  border-left: 3px solid var(--accent);
+}
+.contribuer h2 {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  margin: 0 0 10px;
+}
+.contribuer p {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--ink-muted);
+  margin: 8px 0 0;
+  max-width: 64ch;
+}
+.contact {
+  margin-top: 16px !important;
+  font-family: var(--font-mono);
+  font-size: 0.95rem !important;
+}
+.contact a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
 }
 
 .footer {
