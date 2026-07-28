@@ -58,6 +58,7 @@ export default function DonneesLayout({ children }: Readonly<{ children: React.R
             <Link href="/mentions-legales">Mentions légales</Link>
             <Link href="/politique-de-confidentialite">Confidentialité</Link>
             <Link href="/politique-cookies">Cookies</Link>
+            <Link href="/plan-du-site">Plan du site</Link>
           </nav>
         </footer>
       </div>

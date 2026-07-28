@@ -36,6 +36,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "yearly",
       priority: 0.5,
     },
+    {
+      url: `${SITE_URL}/plan-du-site`,
+      lastModified: maintenant,
+      changeFrequency: "yearly",
+      priority: 0.4,
+    },
     ...["mentions-legales", "politique-de-confidentialite", "politique-cookies"].map((chemin) => ({
       url: `${SITE_URL}/${chemin}`,
       lastModified: maintenant,
