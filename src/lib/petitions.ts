@@ -76,6 +76,46 @@ export function formatSignatures(nbVotes: number | null): string {
   return nbVotes === null ? "non renseigné" : nbVotes.toLocaleString("fr-FR");
 }
 
+export function formatFrDate(iso: string | null): string {
+  if (!iso) return "—";
+  const d = new Date(`${iso}T00:00:00`);
+  if (Number.isNaN(d.getTime())) return iso;
+  return new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", year: "numeric" }).format(d);
+}
+
+// Les ordres du jour sont rédigés en langue administrative : « Nomination d'un
+// rapporteur, en application de l'article 148 alinéa 2 du Règlement, sur une
+// pétition renvoyée à la Commission, en vue de sa présentation ». On en extrait
+// l'acte en français courant, le texte officiel restant consultable en entier.
+//
+// Chercher les mots-clés n'importe où dans le texte donnait de faux résultats :
+// ces intitulés annoncent souvent l'étape suivante (« en vue de sa présentation »,
+// « décision de classement ou d'examen »), si bien qu'un même point contient
+// plusieurs mots d'action. L'acte réellement accompli est toujours le PREMIER
+// mot de l'intitulé — c'est donc lui seul qu'on teste.
+const ACTES: Array<[RegExp, string]> = [
+  [/^(nomination|d[ée]signation)/, "Nomination d’un rapporteur"],
+  [/^pr[ée]sentation/, "Présentation devant la commission"],
+  [/^examen/, "Examen par la commission"],
+  [/^d[ée]cision/, "Décision sur son classement"],
+  [/^(audition|table ronde)/, "Audition"],
+];
+
+export function acteCommission(intitule: string): string {
+  const debut = intitule
+    .replace(/^[\s\-–—•]+/, "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "");
+  for (const [motif, libelle] of ACTES) {
+    if (motif.test(debut)) return libelle;
+  }
+  // Cas restant : la pétition est évoquée au sein d'une réunion consacrée à
+  // autre chose, typiquement l'audition de son initiateur.
+  if (/audition|table ronde/.test(debut)) return "Audition";
+  return "Évoquée en réunion";
+}
+
 export type Stats = {
   calculeLe: string;
   sourceCsv: string;
@@ -143,6 +183,60 @@ export async function getStats(): Promise<Stats | null> {
     signaturesTotal: n("signaturesTotal"),
     updatedAt: d.updatedAt?.toDate?.().toISOString() ?? null,
   };
+}
+
+// Une fiche par pétition : lecture directe par identifiant (l'identifiant du
+// CSV est la clé du document). null si la pétition n'existe pas — la page
+// répond alors 404 au lieu d'inventer une fiche vide.
+export async function getPetition(identifiant: string): Promise<Petition | null> {
+  const snap = await getDoc(doc(db, "petitions", identifiant));
+  return snap.exists() ? (snap.data() as Petition) : null;
+}
+
+// Passages en commission d'une pétition précise. La collection `reunions` est
+// elle aussi indexée par identifiant de pétition ; la plupart des pétitions
+// n'y figurent pas — null est le cas normal, pas une erreur.
+export async function getReunionsPetition(identifiant: string): Promise<PassageEnCommission | null> {
+  const snap = await getDoc(doc(db, "reunions", identifiant));
+  return snap.exists() ? (snap.data() as PassageEnCommission) : null;
+}
+
+// Écrit par scripts/import-petitions.mjs à chaque import : la liste des
+// identifiants et les années de dépôt. Une seule lecture Firestore suffit
+// alors au sitemap et à l'index des pétitions, au lieu d'énumérer les
+// 4 000 documents à chaque passage de robot.
+export type AnneeDepot = { annee: string; nb: number };
+
+export type SitemapMeta = {
+  calculeLe: string;
+  identifiants: string[];
+  annees: AnneeDepot[];
+};
+
+export async function getSitemapMeta(): Promise<SitemapMeta | null> {
+  const snap = await getDoc(doc(db, "meta", "sitemap"));
+  if (!snap.exists()) return null;
+  const d = snap.data();
+  return {
+    calculeLe: d.calculeLe ?? "",
+    identifiants: (d.identifiants as string[]) ?? [],
+    annees: (d.annees as AnneeDepot[]) ?? [],
+  };
+}
+
+// Toutes les pétitions déposées une année donnée, de la plus récente à la
+// plus ancienne. Bornes textuelles sur la date ISO : les dates sont validées
+// AAAA-MM-JJ à l'import, la comparaison lexicographique est donc exacte, et
+// la requête ne demande aucun index composite.
+export async function getPetitionsParAnnee(annee: string): Promise<Petition[]> {
+  const q = query(
+    collection(db, "petitions"),
+    where("datePublication", ">=", `${annee}-01-01`),
+    where("datePublication", "<=", `${annee}-12-31`),
+    orderBy("datePublication", "desc")
+  );
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => d.data() as Petition);
 }
 
 // Les plus signées parmi celles que le fichier déclare classées.

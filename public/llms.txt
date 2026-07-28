@@ -43,3 +43,16 @@ comptes rendus intégraux des débats en séance publique publiés par la DILA.
 
 - Accueil : https://suiteadonner.nucom.fr — statistiques, pétitions au statut
   figé, pétitions classées sans décision publiée, méthode et limites.
+- Index des pétitions : https://suiteadonner.nucom.fr/petitions — toutes les
+  pétitions, année par année ; chaque pétition a une fiche sous
+  https://suiteadonner.nucom.fr/petition/<identifiant> (identifiant du CSV
+  officiel) rassemblant champs bruts, constats dérivés et passages en
+  commission.
+- Classées sans décision publiée :
+  https://suiteadonner.nucom.fr/decisions-non-publiees
+- Passages en commission :
+  https://suiteadonner.nucom.fr/passages-en-commission
+- Fichier public non à jour :
+  https://suiteadonner.nucom.fr/fichier-non-a-jour
+- Méthodologie (sources, règles, limites) :
+  https://suiteadonner.nucom.fr/methodologie

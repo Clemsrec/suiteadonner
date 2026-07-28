@@ -82,6 +82,21 @@ function versDocument(p, calculeLe) {
   };
 }
 
+// Compte des dépôts par année, pour l'index /petitions et la navigation entre
+// années. Toutes les pétitions du fichier ont une date de publication ; si une
+// ligne en manquait un jour, elle resterait accessible par sa fiche et le
+// sitemap, simplement absente des listes annuelles.
+function compterParAnnee(documents) {
+  const compte = new Map();
+  for (const d of documents) {
+    const annee = d.datePublication?.slice(0, 4);
+    if (annee) compte.set(annee, (compte.get(annee) ?? 0) + 1);
+  }
+  return [...compte]
+    .sort((a, b) => b[0].localeCompare(a[0]))
+    .map(([annee, nb]) => ({ annee, nb }));
+}
+
 async function ecrireFirestore(documents, stats) {
   const { initializeApp, applicationDefault, getApps } = await import("firebase-admin/app");
   const { getFirestore, Timestamp } = await import("firebase-admin/firestore");
@@ -102,6 +117,17 @@ async function ecrireFirestore(documents, stats) {
   }
 
   await db.collection("meta").doc("stats").set({ ...stats, updatedAt: Timestamp.now() });
+
+  // Un document unique porte la liste des identifiants et les années de dépôt :
+  // le sitemap et l'index /petitions se servent en une lecture, au lieu
+  // d'énumérer la collection à chaque passage de robot. ~30 Ko pour 4 000
+  // identifiants, loin de la limite de 1 Mo par document.
+  await db.collection("meta").doc("sitemap").set({
+    calculeLe: stats.calculeLe,
+    identifiants: documents.map((d) => d.identifiant),
+    annees: compterParAnnee(documents),
+    updatedAt: Timestamp.now(),
+  });
 }
 
 async function synchroniserAlgolia(documents) {
@@ -168,7 +194,7 @@ async function main() {
     return;
   }
 
-  console.log("\nÉcriture dans Firestore (collection `petitions` + `meta/stats`)...");
+  console.log("\nÉcriture dans Firestore (collection `petitions` + `meta/stats` + `meta/sitemap`)...");
   await ecrireFirestore(documents, stats);
   await synchroniserAlgolia(documents);
   console.log("\nImport terminé.");
