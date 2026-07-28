@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
-import { STATUT_LABELS, STATUT_TAG, formatSignatures } from "@/lib/petitions";
+import PetitionCard from "./PetitionCard";
+import { STATUT_LABELS, STATUT_TAG, formatFrDate } from "@/lib/petitions";
 import { algoliaConfigured, searchPetitionsIndex, type AlgoliaPetitionHit, type SearchFilter } from "@/lib/algolia";
 
 const FILTERS: { key: SearchFilter; label: string }[] = [
@@ -11,19 +12,6 @@ const FILTERS: { key: SearchFilter; label: string }[] = [
   { key: "archivee", label: "Archivées" },
   { key: "ouverte", label: "En cours" },
 ];
-
-const TAG_STYLE_CLASS = {
-  pending: styles.tagPending,
-  none: styles.tagNone,
-  examined: styles.tagExamined,
-};
-
-function formatFrDate(iso: string | null): string {
-  if (!iso) return "—";
-  const d = new Date(`${iso}T00:00:00`);
-  if (Number.isNaN(d.getTime())) return iso;
-  return new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", year: "numeric" }).format(d);
-}
 
 export default function SearchBar() {
   const [keyword, setKeyword] = useState("");
@@ -124,27 +112,16 @@ export default function SearchBar() {
                   {results.length < nbHits ? ` (${results.length} affichés)` : ""}
                 </p>
                 {results.map((p) => (
-                  <a
-                    className={styles.petition}
-                    href={p.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <PetitionCard
                     key={p.objectID}
-                  >
-                    <div className={styles.petitionTop}>
-                      <div className={styles.petitionTitle}>{p.titre}</div>
-                      <span className={`${styles.tag} ${TAG_STYLE_CLASS[STATUT_TAG[p.statutSource]]}`}>
-                        {STATUT_LABELS[p.statutSource]}
-                      </span>
-                    </div>
-                    <div className={styles.petitionMeta}>
-                      <span>
-                        <span className={styles.n}>{formatSignatures(p.nbVotes)}</span> soutiens
-                      </span>
-                      <span>{p.commissionSource || "Commission non précisée"}</span>
-                      <span>{formatFrDate(p.datePublication)}</span>
-                    </div>
-                  </a>
+                    identifiant={p.objectID}
+                    titre={p.titre}
+                    tagLabel={STATUT_LABELS[p.statutSource]}
+                    tagType={STATUT_TAG[p.statutSource]}
+                    nbVotes={p.nbVotes}
+                    commission={p.commissionSource}
+                    dateLabel={formatFrDate(p.datePublication)}
+                  />
                 ))}
               </>
             )}

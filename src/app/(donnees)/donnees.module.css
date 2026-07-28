@@ -1,0 +1,363 @@
+/* Pages de données : fiches pétition, listes par année et par constat,
+   méthodologie. Même vocabulaire visuel que l'accueil (page.module.css, dont
+   les cartes et frises sont réutilisées telles quelles via PetitionCard) ;
+   ce module ne porte que l'ossature propre à ces pages. */
+
+.wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 18px 64px;
+}
+
+.site {
+  border-bottom: 1px solid var(--rule-strong);
+  background: var(--surface);
+}
+.siteInner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 14px 18px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 24px;
+  flex-wrap: wrap;
+}
+.wordmark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.mark {
+  flex: none;
+}
+.siteNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-size: 0.82rem;
+}
+.siteNav a {
+  text-decoration: none;
+  color: var(--ink-muted);
+  border-bottom: 1px solid transparent;
+  white-space: nowrap;
+}
+.siteNav a:hover,
+.siteNav a:focus-visible {
+  color: var(--ink);
+  border-bottom-color: var(--rule-strong);
+}
+
+/* En-tête de page : surtitre, titre, chapeau. */
+.entete {
+  padding: 36px 0 4px;
+}
+.eyebrow {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin: 0 0 10px;
+}
+.eyebrow a {
+  color: inherit;
+  text-decoration: none;
+}
+.eyebrow a:hover,
+.eyebrow a:focus-visible {
+  text-decoration: underline;
+}
+.entete h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.45rem, 4.5vw, 2rem);
+  line-height: 1.18;
+  font-weight: 700;
+}
+.lede {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--ink-muted);
+  margin: 12px 0 0;
+  max-width: 62ch;
+}
+.lede a {
+  color: var(--accent);
+}
+
+/* Ligne d'état sous le titre d'une fiche : étiquette + repères chiffrés. */
+.etat {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin-top: 14px;
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+.etat .n {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Sections de fiche et de liste. */
+.section {
+  margin-top: 36px;
+}
+.section h2 {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-bottom: 1px solid var(--rule-strong);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+.section p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink-muted);
+  margin: 10px 0;
+}
+.section a {
+  color: var(--accent);
+}
+.section strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.section code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--surface-sunk);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+.section ul {
+  margin: 10px 0 10px 20px;
+}
+.section li {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink-muted);
+  margin: 5px 0;
+}
+
+/* Tableau champ → valeur : ce que dit le fichier officiel, champ par champ. */
+.fiche {
+  margin: 14px 0 0;
+  display: grid;
+  grid-template-columns: minmax(150px, 36%) 1fr;
+  border-top: 1px solid var(--rule);
+}
+.fiche dt,
+.fiche dd {
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+.fiche dt {
+  font-weight: 600;
+  color: var(--ink);
+  padding-right: 14px;
+}
+.fiche dd {
+  color: var(--ink-muted);
+}
+.fiche dd.mono {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+/* Champ laissé vide dans le fichier : le dire tel quel, sans le combler. */
+.champVide {
+  font-style: italic;
+  color: var(--ink-faint);
+}
+
+/* Constat qui engage : encadré, comme les réserves de l'accueil. */
+.encadre {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  background: var(--surface-sunk);
+  border-left: 3px solid var(--accent);
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+.encadre strong {
+  color: var(--ink);
+}
+
+/* Texte intégral de la pétition, republié sans modification. */
+.texteIntegral {
+  margin: 12px 0 0;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--ink);
+  white-space: pre-line;
+}
+.provenance {
+  margin-top: 12px;
+  font-size: 0.76rem;
+  color: var(--ink-faint);
+}
+.provenance a {
+  color: inherit;
+}
+
+/* Liste annuaire : une ligne par pétition, compacte — les pages par année
+   peuvent dépasser le millier d'entrées, la carte complète serait trop lourde. */
+.annuaire {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+.annuaire li {
+  border-bottom: 1px solid var(--rule);
+}
+.annuaire li:last-child {
+  border-bottom: none;
+}
+.annuaire a {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+  padding: 9px 0;
+  text-decoration: none;
+  color: inherit;
+}
+.annuaire a:hover,
+.annuaire a:focus-visible {
+  background: var(--surface-sunk);
+}
+.annuaireTitre {
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+.annuaireMeta {
+  flex: none;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+/* Grille des années sur l'index des pétitions. */
+.annees {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+.annees a {
+  display: block;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  text-decoration: none;
+  color: inherit;
+}
+.annees a:hover,
+.annees a:focus-visible {
+  border-color: var(--rule-strong);
+  background: var(--surface-sunk);
+}
+.anneeN {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.anneeNb {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.74rem;
+  color: var(--ink-muted);
+}
+
+/* Navigation entre années, sous la liste. */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule-strong);
+  font-size: 0.84rem;
+}
+.pagination a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+.pagination a:hover,
+.pagination a:focus-visible {
+  text-decoration: underline;
+}
+
+/* Rappel de provenance et de fraîcheur des données, en fin de page. */
+.source {
+  margin-top: 32px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  font-size: 0.76rem;
+  color: var(--ink-faint);
+}
+.source a {
+  color: inherit;
+}
+
+.footer {
+  margin-top: 48px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule-strong);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  justify-content: space-between;
+  font-size: 0.76rem;
+  color: var(--ink-faint);
+}
+.footer a {
+  color: var(--ink-muted);
+  text-decoration: none;
+}
+.footer a:hover,
+.footer a:focus-visible {
+  color: var(--ink);
+}
+.footerNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+@media (max-width: 560px) {
+  .fiche {
+    grid-template-columns: 1fr;
+  }
+  .fiche dt {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  .fiche dd {
+    padding-top: 2px;
+  }
+  .annuaire a {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+}

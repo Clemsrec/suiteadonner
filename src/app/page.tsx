@@ -1,12 +1,15 @@
 import Link from "next/link";
 import styles from "./page.module.css";
 import SearchBar from "./SearchBar";
+import PetitionCard from "./PetitionCard";
 import {
   getFlagshipPetitions,
   getPassagesEnCommission,
   getSansDecision,
   getStats,
   getEcartStatutDates,
+  acteCommission,
+  formatFrDate,
   formatSignatures,
   type PassageEnCommission,
   type Petition,
@@ -14,52 +17,12 @@ import {
 } from "@/lib/petitions";
 import { LEGAL, SORT_PETITION, lienSortPetition } from "@/lib/site";
 
-// Les ordres du jour sont rédigés en langue administrative : « Nomination d'un
-// rapporteur, en application de l'article 148 alinéa 2 du Règlement, sur une
-// pétition renvoyée à la Commission, en vue de sa présentation ». On en extrait
-// l'acte en français courant, le texte officiel restant consultable en entier.
-//
-// Chercher les mots-clés n'importe où dans le texte donnait de faux résultats :
-// ces intitulés annoncent souvent l'étape suivante (« en vue de sa présentation »,
-// « décision de classement ou d'examen »), si bien qu'un même point contient
-// plusieurs mots d'action. L'acte réellement accompli est toujours le PREMIER
-// mot de l'intitulé — c'est donc lui seul qu'on teste.
-const ACTES: Array<[RegExp, string]> = [
-  [/^(nomination|d[ée]signation)/, "Nomination d’un rapporteur"],
-  [/^pr[ée]sentation/, "Présentation devant la commission"],
-  [/^examen/, "Examen par la commission"],
-  [/^d[ée]cision/, "Décision sur son classement"],
-  [/^(audition|table ronde)/, "Audition"],
-];
-
-function acteCommission(intitule: string): string {
-  const debut = intitule
-    .replace(/^[\s\-–—•]+/, "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "");
-  for (const [motif, libelle] of ACTES) {
-    if (motif.test(debut)) return libelle;
-  }
-  // Cas restant : la pétition est évoquée au sein d'une réunion consacrée à
-  // autre chose, typiquement l'audition de son initiateur.
-  if (/audition|table ronde/.test(debut)) return "Audition";
-  return "Évoquée en réunion";
-}
-
 // Les données source ne changent qu'une fois par semaine (republication du
 // lundi côté data.gouv.fr) : rendre la page à chaque visite faisait 20 lectures
 // Firestore par visiteur pour un résultat identique. En ISR, la page est servie
 // depuis le cache et régénérée au plus une fois par heure — le trafic n'a plus
 // d'effet sur Firestore, et une seule instance encaisse n'importe quel pic.
 export const revalidate = 3600;
-
-function formatFrDate(iso: string | null): string {
-  if (!iso) return "—";
-  const d = new Date(`${iso}T00:00:00`);
-  if (Number.isNaN(d.getTime())) return iso;
-  return new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", year: "numeric" }).format(d);
-}
 
 type PageData = {
   stats: Stats | null;
@@ -148,6 +111,7 @@ export default async function Home() {
             <a href="#statut-obsolete">Fichier non à jour</a>
             <a href="#sans-decision">Sans décision</a>
             <a href="#methode">Méthode</a>
+            <Link href="/petitions">Toutes les pétitions</Link>
           </nav>
         </div>
       </header>
@@ -297,25 +261,16 @@ export default async function Home() {
           ) : null}
 
           {flagship.map((p) => (
-            <a
-              className={styles.petition}
-              href={p.url}
-              target="_blank"
-              rel="noopener noreferrer"
+            <PetitionCard
               key={p.identifiant}
-            >
-              <div className={styles.petitionTop}>
-                <div className={styles.petitionTitle}>{p.titre}</div>
-                <span className={`${styles.tag} ${styles.tagExamined}`}>{p.statutLabel}</span>
-              </div>
-              <div className={styles.petitionMeta}>
-                <span>
-                  <span className={styles.n}>{formatSignatures(p.nbVotes)}</span> soutiens
-                </span>
-                <span>{p.commissionSource || "Commission non précisée"}</span>
-                <span>{formatFrDate(p.datePublication)}</span>
-              </div>
-            </a>
+              identifiant={p.identifiant}
+              titre={p.titre}
+              tagLabel={p.statutLabel}
+              tagType="examined"
+              nbVotes={p.nbVotes}
+              commission={p.commissionSource}
+              dateLabel={formatFrDate(p.datePublication)}
+            />
           ))}
 
           {!flagship.length && (
@@ -323,9 +278,7 @@ export default async function Home() {
           )}
 
           <div className={styles.ledgerFoot}>
-            <a href="https://petitions.assemblee-nationale.fr" target="_blank" rel="noopener noreferrer">
-              Voir la plateforme officielle des pétitions →
-            </a>
+            <Link href="/petitions">Toutes les pétitions, année par année →</Link>
           </div>
         </section>
 
@@ -359,14 +312,9 @@ export default async function Home() {
             {commission.map((p) => (
               <div className={styles.passage} key={p.identifiant}>
                 <div className={styles.petitionTop}>
-                  <a
-                    className={styles.petitionTitle}
-                    href={p.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <Link className={styles.petitionTitle} href={`/petition/${p.identifiant}`}>
                     {p.titre}
-                  </a>
+                  </Link>
                   <span className={`${styles.tag} ${styles.tagNone}`}>Décision non publiée</span>
                 </div>
                 <div className={styles.petitionMeta}>
@@ -404,6 +352,10 @@ export default async function Home() {
                 </ol>
               </div>
             ))}
+
+            <div className={styles.ledgerFoot}>
+              <Link href="/passages-en-commission">Tous les passages en commission →</Link>
+            </div>
           </section>
         )}
 
@@ -428,26 +380,21 @@ export default async function Home() {
             </p>
 
             {statutObsolete.map((p) => (
-              <a
-                className={styles.petition}
-                href={p.url}
-                target="_blank"
-                rel="noopener noreferrer"
+              <PetitionCard
                 key={p.identifiant}
-              >
-                <div className={styles.petitionTop}>
-                  <div className={styles.petitionTitle}>{p.titre}</div>
-                  <span className={`${styles.tag} ${styles.tagNone}`}>Fichier non à jour</span>
-                </div>
-                <div className={styles.petitionMeta}>
-                  <span>
-                    <span className={styles.n}>{formatSignatures(p.nbVotes)}</span> soutiens
-                  </span>
-                  <span>Date limite : {formatFrDate(p.dateLimiteVote)}</span>
-                  <span>{p.commissionSource || "Commission non précisée"}</span>
-                </div>
-              </a>
+                identifiant={p.identifiant}
+                titre={p.titre}
+                tagLabel="Fichier non à jour"
+                tagType="none"
+                nbVotes={p.nbVotes}
+                commission={p.commissionSource}
+                dateLabel={`Date limite : ${formatFrDate(p.dateLimiteVote)}`}
+              />
             ))}
+
+            <div className={styles.ledgerFoot}>
+              <Link href="/fichier-non-a-jour">La liste complète et le détail du constat →</Link>
+            </div>
           </section>
         )}
 
@@ -483,26 +430,23 @@ export default async function Home() {
               ) : null}
 
               {sansDecision.map((p) => (
-                <a
-                  className={styles.petition}
-                  href={p.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <PetitionCard
                   key={p.identifiant}
-                >
-                  <div className={styles.petitionTop}>
-                    <div className={styles.petitionTitle}>{p.titre}</div>
-                    <span className={`${styles.tag} ${styles.tagNone}`}>Décision non publiée</span>
-                  </div>
-                  <div className={styles.petitionMeta}>
-                    <span>
-                      <span className={styles.n}>{formatSignatures(p.nbVotes)}</span> soutiens
-                    </span>
-                    <span>{p.commissionSource || "Commission non précisée"}</span>
-                    <span>{formatFrDate(p.dateLimiteVote)}</span>
-                  </div>
-                </a>
+                  identifiant={p.identifiant}
+                  titre={p.titre}
+                  tagLabel="Décision non publiée"
+                  tagType="none"
+                  nbVotes={p.nbVotes}
+                  commission={p.commissionSource}
+                  dateLabel={formatFrDate(p.dateLimiteVote)}
+                />
               ))}
+
+              <div className={styles.ledgerFoot}>
+                <Link href="/decisions-non-publiees">
+                  Toutes les pétitions classées sans décision publiée →
+                </Link>
+              </div>
             </>
           ) : (
             <p className={styles.demoNote}>
@@ -720,6 +664,10 @@ export default async function Home() {
               puissions le décrire.
             </dd>
           </dl>
+          <p className={styles.methodeLede}>
+            Les règles complètes, catégorie par catégorie, sont détaillées sur la
+            page <Link href="/methodologie">méthodologie</Link>.
+          </p>
         </section>
 
         <section className={styles.contribuer} id="contribuer">
@@ -743,7 +691,8 @@ export default async function Home() {
         <footer className={styles.footer}>
           <span>Suite à donner — projet indépendant, non affilié à l&apos;Assemblée nationale</span>
           <nav className={styles.footerNav}>
-            <a href="#methode">Sources &amp; méthode</a>
+            <Link href="/petitions">Toutes les pétitions</Link>
+            <Link href="/methodologie">Méthodologie</Link>
             <a href={`mailto:${LEGAL.email}`}>{LEGAL.email}</a>
             <Link href="/mentions-legales">Mentions légales</Link>
             <Link href="/politique-de-confidentialite">Confidentialité</Link>
