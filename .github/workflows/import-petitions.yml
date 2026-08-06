@@ -1,0 +1,61 @@
+# Import hebdomadaire du jeu de données des pétitions.
+#
+# L'Assemblée republie le fichier chaque lundi matin ; ce workflow le récupère
+# le lundi en fin de matinée, laisse le contrôle de cohérence décider (un CSV
+# non conforme fait échouer le run AVANT toute écriture), puis écrit Firestore
+# (petitions + meta/stats + meta/sitemap) et synchronise Algolia — exactement
+# `npm run import:petitions`, sans le --env-file local.
+#
+# Auth : compte de service `import-petitions@suiteadonner.iam.gserviceaccount.com`
+# (rôle datastore.user uniquement), clé JSON dans le secret GCP_SA_KEY. Un
+# compte de service ne subit pas la réauthentification hebdomadaire imposée aux
+# comptes utilisateur — c'est la raison d'être de ce workflow, deux lundis
+# ayant déjà été manqués à cause d'elle.
+#
+# L'identifiant d'application Algolia est public par construction (NEXT_PUBLIC_,
+# embarqué dans le bundle du site) ; seule la clé Admin est en secret.
+#
+# En cas d'échec, GitHub notifie par email l'auteur du dernier commit de ce
+# fichier. Attention aussi : sur un dépôt public, GitHub suspend les crons
+# après 60 jours sans activité du dépôt — un commit quelconque les réactive.
+
+name: Import hebdomadaire des pétitions
+
+on:
+  schedule:
+    # Lundi 10:00 UTC (11h/12h à Paris) — marge sur la republication du matin.
+    - cron: "0 10 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: import-petitions
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # La clé ne transite que par un fichier du runner, jamais par un argument
+      # de commande (les arguments sont visibles dans les logs de process).
+      - name: Écrire la clé du compte de service
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        run: printf '%s' "$GCP_SA_KEY" > "$RUNNER_TEMP/gcp-key.json"
+
+      - name: Vérifier la cohérence puis importer
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
+          NEXT_PUBLIC_ALGOLIA_APP_ID: B8GIER7BSB
+          NEXT_PUBLIC_ALGOLIA_INDEX_NAME: petitions
+          ALGOLIA_ADMIN_KEY: ${{ secrets.ALGOLIA_ADMIN_KEY }}
+        run: npm run verifier && node scripts/import-petitions.mjs
