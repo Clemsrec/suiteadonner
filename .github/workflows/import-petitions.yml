@@ -36,9 +36,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -47,10 +47,16 @@ jobs:
 
       # La clé ne transite que par un fichier du runner, jamais par un argument
       # de commande (les arguments sont visibles dans les logs de process).
-      - name: Écrire la clé du compte de service
+      # Le contrôle jq échoue AVANT l'import si le secret est vide ou n'est pas
+      # du JSON — un secret mal posé s'est déjà produit et l'erreur générique
+      # de google-auth (« Unexpected end of JSON input ») ne désignait pas la cause.
+      - name: Écrire et vérifier la clé du compte de service
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-        run: printf '%s' "$GCP_SA_KEY" > "$RUNNER_TEMP/gcp-key.json"
+        run: |
+          printf '%s' "$GCP_SA_KEY" > "$RUNNER_TEMP/gcp-key.json"
+          jq -e '.client_email and .private_key' "$RUNNER_TEMP/gcp-key.json" > /dev/null \
+            || { echo "::error::Le secret GCP_SA_KEY est vide ou n'est pas une clé JSON de compte de service."; exit 1; }
 
       - name: Vérifier la cohérence puis importer
         env:
