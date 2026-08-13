@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "./legal.module.css";
+import EmpreinteCarbone from "../EmpreinteCarbone";
 import { LEGAL, SITE_NAME } from "@/lib/site";
 
 // En-tête et pied communs aux trois pages réglementaires. Le groupe de routes
@@ -46,10 +47,12 @@ export default function LegalLayout({ children }: Readonly<{ children: React.Rea
             {SITE_NAME} — édité par {LEGAL.denomination}, projet indépendant, non affilié à
             l&apos;Assemblée nationale
           </span>
+          <EmpreinteCarbone />
           <nav className={styles.footerNav}>
             <Link href="/mentions-legales">Mentions légales</Link>
             <Link href="/politique-de-confidentialite">Confidentialité</Link>
             <Link href="/politique-cookies">Cookies</Link>
+            <Link href="/empreinte-carbone">Empreinte carbone</Link>
             <Link href="/plan-du-site">Plan du site</Link>
           </nav>
         </footer>

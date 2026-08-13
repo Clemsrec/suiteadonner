@@ -2,6 +2,7 @@ import Link from "next/link";
 import styles from "./page.module.css";
 import SearchBar from "./SearchBar";
 import PetitionCard from "./PetitionCard";
+import EmpreinteCarbone from "./EmpreinteCarbone";
 import {
   getFlagshipPetitions,
   getPassagesEnCommission,
@@ -690,6 +691,7 @@ export default async function Home() {
 
         <footer className={styles.footer}>
           <span>Suite à donner — projet indépendant, non affilié à l&apos;Assemblée nationale</span>
+          <EmpreinteCarbone />
           <nav className={styles.footerNav}>
             <Link href="/petitions">Toutes les pétitions</Link>
             <Link href="/methodologie">Méthodologie</Link>
@@ -697,6 +699,7 @@ export default async function Home() {
             <Link href="/mentions-legales">Mentions légales</Link>
             <Link href="/politique-de-confidentialite">Confidentialité</Link>
             <Link href="/politique-cookies">Cookies</Link>
+            <Link href="/empreinte-carbone">Empreinte carbone</Link>
             <Link href="/plan-du-site">Plan du site</Link>
           </nav>
         </footer>

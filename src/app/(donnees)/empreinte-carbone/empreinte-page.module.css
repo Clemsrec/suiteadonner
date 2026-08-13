@@ -1,0 +1,147 @@
+/* Compléments propres à la page d'empreinte carbone. Le reste s'appuie sur
+   donnees.module.css, partagé par toutes les pages de données. */
+
+.chiffres {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  margin: 16px 0 4px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+.chiffre {
+  background: var(--surface);
+  padding: 14px 16px;
+}
+.n {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.l {
+  margin-top: 4px;
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+}
+.n sub,
+.l sub {
+  font-size: 0.7em;
+  line-height: 0;
+  vertical-align: baseline;
+}
+
+.table {
+  width: 100%;
+  margin-top: 18px;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+.table th,
+.table td {
+  text-align: left;
+  padding: 8px 10px 8px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.table th {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  font-weight: 700;
+}
+.table td {
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+.table td code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--ink);
+  word-break: break-all;
+}
+.table th:not(:first-child),
+.table td:not(:first-child) {
+  text-align: right;
+  padding-right: 0;
+  white-space: nowrap;
+}
+.legende {
+  caption-side: bottom;
+  margin-top: 8px;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--ink-faint);
+  text-align: left;
+}
+
+.equivalents {
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+  font-size: 0.88rem;
+  color: var(--ink-muted);
+}
+.eqN {
+  display: inline-block;
+  min-width: 6.5em;
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Statut de couverture, repris du diagnostic de carbone-cost. Les couleurs
+   sont celles des étiquettes de statut du site, pas une palette nouvelle. */
+.statut {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 7px;
+  border-radius: 2px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  vertical-align: 1px;
+  white-space: nowrap;
+  background: var(--surface-sunk);
+  color: var(--ink-faint);
+}
+.statut[data-statut="covered"] {
+  background: var(--status-done-bg);
+  color: var(--status-done-ink);
+}
+.statut[data-statut="partial"] {
+  background: var(--status-pending-bg);
+  color: var(--status-pending-ink);
+}
+.statut[data-statut="missing"] {
+  background: var(--status-none-bg);
+  color: var(--status-none-ink);
+}
+/* « sans objet » n'est ni un succès ni un manque : il n'y avait rien à
+   mesurer. Il garde donc le gris neutre par défaut, comme « inconnu ». */
+
+/* Verdict du diagnostic, traduit depuis son code `reason`. Distingué du texte
+   d'explication pour qu'on voie ce qui vient de la bibliothèque. */
+.verdict {
+  color: var(--ink-faint);
+}
+
+.avertissement {
+  margin-top: 14px;
+  padding-left: 12px;
+  border-left: 2px solid var(--rule-strong);
+}
+
+@media (min-width: 620px) {
+  .chiffres {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .equivalents {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

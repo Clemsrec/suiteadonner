@@ -37,6 +37,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     },
     {
+      url: `${SITE_URL}/empreinte-carbone`,
+      lastModified: maintenant,
+      changeFrequency: "yearly",
+      priority: 0.4,
+    },
+    {
       url: `${SITE_URL}/plan-du-site`,
       lastModified: maintenant,
       changeFrequency: "yearly",

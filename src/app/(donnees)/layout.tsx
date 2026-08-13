@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "./donnees.module.css";
+import EmpreinteCarbone from "../EmpreinteCarbone";
 import { LEGAL, SITE_NAME } from "@/lib/site";
 
 // En-tête et pied communs aux pages de données : fiches pétition, listes par
@@ -50,6 +51,7 @@ export default function DonneesLayout({ children }: Readonly<{ children: React.R
           <span>
             {SITE_NAME}{" "}— projet indépendant, non affilié à l&apos;Assemblée nationale
           </span>
+          <EmpreinteCarbone />
           <nav className={styles.footerNav}>
             <Link href="/">Accueil</Link>
             <Link href="/petitions">Les pétitions</Link>
@@ -58,6 +60,7 @@ export default function DonneesLayout({ children }: Readonly<{ children: React.R
             <Link href="/mentions-legales">Mentions légales</Link>
             <Link href="/politique-de-confidentialite">Confidentialité</Link>
             <Link href="/politique-cookies">Cookies</Link>
+            <Link href="/empreinte-carbone">Empreinte carbone</Link>
             <Link href="/plan-du-site">Plan du site</Link>
           </nav>
         </footer>

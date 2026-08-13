@@ -88,6 +88,10 @@ export default async function PlanDuSite() {
           <li>
             <Link href="/politique-cookies">Politique de cookies</Link>
           </li>
+          <li>
+            <Link href="/empreinte-carbone">Empreinte carbone du site</Link>{" "}— ce que
+            pèse votre consultation, comment c&apos;est calculé et ce que le calcul ignore.
+          </li>
         </ul>
       </section>
     </>

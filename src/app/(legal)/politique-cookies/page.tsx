@@ -77,6 +77,13 @@ export default function PolitiqueCookies() {
         choix ; c&apos;est la seule chose que le site écrit dans votre navigateur sans
         consentement, et il est exempté à ce titre.
       </p>
+      <p>
+        Le badge d&apos;<Link href="/empreinte-carbone">empreinte carbone</Link>{" "}
+        affiché en pied de page ne remet pas cette affirmation en cause&nbsp;: il totalise
+        les octets reçus par votre navigateur dans la mémoire vive de l&apos;onglet, sans
+        rien écrire nulle part et sans rien transmettre à personne. Le relevé disparaît
+        dès que vous fermez l&apos;onglet.
+      </p>
 
       <h2>4. Changer d&apos;avis</h2>
       <p>

@@ -1,0 +1,55 @@
+/* Badge d'empreinte carbone, inséré dans les trois pieds de page du site.
+   Les pieds sont des conteneurs flex en `space-between` : le badge s'y place
+   comme un enfant supplémentaire et hérite de leur taille de texte. */
+.badge {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  text-decoration: none;
+  color: var(--ink-muted);
+}
+.badge:hover,
+.badge:focus-visible {
+  color: var(--ink);
+}
+.badge strong {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.badge sub {
+  font-size: 0.75em;
+  line-height: 0;
+  vertical-align: baseline;
+}
+
+.pastille {
+  align-self: center;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--ink-faint);
+}
+/* Les quatre paliers sont ceux de carbone-cost (formatForDisplay), exprimés en
+   grammes pour mille pages vues. On reprend la palette de statuts du site
+   plutôt que d'introduire des couleurs neuves. */
+.pastille[data-niveau="very-low"],
+.pastille[data-niveau="low"] {
+  background: var(--status-done-ink);
+}
+.pastille[data-niveau="medium"] {
+  background: var(--status-pending-ink);
+}
+.pastille[data-niveau="high"] {
+  background: var(--status-none-ink);
+}
+
+.detail {
+  color: var(--ink-faint);
+}
+
+@media (max-width: 560px) {
+  .detail {
+    display: none;
+  }
+}
