@@ -1,0 +1,119 @@
+/* Récap hebdomadaire, sous le hero : un bloc « journal de bord » sobre, qui se
+   distingue des sections d'analyse par un fond plein et un filet accent. */
+.semaine {
+  margin-top: 22px;
+  padding: 16px 18px 14px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  scroll-margin-top: 84px;
+}
+/* Import trop ancien : le filet passe à la couleur d'alerte, rien d'autre ne
+   crie — le contenu reste exact, c'est sa fraîcheur qui est en cause. */
+.perime {
+  border-left-color: var(--status-none-ink);
+}
+
+.tete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 14px;
+}
+.tete h2 {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0;
+}
+.date {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+}
+
+.alerte {
+  margin: 10px 0 0;
+  padding: 8px 12px;
+  background: var(--status-none-bg);
+  color: var(--status-none-ink);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.resume {
+  margin: 10px 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+.resume strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Détails en colonnes, une par type d'événement, seulement s'il y en a. */
+.details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px 24px;
+  margin-top: 12px;
+}
+.details:empty {
+  display: none;
+}
+.details h3 {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin: 0 0 4px;
+}
+
+.liste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.liste li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  padding: 5px 0;
+  border-top: 1px solid var(--rule);
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+.liste li:first-child {
+  border-top: none;
+}
+.liste a {
+  color: inherit;
+  text-decoration: none;
+}
+.liste a:hover,
+.liste a:focus-visible {
+  color: var(--accent);
+  text-decoration: underline;
+}
+.liste .n {
+  flex: none;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.74rem;
+  color: var(--ink-faint);
+}
+.reste {
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+.note {
+  margin: 12px 0 0;
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: var(--ink-faint);
+}

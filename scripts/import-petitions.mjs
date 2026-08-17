@@ -97,7 +97,91 @@ function compterParAnnee(documents) {
     .map(([annee, nb]) => ({ annee, nb }));
 }
 
-async function ecrireFirestore(documents, stats) {
+// --- Journal hebdomadaire ---------------------------------------------------
+//
+// Ce que le fichier a changé depuis l'import précédent, pétition par pétition.
+// Sans ce journal, un import réussi qui n'apporte presque rien est indiscernable
+// d'un import manqué — c'est arrivé : la mise à jour du 10/08/2026 avait bien
+// tourné, mais une seule pétition avait été ajoutée, et rien ne le disait.
+//
+// Le journal ne contient que des différences constatées entre deux lectures du
+// même fichier officiel : aucune n'est interprétée. « Décision publiée » veut
+// dire que le champ était vide et ne l'est plus, rien de plus. Les événements
+// sont plafonnés (les listes servent d'échantillon cliquable, le compte fait foi).
+
+const MAX_EVENEMENTS_LISTES = 12;
+const NB_IMPORTS_CONSERVES = 12;
+
+// Représentation minimale d'une pétition dans le journal : de quoi la lister,
+// et de quoi la relire dans son état d'alors.
+function resume(d) {
+  return { identifiant: d.identifiant, titre: d.titre, nbVotes: d.nbVotes };
+}
+
+function calculerDelta(precedents, documents, aujourdhui, importPrecedentLe) {
+  const avant = new Map(precedents.map((p) => [p.identifiant, p]));
+  const nouvelles = [];
+  const seuilFranchi = [];
+  const recueilsClos = [];
+  const decisionsPubliees = [];
+  const statutsChanges = [];
+  let signaturesGagnees = 0;
+
+  for (const d of documents) {
+    const p = avant.get(d.identifiant);
+    if (!p) {
+      nouvelles.push(resume(d));
+      continue;
+    }
+    if (d.nbVotes !== null && p.nbVotes !== null && d.nbVotes > p.nbVotes) {
+      signaturesGagnees += d.nbVotes - p.nbVotes;
+    }
+    if (d.seuilAtteint === true && p.seuilAtteint !== true) seuilFranchi.push(resume(d));
+    if (d.recueilTermine && !p.recueilTermine) recueilsClos.push(resume(d));
+    if (d.decisionTexte && !p.decisionTexte) {
+      decisionsPubliees.push({ ...resume(d), decisionTexte: d.decisionTexte });
+    }
+    if (d.statutSource !== p.statutSource) {
+      statutsChanges.push({ ...resume(d), de: p.statutSource, vers: d.statutSource });
+    }
+  }
+
+  const tri = (a, b) => (b.nbVotes ?? -1) - (a.nbVotes ?? -1);
+  const borner = (liste) => liste.sort(tri).slice(0, MAX_EVENEMENTS_LISTES);
+
+  return {
+    calculeLe: aujourdhui,
+    // null au tout premier import : il n'y a rien à quoi comparer, et le
+    // journal ne doit pas prétendre que 4 000 pétitions sont « nouvelles ».
+    depuis: importPrecedentLe,
+    total: documents.length,
+    nbNouvelles: nouvelles.length,
+    nbSeuilFranchi: seuilFranchi.length,
+    nbRecueilsClos: recueilsClos.length,
+    nbDecisionsPubliees: decisionsPubliees.length,
+    nbStatutsChanges: statutsChanges.length,
+    signaturesGagnees,
+    nouvelles: borner(nouvelles),
+    seuilFranchi: borner(seuilFranchi),
+    recueilsClos: borner(recueilsClos),
+    decisionsPubliees: borner(decisionsPubliees),
+    statutsChanges: borner(statutsChanges),
+  };
+}
+
+// L'état précédent est lu dans la collection elle-même, juste avant d'être
+// écrasé : c'est la seule source qui contienne les champs dérivés d'alors, et
+// 4 000 lectures par semaine ne pèsent rien.
+async function lireEtatPrecedent(db) {
+  const snap = await db.collection("petitions").select(
+    "identifiant", "nbVotes", "seuilAtteint", "recueilTermine", "decisionTexte", "statutSource"
+  ).get();
+  const precedents = snap.docs.map((d) => d.data());
+  const stats = await db.collection("meta").doc("stats").get();
+  return { precedents, importPrecedentLe: stats.exists ? (stats.data().calculeLe ?? null) : null };
+}
+
+async function ecrireFirestore(documents, stats, aujourdhui) {
   const { initializeApp, applicationDefault, getApps } = await import("firebase-admin/app");
   const { getFirestore, Timestamp } = await import("firebase-admin/firestore");
 
@@ -105,6 +189,23 @@ async function ecrireFirestore(documents, stats) {
     initializeApp({ credential: applicationDefault(), projectId: "suiteadonner" });
   }
   const db = getFirestore();
+
+  // Le delta se calcule AVANT d'écraser la collection ; s'il échoue, l'import
+  // continue sans journal — la mise à jour des données passe avant le récit.
+  let delta = null;
+  try {
+    const { precedents, importPrecedentLe } = await lireEtatPrecedent(db);
+    if (precedents.length) delta = calculerDelta(precedents, documents, aujourdhui, importPrecedentLe);
+    console.log(
+      delta
+        ? `Delta depuis ${delta.depuis} : +${delta.nbNouvelles} pétitions · ${delta.nbSeuilFranchi} seuil(s) franchi(s) · ` +
+          `${delta.nbRecueilsClos} recueil(s) clos · ${delta.nbDecisionsPubliees} décision(s) publiée(s) · ` +
+          `${delta.nbStatutsChanges} statut(s) changé(s) · +${delta.signaturesGagnees} signatures`
+        : "Premier import : pas d'état précédent, journal non calculé."
+    );
+  } catch (err) {
+    console.error("Journal non calculé (l'import continue) :", err.message);
+  }
 
   const TAILLE_LOT = 450;
   for (let i = 0; i < documents.length; i += TAILLE_LOT) {
@@ -128,6 +229,21 @@ async function ecrireFirestore(documents, stats) {
     annees: compterParAnnee(documents),
     updatedAt: Timestamp.now(),
   });
+
+  // Le journal garde les derniers imports, le plus récent en tête : l'accueil
+  // n'affiche que le premier, l'historique borné évite que le document grossisse
+  // sans fin. Un import relancé le même jour remplace son entrée au lieu de la
+  // dupliquer.
+  if (delta) {
+    const ref = db.collection("meta").doc("journal");
+    const existant = await ref.get();
+    const anciens = existant.exists ? (existant.data().imports ?? []) : [];
+    const imports = [delta, ...anciens.filter((i) => i.calculeLe !== delta.calculeLe)].slice(
+      0,
+      NB_IMPORTS_CONSERVES
+    );
+    await ref.set({ imports, updatedAt: Timestamp.now() });
+  }
 }
 
 async function synchroniserAlgolia(documents) {
@@ -194,8 +310,8 @@ async function main() {
     return;
   }
 
-  console.log("\nÉcriture dans Firestore (collection `petitions` + `meta/stats` + `meta/sitemap`)...");
-  await ecrireFirestore(documents, stats);
+  console.log("\nÉcriture dans Firestore (collection `petitions` + `meta/stats` + `meta/sitemap` + `meta/journal`)...");
+  await ecrireFirestore(documents, stats, aujourdhui);
   await synchroniserAlgolia(documents);
   console.log("\nImport terminé.");
 }

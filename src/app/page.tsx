@@ -3,7 +3,9 @@ import styles from "./page.module.css";
 import SearchBar from "./SearchBar";
 import PetitionCard from "./PetitionCard";
 import EmpreinteCarbone from "./EmpreinteCarbone";
+import CetteSemaine from "./CetteSemaine";
 import {
+  getDernierImport,
   getFlagshipPetitions,
   getPassagesEnCommission,
   getSansDecision,
@@ -12,6 +14,7 @@ import {
   acteCommission,
   formatFrDate,
   formatSignatures,
+  type ImportDelta,
   type PassageEnCommission,
   type Petition,
   type Stats,
@@ -31,6 +34,7 @@ type PageData = {
   sansDecision: Petition[];
   statutObsolete: Petition[];
   commission: PassageEnCommission[];
+  dernierImport: ImportDelta | null;
   error: boolean;
 };
 
@@ -38,15 +42,17 @@ type PageData = {
 // et un index Firestore encore en construction ne doit pas vider les sections
 // qui, elles, fonctionnent. Chaque bloc dégrade indépendamment.
 async function loadData(): Promise<PageData> {
-  const [stats, flagship, sansDecision, statutObsolete, commission] = await Promise.allSettled([
-    getStats(),
-    getFlagshipPetitions(6),
-    getSansDecision(8),
-    getEcartStatutDates(5),
-    getPassagesEnCommission(6),
-  ]);
+  const [stats, flagship, sansDecision, statutObsolete, commission, dernierImport] =
+    await Promise.allSettled([
+      getStats(),
+      getFlagshipPetitions(6),
+      getSansDecision(8),
+      getEcartStatutDates(5),
+      getPassagesEnCommission(6),
+      getDernierImport(),
+    ]);
 
-  for (const r of [stats, flagship, sansDecision, statutObsolete, commission]) {
+  for (const r of [stats, flagship, sansDecision, statutObsolete, commission, dernierImport]) {
     if (r.status === "rejected") console.error("Lecture Firestore impossible :", r.reason);
   }
 
@@ -56,12 +62,14 @@ async function loadData(): Promise<PageData> {
     sansDecision: sansDecision.status === "fulfilled" ? sansDecision.value : [],
     statutObsolete: statutObsolete.status === "fulfilled" ? statutObsolete.value : [],
     commission: commission.status === "fulfilled" ? commission.value : [],
+    dernierImport: dernierImport.status === "fulfilled" ? dernierImport.value : null,
     error: stats.status === "rejected",
   };
 }
 
 export default async function Home() {
-  const { stats, flagship, sansDecision, statutObsolete, commission, error } = await loadData();
+  const { stats, flagship, sansDecision, statutObsolete, commission, dernierImport, error } =
+    await loadData();
 
   return (
     <>
@@ -152,6 +160,8 @@ export default async function Home() {
             </p>
           )}
         </section>
+
+        <CetteSemaine delta={dernierImport} />
 
         <SearchBar />
 

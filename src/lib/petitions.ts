@@ -224,6 +224,37 @@ export async function getSitemapMeta(): Promise<SitemapMeta | null> {
   };
 }
 
+// Journal des imports, écrit par scripts/import-petitions.mjs : ce que le
+// fichier officiel a changé entre deux lectures, pétition par pétition. Chaque
+// entrée est un constat de différence, jamais une interprétation.
+export type PetitionResume = { identifiant: string; titre: string; nbVotes: number | null };
+
+export type ImportDelta = {
+  calculeLe: string;
+  /** null au tout premier import : rien à quoi comparer. */
+  depuis: string | null;
+  total: number;
+  nbNouvelles: number;
+  nbSeuilFranchi: number;
+  nbRecueilsClos: number;
+  nbDecisionsPubliees: number;
+  nbStatutsChanges: number;
+  signaturesGagnees: number;
+  /** Listes bornées (échantillon cliquable) : les compteurs ci-dessus font foi. */
+  nouvelles: PetitionResume[];
+  seuilFranchi: PetitionResume[];
+  recueilsClos: PetitionResume[];
+  decisionsPubliees: (PetitionResume & { decisionTexte: string })[];
+  statutsChanges: (PetitionResume & { de: string; vers: string })[];
+};
+
+export async function getDernierImport(): Promise<ImportDelta | null> {
+  const snap = await getDoc(doc(db, "meta", "journal"));
+  if (!snap.exists()) return null;
+  const imports = (snap.data().imports as ImportDelta[]) ?? [];
+  return imports[0] ?? null;
+}
+
 // Toutes les pétitions déposées une année donnée, de la plus récente à la
 // plus ancienne. Bornes textuelles sur la date ISO : les dates sont validées
 // AAAA-MM-JJ à l'import, la comparaison lexicographique est donc exacte, et
