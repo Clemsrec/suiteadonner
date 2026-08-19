@@ -2,9 +2,15 @@
 # https://firebase.google.com/docs/app-hosting/configure
 
 runConfig:
-  # minInstances 0 : un démarrage à froid après inactivité, mais aucun coût au
-  # repos. Acceptable parce que la page est désormais servie depuis le cache ISR.
-  minInstances: 0
+  # minInstances 1 : une instance reste chaude en permanence. À 0, chaque
+  # visite après inactivité payait un démarrage à froid de 1 à 4 s — même pour
+  # une page déjà en cache ISR, le cache ne servant qu'une fois l'instance
+  # debout. Le Googlebot, qui arrive par rafales espacées, ne voyait que ces
+  # démarrages : 4 000 URL « détectées, non indexées » trois semaines après la
+  # soumission du sitemap (constat du 19/08/2026). Le budget d'exploration est
+  # proportionnel à la réactivité du serveur ; quelques euros par mois est le
+  # prix de l'indexation.
+  minInstances: 1
   # maxInstances 1 était un plafond de débit : la file d'attente se formait dès
   # le premier pic et le site paraissait hors service sans qu'aucune attaque
   # n'ait eu lieu.
