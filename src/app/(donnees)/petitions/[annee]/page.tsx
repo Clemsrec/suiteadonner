@@ -3,9 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import styles from "../../donnees.module.css";
+import TableauPetitions, { type LignePetition } from "@/app/TableauPetitions";
 import {
+  STATUT_TAG,
   formatFrDate,
-  formatSignatures,
   getPetitionsParAnnee,
   getSitemapMeta,
 } from "@/lib/petitions";
@@ -75,20 +76,20 @@ export default async function PetitionsParAnnee({ params }: Params) {
       </header>
 
       <section className={styles.section}>
-        <ol className={styles.annuaire}>
-          {petitions.map((p) => (
-            <li key={p.identifiant}>
-              <Link href={`/petition/${p.identifiant}`}>
-                <span className={styles.annuaireTitre}>{p.titre}</span>
-                <span className={styles.annuaireMeta}>
-                  {formatSignatures(p.nbVotes)} soutiens
-                  {" · "}
-                  {p.statutLabel}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ol>
+        <TableauPetitions
+          enteteDate="Déposée le"
+          lignes={petitions.map(
+            (p): LignePetition => ({
+              identifiant: p.identifiant,
+              titre: p.titre,
+              tagLabel: p.statutLabel,
+              tagType: STATUT_TAG[p.statutSource],
+              nbVotes: p.nbVotes,
+              commission: p.commissionSource,
+              dateLabel: formatFrDate(p.datePublication),
+            })
+          )}
+        />
 
         <nav className={styles.pagination} aria-label="Autres années">
           <span>{precedente && <Link href={`/petitions/${precedente}`}>← Déposées en {precedente}</Link>}</span>

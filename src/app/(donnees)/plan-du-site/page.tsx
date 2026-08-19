@@ -23,7 +23,7 @@ export default async function PlanDuSite() {
   });
 
   return (
-    <>
+    <div className={styles.colonne}>
       <header className={styles.entete}>
         <p className={styles.eyebrow}>Toutes les rubriques</p>
         <h1>Plan du site</h1>
@@ -94,6 +94,6 @@ export default async function PlanDuSite() {
           </li>
         </ul>
       </section>
-    </>
+    </div>
   );
 }

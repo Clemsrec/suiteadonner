@@ -18,6 +18,14 @@
   --status-examined-bg: #e2e9f1;
   --status-examined-ink: #1e3a5f;
 
+  /* Ossature de mise en page, commune à l'accueil et aux pages de données.
+     La page va chercher la largeur d'un quotidien en ligne ; le texte suivi,
+     lui, garde une mesure de lecture courte — c'est la largeur du tableau qui
+     manquait, jamais celle du paragraphe. */
+  --largeur-page: 1080px;
+  --largeur-texte: 68ch;
+  --largeur-lede: 56ch;
+
   --font-serif: Georgia, "Iowan Old Style", "Palatino Linotype", "URW Palladio L", P052, serif;
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;

@@ -136,7 +136,7 @@ export default async function FichePetition({ params }: Params) {
   };
 
   return (
-    <article>
+    <article className={styles.article}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(filAriane) }} />
 
       <header className={styles.entete}>
@@ -163,124 +163,148 @@ export default async function FichePetition({ params }: Params) {
         </div>
       </header>
 
-      <section className={styles.section}>
-        <h2>Ce que dit le fichier officiel</h2>
-        <p>
-          Champs relevés tels quels dans le jeu de données ouvert de l&apos;Assemblée
-          nationale, sans réinterprétation. Un champ vide est affiché vide.
-        </p>
-        <dl className={styles.fiche}>
-          <dt>Identifiant</dt>
-          <dd className={styles.mono}>{p.identifiant}</dd>
-          <dt>Statut brut</dt>
-          <dd className={styles.mono}>{p.statutSource}</dd>
-          <dt>Signatures</dt>
-          <dd className={styles.mono}>{formatSignatures(p.nbVotes)}</dd>
-          <dt>Date de dépôt</dt>
-          <dd>{formatFrDate(p.datePublication)}</dd>
-          <dt>Date limite de signature</dt>
-          <dd>{formatFrDate(p.dateLimiteVote)}</dd>
-          <dt>Commission</dt>
-          <dd>{p.commissionSource ?? <span className={styles.champVide}>non renseignée</span>}</dd>
-          <dt>Législature</dt>
-          <dd>{p.legislature ?? <span className={styles.champVide}>non renseignée</span>}</dd>
-          <dt>Décision de la commission</dt>
-          <dd>
-            {p.decisionTexte ?? (
-              <span className={styles.champVide}>champ laissé entièrement vide</span>
-            )}
-          </dd>
-        </dl>
-      </section>
-
-      <section className={styles.section}>
-        <h2>Ce que nous constatons</h2>
-        <ul>
-          {constats(p).map((fait) => (
-            <li key={fait.slice(0, 40)}>{fait}</li>
-          ))}
-        </ul>
-
-        {sansDecisionPubliee && (
-          <p className={styles.encadre}>
-            <strong>Classée sans décision publiée.</strong>{" "}Le jeu de données officiel
-            prévoit un champ pour motiver le classement d&apos;une pétition&nbsp;:
-            pour celle-ci, il est resté vide. Nous constatons une absence, nous
-            n&apos;en déduisons rien — nous ignorons si une décision a été prise sans
-            être rendue publique, ou si aucune ne l&apos;a été.{" "}
-            <Link href="/decisions-non-publiees">Voir toutes les pétitions concernées</Link>.
-          </p>
-        )}
-
-        {p.ecartStatutDates && (
-          <p className={styles.encadre}>
-            <strong>Le fichier public n&apos;est pas à jour.</strong> Sa date limite de
-            signature est passée, mais le fichier de données ouvertes conserve à
-            cette pétition le statut <code>ouverte</code>. La plateforme officielle,
-            elle, affiche bien la date limite&nbsp;: le défaut ne concerne que le
-            fichier réutilisable.{" "}
-            <Link href="/fichier-non-a-jour">Voir toutes les pétitions concernées</Link>.
-          </p>
-        )}
-      </section>
-
-      {passages && passages.reunions.length > 0 && (
-        <section className={styles.section}>
-          <h2>Ce que la commission a fait</h2>
-          <p>
-            Ces étapes ne sont pas des déductions de notre part&nbsp;: la commission a
-            inscrit cette pétition à son ordre du jour en la désignant elle-même, par
-            son numéro ou par son titre exact. Chaque étape indique laquelle des deux,
-            avec le texte officiel intégral.
-          </p>
-          <ol className={cartes.frise}>
-            {passages.reunions.map((r) => (
-              <li key={`${r.date}-${r.compteRenduRef ?? r.intitule.slice(0, 20)}`}>
-                <span className={cartes.friseDate}>{formatFrDate(r.date)}</span>
-                <span className={cartes.friseActe}>{acteCommission(r.intitule)}</span>
-                <span className={cartes.preuve}>
-                  {r.appariement === "numero"
-                    ? "La commission cite le numéro de la pétition"
-                    : "La commission cite le titre exact de la pétition"}
-                </span>
-                <details className={cartes.friseDetail}>
-                  <summary>Texte officiel</summary>
-                  <p>{r.intitule}</p>
-                  {r.compteRenduRef && (
-                    <p className={cartes.friseCr}>Compte rendu de la réunion : {r.compteRenduRef}</p>
-                  )}
-                </details>
-              </li>
-            ))}
-          </ol>
-        </section>
-      )}
-
-      <section className={styles.section}>
-        <h2>Texte de la pétition</h2>
-        <p className={styles.texteIntegral}>{p.description}</p>
-        <p className={styles.provenance}>
-          Texte republié sans modification depuis le{" "}
-          <a
-            href="https://www.data.gouv.fr/datasets/petitions-de-lassemblee-nationale"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            jeu de données ouvert des pétitions
-          </a>{" "}
-          (Licence Ouverte 2.0). La pétition reste consultable sur{" "}
-          <a href={p.url} target="_blank" rel="noopener noreferrer">
-            la plateforme officielle de l&apos;Assemblée nationale
+      {/* Colonne de repères : le fichier officiel champ par champ. Placée
+          avant le corps dans le document — sur écran étroit elle se lit donc
+          juste après le titre, comme avant la mise en colonnes. */}
+      <aside className={styles.rail}>
+        <div className={styles.railInner}>
+          <h2 className={styles.railTitre}>Le fichier officiel, champ par champ</h2>
+          <dl className={styles.reperes}>
+            <dt>Identifiant</dt>
+            <dd className={styles.mono}>{p.identifiant}</dd>
+            <dt>Statut brut</dt>
+            <dd className={styles.mono}>{p.statutSource}</dd>
+            <dt>Signatures</dt>
+            <dd className={styles.mono}>{formatSignatures(p.nbVotes)}</dd>
+            <dt>Date de dépôt</dt>
+            <dd>{formatFrDate(p.datePublication)}</dd>
+            <dt>Date limite de signature</dt>
+            <dd>{formatFrDate(p.dateLimiteVote)}</dd>
+            <dt>Commission</dt>
+            <dd>{p.commissionSource ?? <span className={styles.champVide}>non renseignée</span>}</dd>
+            <dt>Législature</dt>
+            <dd>{p.legislature ?? <span className={styles.champVide}>non renseignée</span>}</dd>
+          </dl>
+          <a className={styles.railLien} href={p.url} target="_blank" rel="noopener noreferrer">
+            Voir la pétition sur la plateforme de l&apos;Assemblée nationale →
           </a>
-          .
-        </p>
-      </section>
+        </div>
+      </aside>
 
-      <p className={styles.source}>
-        Données extraites du fichier officiel de data.gouv.fr, calculées le{" "}
-        {formatFrDate(p.calculeLe)}. Notre méthode, nos règles et leurs limites sont
-        détaillées sur la page <Link href="/methodologie">méthodologie</Link>.
-      </p>
+      <div className={styles.corps}>
+        <section className={styles.section}>
+          <h2>La décision de la commission</h2>
+          <p>
+            Voici, mot pour mot, ce que le jeu de données ouvert de l&apos;Assemblée
+            nationale consacre au sort de cette pétition. Rien n&apos;est reformulé, et
+            un champ vide est affiché vide.
+          </p>
+          {p.decisionTexte ? (
+            <blockquote className={styles.citation}>
+              {p.decisionTexte}
+              <span className={styles.citationSource}>
+                Champ «&nbsp;décision de la commission&nbsp;», reproduit sans modification.
+              </span>
+            </blockquote>
+          ) : (
+            <p className={`${styles.citation} ${styles.citationVide}`}>
+              Le champ prévu pour motiver la décision est resté entièrement vide.
+              <span className={styles.citationSource}>
+                Champ «&nbsp;décision de la commission&nbsp;» du fichier officiel.
+              </span>
+            </p>
+          )}
+        </section>
+
+        <section className={styles.section}>
+          <h2>Ce que nous constatons</h2>
+          <ul>
+            {constats(p).map((fait) => (
+              <li key={fait.slice(0, 40)}>{fait}</li>
+            ))}
+          </ul>
+
+          {sansDecisionPubliee && (
+            <p className={styles.encadre}>
+              <strong>Classée sans décision publiée.</strong>{" "}Le jeu de données officiel
+              prévoit un champ pour motiver le classement d&apos;une pétition&nbsp;:
+              pour celle-ci, il est resté vide. Nous constatons une absence, nous
+              n&apos;en déduisons rien — nous ignorons si une décision a été prise sans
+              être rendue publique, ou si aucune ne l&apos;a été.{" "}
+              <Link href="/decisions-non-publiees">Voir toutes les pétitions concernées</Link>.
+            </p>
+          )}
+
+          {p.ecartStatutDates && (
+            <p className={styles.encadre}>
+              <strong>Le fichier public n&apos;est pas à jour.</strong> Sa date limite de
+              signature est passée, mais le fichier de données ouvertes conserve à
+              cette pétition le statut <code>ouverte</code>. La plateforme officielle,
+              elle, affiche bien la date limite&nbsp;: le défaut ne concerne que le
+              fichier réutilisable.{" "}
+              <Link href="/fichier-non-a-jour">Voir toutes les pétitions concernées</Link>.
+            </p>
+          )}
+        </section>
+
+        {passages && passages.reunions.length > 0 && (
+          <section className={styles.section}>
+            <h2>Ce que la commission a fait</h2>
+            <p>
+              Ces étapes ne sont pas des déductions de notre part&nbsp;: la commission a
+              inscrit cette pétition à son ordre du jour en la désignant elle-même, par
+              son numéro ou par son titre exact. Chaque étape indique laquelle des deux,
+              avec le texte officiel intégral.
+            </p>
+            <ol className={cartes.frise}>
+              {passages.reunions.map((r) => (
+                <li key={`${r.date}-${r.compteRenduRef ?? r.intitule.slice(0, 20)}`}>
+                  <span className={cartes.friseDate}>{formatFrDate(r.date)}</span>
+                  <span className={cartes.friseActe}>{acteCommission(r.intitule)}</span>
+                  <span className={cartes.preuve}>
+                    {r.appariement === "numero"
+                      ? "La commission cite le numéro de la pétition"
+                      : "La commission cite le titre exact de la pétition"}
+                  </span>
+                  <details className={cartes.friseDetail}>
+                    <summary>Texte officiel</summary>
+                    <p>{r.intitule}</p>
+                    {r.compteRenduRef && (
+                      <p className={cartes.friseCr}>Compte rendu de la réunion : {r.compteRenduRef}</p>
+                    )}
+                  </details>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        <section className={styles.section}>
+          <h2>Texte de la pétition</h2>
+          <p className={styles.texteIntegral}>{p.description}</p>
+          <p className={styles.provenance}>
+            Texte republié sans modification depuis le{" "}
+            <a
+              href="https://www.data.gouv.fr/datasets/petitions-de-lassemblee-nationale"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              jeu de données ouvert des pétitions
+            </a>{" "}
+            (Licence Ouverte 2.0). La pétition reste consultable sur{" "}
+            <a href={p.url} target="_blank" rel="noopener noreferrer">
+              la plateforme officielle de l&apos;Assemblée nationale
+            </a>
+            .
+          </p>
+        </section>
+
+        <p className={styles.source}>
+          Données extraites du fichier officiel de data.gouv.fr, calculées le{" "}
+          {formatFrDate(p.calculeLe)}. Notre méthode, nos règles et leurs limites sont
+          détaillées sur la page <Link href="/methodologie">méthodologie</Link>.
+        </p>
+      </div>
     </article>
   );
 }

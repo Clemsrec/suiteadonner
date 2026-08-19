@@ -1,7 +1,10 @@
+/* Largeur de journal : les tableaux et les frises occupent toute la page,
+   le texte suivi garde sa mesure courte grâce aux max-width posées bloc par
+   bloc. C'est la place qui manquait aux listes, pas aux paragraphes. */
 .wrap {
-  max-width: 780px;
+  max-width: var(--largeur-page);
   margin: 0 auto;
-  padding: 0 18px 64px;
+  padding: 0 24px 72px;
 }
 
 /* header */
@@ -23,7 +26,7 @@
 .methode,
 .contribuer,
 .search {
-  scroll-margin-top: 84px;
+  scroll-margin-top: 104px;
 }
 /* Sur mobile le menu passe sur deux lignes : la barre atteint 135 px, soit
    près d'un cinquième de l'écran retenu en permanence. Le gain de navigation
@@ -41,21 +44,14 @@
     scroll-margin-top: 12px;
   }
 }
-/* Plus large que la colonne de texte (780 px) : le menu compte six entrées et
-   saturait exactement la largeur disponible, ce qui faisait passer chaque
-   libellé sur deux lignes. La barre peut déborder de la colonne sans gêne,
-   c'est un usage courant pour un en-tête. */
+/* Bandeau de titre puis barre de rubriques, comme la une d'un quotidien :
+   huit entrées ne tiennent pas à côté du titre de marque sans rapetisser les
+   libellés jusqu'à l'illisible. Alignée sur la page, le fer à gauche du titre
+   tombe exactement sur celui des tableaux. */
 .siteInner {
-  max-width: 1120px;
+  max-width: var(--largeur-page);
   margin: 0 auto;
-  padding: 16px 18px;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px 24px;
-  /* Sous ~900 px, le menu passe proprement à la ligne suivante au lieu
-     d'écraser les libellés. */
-  flex-wrap: wrap;
+  padding: 14px 24px 0;
 }
 .wordmark {
   display: flex;
@@ -84,7 +80,10 @@
 .siteNav {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 18px;
+  gap: 8px 20px;
+  margin-top: 12px;
+  padding: 9px 0;
+  border-top: 1px solid var(--rule);
   font-size: 0.82rem;
 }
 .siteNav a {
@@ -102,7 +101,7 @@
 
 /* hero */
 .hero {
-  padding: 40px 0 28px;
+  padding: 48px 0 32px;
   border-bottom: 1px solid var(--rule);
 }
 .eyebrow {
@@ -115,17 +114,23 @@
 }
 .hero h1 {
   font-family: var(--font-serif);
-  font-size: clamp(1.7rem, 5.5vw, 2.5rem);
-  line-height: 1.14;
+  font-size: clamp(1.8rem, 5.2vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
   font-weight: 700;
-  margin: 0 0 14px;
+  margin: 0 0 16px;
   text-wrap: balance;
   max-width: 15ch;
 }
+/* Chapeau : en serif comme dans la presse, pour qu'on distingue d'un coup
+   d'œil ce qui se lit de ce qui se consulte (chiffres, étiquettes, tableaux,
+   qui restent en linéale). */
 .lede {
-  font-size: 1rem;
+  font-family: var(--font-serif);
+  font-size: 1.12rem;
+  line-height: 1.6;
   color: var(--ink-muted);
-  max-width: 48ch;
+  max-width: var(--largeur-lede);
   margin: 0;
 }
 
@@ -164,6 +169,7 @@
 }
 .searchForm {
   display: flex;
+  max-width: 720px;
   border: 1px solid var(--rule-strong);
   background: var(--surface);
 }
@@ -248,14 +254,17 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  border-bottom: 1px solid var(--rule-strong);
+  border-bottom: 2px solid var(--ink);
   padding-bottom: 8px;
   margin-bottom: 4px;
   gap: 10px;
 }
+/* Filet noir épais sous le titre de rubrique : le repère qui découpe une page
+   de journal en sections nettes. */
 .sectionHead h2 {
   font-family: var(--font-serif);
-  font-size: 1.05rem;
+  font-size: 1.35rem;
+  line-height: 1.2;
   margin: 0;
   font-weight: 700;
 }
@@ -266,21 +275,111 @@
   white-space: nowrap;
 }
 
-.petition {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-  padding: 14px 0;
+/* Tableau des pétitions — l'objet central du site. Toujours les mêmes
+   colonnes dans le même ordre : le titre au fer à gauche, les soutiens alignés
+   sur les unités, le constat du fichier, la date. On lit une colonne de haut
+   en bas ; c'est ce qu'une suite de cartes empêchait de faire. */
+.tableau {
+  width: 100%;
+  margin: 16px 0 0;
+  border-collapse: collapse;
+  border-top: 1px solid var(--rule-strong);
+}
+.tableauLegende {
+  caption-side: top;
+  text-align: left;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--ink-faint);
+  padding: 0 0 12px;
+  max-width: var(--largeur-texte);
+}
+.tableau thead th {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  text-align: left;
+  padding: 9px 18px 9px 0;
   border-bottom: 1px solid var(--rule);
-  transition: background-color 0.12s ease;
+  white-space: nowrap;
 }
-.petition:last-child {
-  border-bottom: none;
+.tableau td {
+  padding: 13px 18px 13px 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: baseline;
 }
-.petition:hover,
-.petition:focus-visible {
-  background: var(--surface-sunk);
+.tableau th:last-child,
+.tableau td:last-child {
+  padding-right: 0;
 }
+.tableau tbody tr:hover {
+  background: var(--surface);
+}
+.cellTitre a {
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--ink);
+  text-decoration: none;
+}
+.cellTitre a:hover,
+.cellTitre a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+/* La commission tient sous le titre plutôt que dans sa propre colonne : ces
+   intitulés font jusqu'à cent caractères et écraseraient tout le reste. Sur
+   une seule ligne, quitte à la couper : dans une liste, ce libellé sert à
+   situer, et la fiche le donne en entier. */
+.cellCommission {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.76rem;
+  line-height: 1.4;
+  color: var(--ink-faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.colNombre,
+.cellNombre {
+  width: 11ch;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.colStatut {
+  width: 23%;
+}
+.colDate,
+.cellDate {
+  width: 13ch;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.76rem;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+/* Dans un tableau, l'étiquette pleine se répète des centaines de fois et
+   finit par faire du bruit : on garde la couleur du statut, portée par un
+   filet, et on rend le fond à la page. */
+.cellStatut .tag {
+  display: block;
+  white-space: normal;
+  background: transparent;
+  padding: 0 0 0 9px;
+  border-left: 2px solid currentColor;
+  line-height: 1.35;
+}
+
+/* Bloc titre + étiquette, réutilisé par les passages en commission. */
 .petitionTop {
   display: flex;
   justify-content: space-between;
@@ -288,8 +387,9 @@
   gap: 10px;
 }
 .petitionTitle {
-  font-size: 0.96rem;
-  font-weight: 600;
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
   line-height: 1.3;
   max-width: 40ch;
 }
@@ -341,11 +441,12 @@
 }
 
 .blockLede {
-  font-size: 0.86rem;
+  font-family: var(--font-serif);
+  font-size: 0.98rem;
   color: var(--ink-muted);
-  line-height: 1.55;
+  line-height: 1.65;
   margin: 12px 0 0;
-  max-width: 62ch;
+  max-width: var(--largeur-texte);
 }
 .counter {
   margin: 14px 0 4px;
@@ -469,12 +570,12 @@
   margin-top: 44px;
   background: var(--surface);
   border: 1px solid var(--rule);
-  padding: 20px 18px;
+  padding: 24px 26px 8px;
 }
 .methode h2 {
   font-family: var(--font-serif);
-  font-size: 1rem;
-  margin: 0 0 10px;
+  font-size: 1.25rem;
+  margin: 0 0 12px;
 }
 .constat {
   margin-top: 44px;
@@ -495,17 +596,19 @@
 }
 .constat h2 {
   font-family: var(--font-serif);
-  font-size: 1.35rem;
-  line-height: 1.28;
+  font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+  line-height: 1.22;
+  letter-spacing: -0.01em;
   margin: 6px 0 0;
-  max-width: 30ch;
+  max-width: 34ch;
 }
 .constatLede {
-  font-size: 0.9rem;
-  line-height: 1.6;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.68;
   color: var(--ink-muted);
-  margin: 12px 0 0;
-  max-width: 62ch;
+  margin: 14px 0 0;
+  max-width: var(--largeur-texte);
 }
 .faits {
   margin-top: 24px;
@@ -589,11 +692,12 @@
   margin: 0 0 8px;
 }
 .reserve p {
-  font-size: 0.85rem;
-  line-height: 1.6;
+  font-family: var(--font-serif);
+  font-size: 0.96rem;
+  line-height: 1.68;
   color: var(--ink-muted);
-  margin: 8px 0 0;
-  max-width: 66ch;
+  margin: 10px 0 0;
+  max-width: var(--largeur-texte);
 }
 .reserve strong {
   color: var(--ink);
@@ -601,19 +705,27 @@
 }
 
 .methodeLede {
-  font-size: 0.88rem;
-  line-height: 1.6;
+  font-family: var(--font-serif);
+  font-size: 0.98rem;
+  line-height: 1.68;
   color: var(--ink-muted);
   margin: 0 0 4px;
-  max-width: 62ch;
+  max-width: var(--largeur-texte);
 }
 .methode dl {
   margin: 0;
-  display: grid;
-  /* minmax(0, …) et non une largeur figée : les intitulés en clair sont longs,
-     et sans cela ils débordaient sur la colonne de droite. */
-  grid-template-columns: 1fr;
-  font-size: 0.86rem;
+}
+/* Une entrée = un libellé et sa ou ses réponses, réunis dans un même bloc.
+   Sans ce groupement, une entrée à deux réponses décalait tout le reste de la
+   liste d'une case : les textes tombaient dans la colonne étroite des
+   libellés, et les libellés dans la large. */
+.entree {
+  padding: 14px 0;
+  border-top: 1px solid var(--rule);
+}
+.entree:first-child {
+  padding-top: 4px;
+  border-top: none;
 }
 .methode dt {
   color: var(--ink);
@@ -622,20 +734,13 @@
   letter-spacing: 0.06em;
   font-weight: 700;
   line-height: 1.4;
-  padding-top: 14px;
-  /* Filet de séparation entre chaque entrée, porté par le libellé : en une
-     seule colonne il coiffe la ligne, en deux colonnes il la traverse. */
-  border-top: 1px solid var(--rule);
 }
 .methode dd {
-  margin: 0;
-  padding-bottom: 14px;
+  margin: 8px 0 0;
+  font-family: var(--font-serif);
+  font-size: 0.98rem;
   color: var(--ink-muted);
-  line-height: 1.6;
-}
-.methode dl > dt:first-of-type,
-.methode dl > dt:first-of-type + dd {
-  border-top: none;
+  line-height: 1.68;
 }
 .demoNote {
   margin-top: 16px;
@@ -658,11 +763,12 @@
   margin: 0 0 10px;
 }
 .contribuer p {
-  font-size: 0.88rem;
-  line-height: 1.6;
+  font-family: var(--font-serif);
+  font-size: 0.98rem;
+  line-height: 1.68;
   color: var(--ink-muted);
-  margin: 8px 0 0;
-  max-width: 64ch;
+  margin: 10px 0 0;
+  max-width: var(--largeur-texte);
 }
 .contact {
   margin-top: 16px !important;
@@ -711,24 +817,117 @@
   .faits {
     grid-template-columns: repeat(2, 1fr);
   }
-  .methode dl {
-    grid-template-columns: minmax(0, 200px) 1fr;
-    column-gap: 24px;
+  /* Libellé à gauche, réponses à droite. Les colonnes sont assignées
+     explicitement : en placement automatique, une seconde réponse repoussait
+     l'entrée suivante d'une case. */
+  .entree {
+    display: grid;
+    grid-template-columns: minmax(0, 210px) minmax(0, var(--largeur-texte));
+    column-gap: 32px;
   }
   .methode dt {
-    padding-bottom: 14px;
+    grid-column: 1;
   }
   .methode dd {
-    padding-top: 14px;
-    border-top: 1px solid var(--rule);
+    grid-column: 2;
+    margin-top: 0;
+  }
+  .methode dd + dd {
+    margin-top: 12px;
   }
 }
 
 @media (min-width: 720px) {
   .hero {
-    padding: 56px 0 34px;
+    padding: 64px 0 38px;
   }
   .hero h1 {
     max-width: 20ch;
+  }
+}
+
+/* Sous ~760 px il n'y a pas la place de tenir quatre colonnes : chaque ligne
+   se replie en un bloc — titre, puis chiffres et date sur une ligne, puis
+   l'étiquette. Les intitulés de colonnes deviennent inutiles et disparaissent. */
+@media (max-width: 760px) {
+  .tableau thead {
+    position: absolute;
+    left: -9999px;
+  }
+  .tableau,
+  .tableau tbody,
+  .tableau tr,
+  .tableau td {
+    display: block;
+    width: auto;
+  }
+  .tableau tr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "titre titre"
+      "nombre date"
+      "statut statut";
+    gap: 6px 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .tableau td {
+    padding: 0;
+    border-bottom: none;
+  }
+  .cellTitre {
+    grid-area: titre;
+  }
+  .cellNombre {
+    grid-area: nombre;
+    text-align: left;
+    width: auto;
+  }
+  .cellDate {
+    grid-area: date;
+    text-align: right;
+    width: auto;
+  }
+  .cellStatut {
+    grid-area: statut;
+  }
+  .cellStatut .tag {
+    display: inline-block;
+  }
+}
+
+@media (min-width: 960px) {
+  /* Les quatre chiffres du constat se lisent d'une seule traversée du regard,
+     comme un bandeau de une, au lieu de deux lignes de deux. */
+  .faits {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  /* Passage en commission : à gauche la pétition, à droite sa chronologie.
+     La frise n'a plus à s'empiler sous le titre. */
+  .passage {
+    display: grid;
+    grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
+    /* La seconde rangée absorbe toute la hauteur de la frise ; sans cela, la
+       ligne de chiffres se retrouverait à mi-hauteur de la colonne de gauche
+       au lieu de suivre le titre. */
+    grid-template-rows: auto 1fr;
+    column-gap: 48px;
+    align-items: start;
+    padding: 20px 0;
+  }
+  .passage .petitionTop {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .passage .frise {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin-top: 0;
+  }
+  .entree {
+    grid-template-columns: minmax(0, 250px) minmax(0, var(--largeur-texte));
+    column-gap: 44px;
   }
 }

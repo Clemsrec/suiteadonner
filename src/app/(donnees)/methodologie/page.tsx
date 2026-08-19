@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 // compteurs à jour vivent sur l'accueil et les pages de constat.
 export default function Methodologie() {
   return (
-    <>
+    <div className={styles.colonne}>
       <header className={styles.entete}>
         <p className={styles.eyebrow}>Sources, règles et limites</p>
         <h1>Méthodologie</h1>
@@ -190,6 +190,6 @@ export default function Methodologie() {
         <Link href="/mentions-legales">mentions légales</Link> ·{" "}
         <Link href="/">l&apos;accueil et ses chiffres à jour</Link>.
       </p>
-    </>
+    </div>
   );
 }

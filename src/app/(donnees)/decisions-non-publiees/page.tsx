@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import styles from "../donnees.module.css";
-import PetitionCard from "@/app/PetitionCard";
+import TableauPetitions, { type LignePetition } from "@/app/TableauPetitions";
 import { formatFrDate, getSansDecision, getStats } from "@/lib/petitions";
 import { SITE_NAME } from "@/lib/site";
 
@@ -61,18 +61,21 @@ export default async function DecisionsNonPubliees() {
 
       <section className={styles.section}>
         {petitions.length ? (
-          petitions.map((p) => (
-            <PetitionCard
-              key={p.identifiant}
-              identifiant={p.identifiant}
-              titre={p.titre}
-              tagLabel="Décision non publiée"
-              tagType="none"
-              nbVotes={p.nbVotes}
-              commission={p.commissionSource}
-              dateLabel={p.dateLimiteVote ? `Recueil clos le ${formatFrDate(p.dateLimiteVote)}` : null}
-            />
-          ))
+          <TableauPetitions
+            enteteDate="Recueil clos le"
+            legende={`${petitions.length.toLocaleString("fr-FR")} pétitions, de la plus signée à la moins signée.`}
+            lignes={petitions.map(
+              (p): LignePetition => ({
+                identifiant: p.identifiant,
+                titre: p.titre,
+                tagLabel: "Décision non publiée",
+                tagType: "none",
+                nbVotes: p.nbVotes,
+                commission: p.commissionSource,
+                dateLabel: formatFrDate(p.dateLimiteVote),
+              })
+            )}
+          />
         ) : (
           <p>Les données ne sont pas accessibles pour le moment. Merci de réessayer dans quelques minutes.</p>
         )}

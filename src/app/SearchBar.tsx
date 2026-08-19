@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
-import PetitionCard from "./PetitionCard";
+import TableauPetitions, { type LignePetition } from "./TableauPetitions";
 import { STATUT_LABELS, STATUT_TAG, formatFrDate } from "@/lib/petitions";
 import { algoliaConfigured, searchPetitionsIndex, type AlgoliaPetitionHit, type SearchFilter } from "@/lib/algolia";
 
@@ -111,18 +111,20 @@ export default function SearchBar() {
                   {nbHits.toLocaleString("fr-FR")} résultat{nbHits > 1 ? "s" : ""}
                   {results.length < nbHits ? ` (${results.length} affichés)` : ""}
                 </p>
-                {results.map((p) => (
-                  <PetitionCard
-                    key={p.objectID}
-                    identifiant={p.objectID}
-                    titre={p.titre}
-                    tagLabel={STATUT_LABELS[p.statutSource]}
-                    tagType={STATUT_TAG[p.statutSource]}
-                    nbVotes={p.nbVotes}
-                    commission={p.commissionSource}
-                    dateLabel={formatFrDate(p.datePublication)}
-                  />
-                ))}
+                <TableauPetitions
+                  enteteDate="Déposée le"
+                  lignes={results.map(
+                    (p): LignePetition => ({
+                      identifiant: p.objectID,
+                      titre: p.titre,
+                      tagLabel: STATUT_LABELS[p.statutSource],
+                      tagType: STATUT_TAG[p.statutSource],
+                      nbVotes: p.nbVotes,
+                      commission: p.commissionSource,
+                      dateLabel: formatFrDate(p.datePublication),
+                    })
+                  )}
+                />
               </>
             )}
           </div>

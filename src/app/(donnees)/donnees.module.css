@@ -4,24 +4,21 @@
    ce module ne porte que l'ossature propre à ces pages. */
 
 .wrap {
-  max-width: 780px;
+  max-width: var(--largeur-page);
   margin: 0 auto;
-  padding: 0 18px 64px;
+  padding: 0 24px 72px;
 }
 
 .site {
   border-bottom: 1px solid var(--rule-strong);
   background: var(--surface);
 }
+/* Même bandeau que l'accueil : titre de marque, puis barre de rubriques
+   séparée par un filet. */
 .siteInner {
-  max-width: 1120px;
+  max-width: var(--largeur-page);
   margin: 0 auto;
-  padding: 14px 18px;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px 24px;
-  flex-wrap: wrap;
+  padding: 14px 24px 0;
 }
 .wordmark {
   display: flex;
@@ -39,7 +36,10 @@
 .siteNav {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 18px;
+  gap: 8px 20px;
+  margin-top: 12px;
+  padding: 9px 0;
+  border-top: 1px solid var(--rule);
   font-size: 0.82rem;
 }
 .siteNav a {
@@ -54,9 +54,18 @@
   border-bottom-color: var(--rule-strong);
 }
 
-/* En-tête de page : surtitre, titre, chapeau. */
+/* Pages qui ne sont faites que de texte : la colonne se referme sur la mesure
+   de lecture, sinon les filets de section courent tout seuls dans le blanc.
+   Les pages à tableaux, elles, prennent toute la largeur. */
+.colonne {
+  max-width: 800px;
+}
+
+/* En-tête de page : surtitre, titre, chapeau — le bloc de tête d'un article
+   de presse, séparé de ce qui suit par un filet qui court sur toute la page. */
 .entete {
-  padding: 36px 0 4px;
+  padding: 44px 0 22px;
+  border-bottom: 1px solid var(--rule);
 }
 .eyebrow {
   font-size: 0.68rem;
@@ -76,16 +85,22 @@
 }
 .entete h1 {
   font-family: var(--font-serif);
-  font-size: clamp(1.45rem, 4.5vw, 2rem);
-  line-height: 1.18;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
   font-weight: 700;
+  max-width: 24ch;
+  text-wrap: balance;
 }
+/* Chapeau en serif, comme dans un journal : il se lit d'une traite, à la
+   différence des étiquettes et des chiffres qui restent en linéale. */
 .lede {
-  font-size: 0.92rem;
-  line-height: 1.6;
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  line-height: 1.65;
   color: var(--ink-muted);
-  margin: 12px 0 0;
-  max-width: 62ch;
+  margin: 14px 0 0;
+  max-width: var(--largeur-texte);
 }
 .lede a {
   color: var(--accent);
@@ -96,9 +111,9 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 14px;
-  margin-top: 14px;
-  font-size: 0.8rem;
+  gap: 8px 16px;
+  margin-top: 18px;
+  font-size: 0.82rem;
   color: var(--ink-muted);
 }
 .etat .n {
@@ -110,21 +125,26 @@
 
 /* Sections de fiche et de liste. */
 .section {
-  margin-top: 36px;
+  margin-top: 40px;
 }
+/* Filet noir épais sous le titre : le repère qui découpe une page de journal
+   en rubriques nettes, plus visible qu'un simple gris. */
 .section h2 {
   font-family: var(--font-serif);
-  font-size: 1.05rem;
+  font-size: 1.3rem;
+  line-height: 1.25;
   font-weight: 700;
-  border-bottom: 1px solid var(--rule-strong);
+  border-bottom: 2px solid var(--ink);
   padding-bottom: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 .section p {
-  font-size: 0.9rem;
-  line-height: 1.6;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.7;
   color: var(--ink-muted);
-  margin: 10px 0;
+  margin: 12px 0;
+  max-width: var(--largeur-texte);
 }
 .section a {
   color: var(--accent);
@@ -141,13 +161,15 @@
   border-radius: 2px;
 }
 .section ul {
-  margin: 10px 0 10px 20px;
+  margin: 12px 0 12px 20px;
+  max-width: var(--largeur-texte);
 }
 .section li {
-  font-size: 0.9rem;
-  line-height: 1.6;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.7;
   color: var(--ink-muted);
-  margin: 5px 0;
+  margin: 7px 0;
 }
 
 /* Tableau champ → valeur : ce que dit le fichier officiel, champ par champ. */
@@ -184,25 +206,31 @@
 
 /* Constat qui engage : encadré, comme les réserves de l'accueil. */
 .encadre {
-  margin: 14px 0 0;
-  padding: 12px 14px;
+  margin: 18px 0 0;
+  padding: 14px 18px;
   background: var(--surface-sunk);
   border-left: 3px solid var(--accent);
-  font-size: 0.86rem;
-  line-height: 1.55;
+  font-family: var(--font-serif);
+  font-size: 0.98rem;
+  line-height: 1.65;
   color: var(--ink-muted);
+  max-width: var(--largeur-texte);
 }
 .encadre strong {
   color: var(--ink);
 }
 
-/* Texte intégral de la pétition, republié sans modification. */
+/* Texte intégral de la pétition, republié sans modification. C'est le seul
+   endroit où quelqu'un a écrit quelque chose : il se lit comme un article,
+   au corps le plus confortable de la page. */
 .texteIntegral {
-  margin: 12px 0 0;
-  font-size: 0.92rem;
-  line-height: 1.7;
+  margin: 14px 0 0;
+  font-family: var(--font-serif);
+  font-size: 1.08rem;
+  line-height: 1.75;
   color: var(--ink);
   white-space: pre-line;
+  max-width: var(--largeur-texte);
 }
 .provenance {
   margin-top: 12px;
@@ -212,54 +240,176 @@
 .provenance a {
   color: inherit;
 }
+/* `.section p` porte la typographie du texte courant et l'emporterait sur ces
+   deux classes seules — d'où le sélecteur composé, qui remet chacune à son
+   traitement : le texte de la pétition en grand, la provenance en petit. */
+.section p.texteIntegral {
+  font-size: 1.08rem;
+  line-height: 1.75;
+  color: var(--ink);
+  margin: 14px 0 0;
+}
+.section p.provenance {
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  line-height: 1.55;
+  color: var(--ink-faint);
+  margin: 14px 0 0;
+}
 
-/* Liste annuaire : une ligne par pétition, compacte — les pages par année
-   peuvent dépasser le millier d'entrées, la carte complète serait trop lourde. */
-.annuaire {
-  list-style: none;
-  margin: 8px 0 0;
-  padding: 0;
+/* Fiche pétition : un article, et à côté la colonne de repères — le fichier
+   officiel champ par champ. Sur écran étroit la colonne repasse sous
+   l'en-tête, avant le corps : ce que dit le fichier reste la première chose
+   qu'on lit, c'est la promesse du site. */
+.article {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 48px;
 }
-.annuaire li {
-  border-bottom: 1px solid var(--rule);
+.rail {
+  margin-top: 28px;
 }
-.annuaire li:last-child {
-  border-bottom: none;
+.railInner {
+  border-top: 2px solid var(--ink);
+  padding-top: 12px;
 }
-.annuaire a {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 14px;
-  padding: 9px 0;
-  text-decoration: none;
-  color: inherit;
+.railTitre {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  margin-bottom: 4px;
 }
-.annuaire a:hover,
-.annuaire a:focus-visible {
-  background: var(--surface-sunk);
+/* Champ → valeur, empilés : dans une colonne étroite, deux colonnes de plus
+   ne tiendraient pas. */
+.reperes {
+  margin: 0;
 }
-.annuaireTitre {
-  font-size: 0.88rem;
-  font-weight: 500;
-  line-height: 1.35;
+.reperes dt {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
 }
-.annuaireMeta {
-  flex: none;
+.reperes dd {
+  margin: 2px 0 12px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.reperes dd.mono {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  font-size: 0.72rem;
-  color: var(--ink-faint);
-  white-space: nowrap;
+  font-size: 0.85rem;
+}
+.railLien {
+  display: block;
+  margin-top: 6px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--accent);
 }
 
-/* Grille des années sur l'index des pétitions. */
-.annees {
+/* La décision de la commission, telle qu'elle est écrite dans le fichier —
+   ou son absence. C'est la seule phrase que l'Assemblée consacre à cette
+   pétition : elle est citée, pas rangée dans un tableau. */
+.citation {
+  margin: 16px 0 0;
+  padding: 16px 20px;
+  background: var(--surface);
+  border-left: 3px solid var(--rule-strong);
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--ink);
+  max-width: var(--largeur-texte);
+}
+.citationVide {
+  border-left-color: var(--status-none-ink);
+  font-style: italic;
+  color: var(--ink-muted);
+}
+.citationSource {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-size: 0.74rem;
+  color: var(--ink-faint);
+}
+
+/* Tant que la colonne n'est pas à côté du texte, elle occupe toute la largeur :
+   un champ par ligne y gaspillerait un écran entier. Elle reprend alors la
+   forme d'un tableau champ → valeur. */
+@media (max-width: 999px) {
+  .reperes {
+    display: grid;
+    grid-template-columns: minmax(150px, 32%) 1fr;
+    border-top: 1px solid var(--rule);
+  }
+  .reperes dt,
+  .reperes dd {
+    padding: 10px 0;
+    margin: 0;
+    border-top: none;
+    border-bottom: 1px solid var(--rule);
+  }
+  .reperes dt {
+    padding-right: 14px;
+  }
+}
+
+@media (max-width: 560px) {
+  .reperes {
+    grid-template-columns: 1fr;
+  }
+  .reperes dt {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  .reperes dd {
+    padding-top: 2px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .article {
+    grid-template-columns: minmax(0, 1fr) 296px;
+  }
+  .article > .entete {
+    grid-column: 1 / -1;
+  }
+  .corps {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .rail {
+    grid-column: 2;
+    grid-row: 2;
+    margin-top: 40px;
+  }
+  .railInner {
+    position: sticky;
+    top: 24px;
+  }
+}
+
+/* Grille des années sur l'index des pétitions. Sélecteur composé : c'est une
+   liste, et la règle de mesure des listes de texte la rétrécirait de moitié. */
+.section ul.annees {
   list-style: none;
-  margin: 14px 0 0;
+  margin: 18px 0 0;
   padding: 0;
+  max-width: none;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 10px;
 }
 .annees a {
@@ -354,10 +504,5 @@
   }
   .fiche dd {
     padding-top: 2px;
-  }
-  .annuaire a {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
   }
 }

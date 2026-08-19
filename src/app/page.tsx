@@ -1,7 +1,7 @@
 import Link from "next/link";
 import styles from "./page.module.css";
 import SearchBar from "./SearchBar";
-import PetitionCard from "./PetitionCard";
+import TableauPetitions, { type LignePetition } from "./TableauPetitions";
 import EmpreinteCarbone from "./EmpreinteCarbone";
 import CetteSemaine from "./CetteSemaine";
 import {
@@ -271,18 +271,20 @@ export default async function Home() {
             </p>
           ) : null}
 
-          {flagship.map((p) => (
-            <PetitionCard
-              key={p.identifiant}
-              identifiant={p.identifiant}
-              titre={p.titre}
-              tagLabel={p.statutLabel}
-              tagType="examined"
-              nbVotes={p.nbVotes}
-              commission={p.commissionSource}
-              dateLabel={formatFrDate(p.datePublication)}
+          {flagship.length > 0 && (
+            <TableauPetitions
+              enteteDate="Déposée le"
+              lignes={flagship.map((p): LignePetition => ({
+                identifiant: p.identifiant,
+                titre: p.titre,
+                tagLabel: p.statutLabel,
+                tagType: "examined",
+                nbVotes: p.nbVotes,
+                commission: p.commissionSource,
+                dateLabel: formatFrDate(p.datePublication),
+              }))}
             />
-          ))}
+          )}
 
           {!flagship.length && (
             <p className={styles.demoNote}>Pas encore de données à afficher ici.</p>
@@ -390,18 +392,18 @@ export default async function Home() {
               chercheurs, les journalistes et ce site.
             </p>
 
-            {statutObsolete.map((p) => (
-              <PetitionCard
-                key={p.identifiant}
-                identifiant={p.identifiant}
-                titre={p.titre}
-                tagLabel="Fichier non à jour"
-                tagType="none"
-                nbVotes={p.nbVotes}
-                commission={p.commissionSource}
-                dateLabel={`Date limite : ${formatFrDate(p.dateLimiteVote)}`}
-              />
-            ))}
+            <TableauPetitions
+              enteteDate="Date limite"
+              lignes={statutObsolete.map((p): LignePetition => ({
+                identifiant: p.identifiant,
+                titre: p.titre,
+                tagLabel: "Fichier non à jour",
+                tagType: "none",
+                nbVotes: p.nbVotes,
+                commission: p.commissionSource,
+                dateLabel: formatFrDate(p.dateLimiteVote),
+              }))}
+            />
 
             <div className={styles.ledgerFoot}>
               <Link href="/fichier-non-a-jour">La liste complète et le détail du constat →</Link>
@@ -440,18 +442,18 @@ export default async function Home() {
                 </p>
               ) : null}
 
-              {sansDecision.map((p) => (
-                <PetitionCard
-                  key={p.identifiant}
-                  identifiant={p.identifiant}
-                  titre={p.titre}
-                  tagLabel="Décision non publiée"
-                  tagType="none"
-                  nbVotes={p.nbVotes}
-                  commission={p.commissionSource}
-                  dateLabel={formatFrDate(p.dateLimiteVote)}
-                />
-              ))}
+              <TableauPetitions
+                enteteDate="Recueil clos le"
+                lignes={sansDecision.map((p): LignePetition => ({
+                  identifiant: p.identifiant,
+                  titre: p.titre,
+                  tagLabel: "Décision non publiée",
+                  tagType: "none",
+                  nbVotes: p.nbVotes,
+                  commission: p.commissionSource,
+                  dateLabel: formatFrDate(p.dateLimiteVote),
+                }))}
+              />
 
               <div className={styles.ledgerFoot}>
                 <Link href="/decisions-non-publiees">
@@ -536,144 +538,166 @@ export default async function Home() {
             trouver et n&apos;y est pas.
           </p>
           <dl>
-            <dt>D&apos;où viennent les chiffres</dt>
-            <dd>
-              De deux fichiers publiés par l&apos;État : la liste officielle des{" "}
-              <a
-                href="https://www.data.gouv.fr/datasets/petitions-de-lassemblee-nationale"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                pétitions déposées à l&apos;Assemblée nationale
-              </a>{" "}
-              et l&apos;agenda des réunions de l&apos;Assemblée, qui contient
-              l&apos;ordre du jour des commissions. Ce sont des documents
-              ouverts, que n&apos;importe qui peut télécharger et vérifier.
-            </dd>
-            <dd>
-              Le fichier des pétitions est <strong>notre unique source de
-              référence</strong>. La plateforme officielle nous sert à comparer
-              et à mettre en contexte, jamais à établir un chiffre. Attention si
-              vous refaites nos calculs&nbsp;: plusieurs copies de ce fichier
-              circulent, et l&apos;une d&apos;elles avait un mois de retard
-              lorsque nous l&apos;avons contrôlée le 27 juillet 2026.
-            </dd>
+            <div className={styles.entree}>
+              <dt>D&apos;où viennent les chiffres</dt>
+              <dd>
+                De deux fichiers publiés par l&apos;État : la liste officielle des{" "}
+                <a
+                  href="https://www.data.gouv.fr/datasets/petitions-de-lassemblee-nationale"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  pétitions déposées à l&apos;Assemblée nationale
+                </a>{" "}
+                et l&apos;agenda des réunions de l&apos;Assemblée, qui contient
+                l&apos;ordre du jour des commissions. Ce sont des documents
+                ouverts, que n&apos;importe qui peut télécharger et vérifier.
+              </dd>
+              <dd>
+                Le fichier des pétitions est <strong>notre unique source de
+                référence</strong>. La plateforme officielle nous sert à comparer
+                et à mettre en contexte, jamais à établir un chiffre. Attention si
+                vous refaites nos calculs&nbsp;: plusieurs copies de ce fichier
+                circulent, et l&apos;une d&apos;elles avait un mois de retard
+                lorsque nous l&apos;avons contrôlée le 27 juillet 2026.
+              </dd>
+            </div>
 
-            <dt>Ce que nous ne calculons jamais</dt>
-            <dd>
-              Quand le fichier ne dit rien, nous n&apos;inventons pas. Un
-              nombre de signatures absent s&apos;affiche « non renseigné » et
-              non «&nbsp;0&nbsp;» — cela concerne {""}
-              {stats?.signaturesInconnues ?? 0}{" "}
-              pétitions. Une date manquante
-              ne devient pas une date par défaut. Un regroupement de clôtures
-              est constaté sans qu&apos;une cause lui soit attribuée.
-            </dd>
+            <div className={styles.entree}>
+              <dt>Ce que nous ne calculons jamais</dt>
+              <dd>
+                Quand le fichier ne dit rien, nous n&apos;inventons pas. Un
+                nombre de signatures absent s&apos;affiche « non renseigné » et
+                non «&nbsp;0&nbsp;» — cela concerne {""}
+                {stats?.signaturesInconnues ?? 0}{" "}
+                pétitions. Une date manquante
+                ne devient pas une date par défaut. Un regroupement de clôtures
+                est constaté sans qu&apos;une cause lui soit attribuée.
+              </dd>
+            </div>
 
-            <dt>Les écarts que nous laissons tels quels</dt>
-            <dd>
-              Quand le fichier se contredit, nous le signalons au lieu de
-              choisir à sa place. Aujourd&apos;hui&nbsp;:{" "}
-              {stats?.ecartStatutDates ?? 0}{" "}
-              pétitions portent le statut
-              «&nbsp;ouverte&nbsp;» alors que leur date limite est passée, et{" "}
-              {stats ? stats.classee - stats.classeesHorsSeuil : 0}{" "}
-              pétitions marquées «&nbsp;classée&nbsp;» ont un texte de décision indiquant
-              en réalité un classement d&apos;office. C&apos;est pourquoi nous
-              lisons le motif dans le texte, et jamais dans le statut.
-            </dd>
+            <div className={styles.entree}>
+              <dt>Les écarts que nous laissons tels quels</dt>
+              <dd>
+                Quand le fichier se contredit, nous le signalons au lieu de
+                choisir à sa place. Aujourd&apos;hui&nbsp;:{" "}
+                {stats?.ecartStatutDates ?? 0}{" "}
+                pétitions portent le statut
+                «&nbsp;ouverte&nbsp;» alors que leur date limite est passée, et{" "}
+                {stats ? stats.classee - stats.classeesHorsSeuil : 0}{" "}
+                pétitions marquées «&nbsp;classée&nbsp;» ont un texte de décision indiquant
+                en réalité un classement d&apos;office. C&apos;est pourquoi nous
+                lisons le motif dans le texte, et jamais dans le statut.
+              </dd>
+            </div>
 
-            <dt>À quel rythme</dt>
-            <dd>
-              La liste des pétitions est actualisée chaque lundi matin par
-              l&apos;Assemblée. Nous la récupérons ensuite pour mettre le site à
-              jour. La date de dernière mise à jour est affichée en haut de
-              chaque tableau.
-            </dd>
+            <div className={styles.entree}>
+              <dt>À quel rythme</dt>
+              <dd>
+                La liste des pétitions est actualisée chaque lundi matin par
+                l&apos;Assemblée. Nous la récupérons ensuite pour mettre le site à
+                jour. La date de dernière mise à jour est affichée en haut de
+                chaque tableau.
+              </dd>
+            </div>
 
-            <dt>Ce que veut dire « classée d&apos;office »</dt>
-            <dd>
-              Cela signifie qu&apos;une pétition a été écartée sans qu&apos;une
-              commission ait eu à se prononcer, le plus souvent parce
-              qu&apos;elle n&apos;a pas réuni 10&nbsp;000 signatures dans le
-              délai imparti. Dans ce cas, le fichier officiel indique bien ce
-              motif&nbsp;: c&apos;est la seule situation où une explication est
-              systématiquement donnée.
-            </dd>
+            <div className={styles.entree}>
+              <dt>Ce que veut dire « classée d&apos;office »</dt>
+              <dd>
+                Cela signifie qu&apos;une pétition a été écartée sans qu&apos;une
+                commission ait eu à se prononcer, le plus souvent parce
+                qu&apos;elle n&apos;a pas réuni 10&nbsp;000 signatures dans le
+                délai imparti. Dans ce cas, le fichier officiel indique bien ce
+                motif&nbsp;: c&apos;est la seule situation où une explication est
+                systématiquement donnée.
+              </dd>
+            </div>
 
-            <dt>Les clôtures groupées</dt>
-            <dd>
-              Certaines dates voient des centaines de pétitions s&apos;arrêter
-              en même temps, quel que soit leur nombre de signatures. La plus
-              importante regroupe 892 pétitions au 9 juin 2024. Nous constatons
-              ce regroupement dans les données&nbsp;; nous n&apos;affirmons pas
-              sa cause, faute d&apos;information officielle qui la documente.
-            </dd>
+            <div className={styles.entree}>
+              <dt>Les clôtures groupées</dt>
+              <dd>
+                Certaines dates voient des centaines de pétitions s&apos;arrêter
+                en même temps, quel que soit leur nombre de signatures. La plus
+                importante regroupe 892 pétitions au 9 juin 2024. Nous constatons
+                ce regroupement dans les données&nbsp;; nous n&apos;affirmons pas
+                sa cause, faute d&apos;information officielle qui la documente.
+              </dd>
+            </div>
 
-            <dt>Ce que veut dire « classée »</dt>
-            <dd>
-              La pétition est écartée et ne connaîtra pas de suite. Attention
-              toutefois&nbsp;: le fichier officiel emploie cette étiquette y
-              compris pour des pétitions dont le texte de décision indique
-              qu&apos;elles ont en réalité été classées d&apos;office, faute de
-              signatures. Nous n&apos;écrivons donc jamais « classée après
-              examen », car rien dans les données ne prouve qu&apos;un examen a
-              eu lieu.
-            </dd>
+            <div className={styles.entree}>
+              <dt>Ce que veut dire « classée »</dt>
+              <dd>
+                La pétition est écartée et ne connaîtra pas de suite. Attention
+                toutefois&nbsp;: le fichier officiel emploie cette étiquette y
+                compris pour des pétitions dont le texte de décision indique
+                qu&apos;elles ont en réalité été classées d&apos;office, faute de
+                signatures. Nous n&apos;écrivons donc jamais « classée après
+                examen », car rien dans les données ne prouve qu&apos;un examen a
+                eu lieu.
+              </dd>
+            </div>
 
-            <dt>« Le fichier public n&apos;est pas à jour »</dt>
-            <dd>
-              Chaque pétition a une date de fin de recueil des signatures. Nous
-              vérifions si cette date est passée. Quand elle l&apos;est alors que
-              le fichier de données ouvertes conserve le statut{" "}
-              <code>ouverte</code>, nous le signalons. C&apos;est le cas de la
-              pétition la plus signée de la plateforme, huit mois après sa date
-              limite.
-              <br />
-              Nous avons vérifié la page officielle de ces pétitions&nbsp;: elle
-              affiche la date limite et le statut « Acceptées », et n&apos;emploie
-              jamais la formule « en cours de signature ». <strong>Le défaut
-              porte donc sur le fichier réutilisable, pas sur ce que voit un
-              citoyen.</strong>{" "}
-              Nous le signalons parce que ce fichier est la
-              source de tous les travaux qui s&apos;appuient dessus, dont le nôtre.
-            </dd>
+            <div className={styles.entree}>
+              <dt>« Le fichier public n&apos;est pas à jour »</dt>
+              <dd>
+                Chaque pétition a une date de fin de recueil des signatures. Nous
+                vérifions si cette date est passée. Quand elle l&apos;est alors que
+                le fichier de données ouvertes conserve le statut{" "}
+                <code>ouverte</code>, nous le signalons. C&apos;est le cas de la
+                pétition la plus signée de la plateforme, huit mois après sa date
+                limite.
+                <br />
+                Nous avons vérifié la page officielle de ces pétitions&nbsp;: elle
+                affiche la date limite et le statut « Acceptées », et n&apos;emploie
+                jamais la formule « en cours de signature ». <strong>Le défaut
+                porte donc sur le fichier réutilisable, pas sur ce que voit un
+                citoyen.</strong>{" "}
+                Nous le signalons parce que ce fichier est la
+                source de tous les travaux qui s&apos;appuient dessus, dont le nôtre.
+              </dd>
+            </div>
 
-            <dt>« Classée sans décision publiée »</dt>
-            <dd>
-              Le fichier officiel prévoit un emplacement pour expliquer pourquoi
-              une pétition a été classée. Nous listons celles pour lesquelles
-              cet emplacement a été laissé vide. Nous constatons une absence,
-              nous n&apos;en déduisons rien : nous ignorons si une décision a été
-              prise sans être rendue publique, ou si aucune ne l&apos;a été.
-            </dd>
+            <div className={styles.entree}>
+              <dt>« Classée sans décision publiée »</dt>
+              <dd>
+                Le fichier officiel prévoit un emplacement pour expliquer pourquoi
+                une pétition a été classée. Nous listons celles pour lesquelles
+                cet emplacement a été laissé vide. Nous constatons une absence,
+                nous n&apos;en déduisons rien : nous ignorons si une décision a été
+                prise sans être rendue publique, ou si aucune ne l&apos;a été.
+              </dd>
+            </div>
 
-            <dt>Ce que nous publions, et ce que nous gardons pour nous</dt>
-            <dd>
-              <strong>
-                Tout ce qui figure sur ce site est soit une lecture directe du
-                fichier officiel, soit un rapprochement que l&apos;Assemblée a
-                elle-même établi.
-              </strong>{" "}
-              Quand une commission inscrit une pétition à son ordre du jour, elle
-              la désigne par son numéro ou son titre exact&nbsp;: nous indiquons
-              à chaque étape laquelle des deux, avec le texte officiel intégral.
-              <br />
-              Nous calculons par ailleurs des rapprochements entre pétitions et
-              débats en séance publique, par mots-clés et par dates. Rien ne
-              reliant officiellement les deux, ce ne sont que des indices —
-              c&apos;est pourquoi <strong>nous ne les affichons pas</strong>. Ils
-              servent à orienter nos recherches, pas à établir des faits.
-            </dd>
+            <div className={styles.entree}>
+              <dt>Ce que nous publions, et ce que nous gardons pour nous</dt>
+              <dd>
+                <strong>
+                  Tout ce qui figure sur ce site est soit une lecture directe du
+                  fichier officiel, soit un rapprochement que l&apos;Assemblée a
+                  elle-même établi.
+                </strong>{" "}
+                Quand une commission inscrit une pétition à son ordre du jour, elle
+                la désigne par son numéro ou son titre exact&nbsp;: nous indiquons
+                à chaque étape laquelle des deux, avec le texte officiel intégral.
+                <br />
+                Nous calculons par ailleurs des rapprochements entre pétitions et
+                débats en séance publique, par mots-clés et par dates. Rien ne
+                reliant officiellement les deux, ce ne sont que des indices —
+                c&apos;est pourquoi <strong>nous ne les affichons pas</strong>. Ils
+                servent à orienter nos recherches, pas à établir des faits.
+              </dd>
+            </div>
 
-            <dt>Ce que nous ne pouvons pas savoir</dt>
-            <dd>
-              L&apos;ordre du jour d&apos;une réunion dit qu&apos;une pétition a
-              été examinée, pas ce qui s&apos;y est dit. Les échanges, les
-              arguments et le sens du vote ne figurent pas dans les données que
-              nous exploitons. Un travail réel a donc pu avoir lieu sans que nous
-              puissions le décrire.
-            </dd>
+            <div className={styles.entree}>
+              <dt>Ce que nous ne pouvons pas savoir</dt>
+              <dd>
+                L&apos;ordre du jour d&apos;une réunion dit qu&apos;une pétition a
+                été examinée, pas ce qui s&apos;y est dit. Les échanges, les
+                arguments et le sens du vote ne figurent pas dans les données que
+                nous exploitons. Un travail réel a donc pu avoir lieu sans que nous
+                puissions le décrire.
+              </dd>
+            </div>
           </dl>
           <p className={styles.methodeLede}>
             Les règles complètes, catégorie par catégorie, sont détaillées sur la

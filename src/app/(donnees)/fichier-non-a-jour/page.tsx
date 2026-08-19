@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import styles from "../donnees.module.css";
-import PetitionCard from "@/app/PetitionCard";
+import TableauPetitions, { type LignePetition } from "@/app/TableauPetitions";
 import { formatFrDate, getEcartStatutDates, getStats } from "@/lib/petitions";
 import { SITE_NAME } from "@/lib/site";
 
@@ -56,18 +56,21 @@ export default async function FichierNonAJour() {
 
       <section className={styles.section}>
         {petitions.length ? (
-          petitions.map((p) => (
-            <PetitionCard
-              key={p.identifiant}
-              identifiant={p.identifiant}
-              titre={p.titre}
-              tagLabel="Fichier non à jour"
-              tagType="none"
-              nbVotes={p.nbVotes}
-              commission={p.commissionSource}
-              dateLabel={`Date limite : ${formatFrDate(p.dateLimiteVote)}`}
-            />
-          ))
+          <TableauPetitions
+            enteteDate="Date limite"
+            legende="La date limite affichée est celle du fichier lui-même : elle est passée, et le statut n'en tient pas compte."
+            lignes={petitions.map(
+              (p): LignePetition => ({
+                identifiant: p.identifiant,
+                titre: p.titre,
+                tagLabel: "Fichier non à jour",
+                tagType: "none",
+                nbVotes: p.nbVotes,
+                commission: p.commissionSource,
+                dateLabel: formatFrDate(p.dateLimiteVote),
+              })
+            )}
+          />
         ) : (
           <p>
             Aucune pétition dans ce cas au dernier import — ou données momentanément
