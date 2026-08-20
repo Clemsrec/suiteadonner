@@ -46,3 +46,6 @@ next-env.d.ts
 
 # corpus parlementaire aspiré (volumineux, regénérable)
 /.corpus/
+
+# journaux de debug de la CLI/extension Firebase (spécifiques au poste)
+/.firebase/
