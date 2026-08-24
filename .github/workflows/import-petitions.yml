@@ -1,10 +1,16 @@
 # Import hebdomadaire du jeu de données des pétitions.
 #
-# L'Assemblée republie le fichier chaque lundi matin ; ce workflow le récupère
-# le lundi en fin de matinée, laisse le contrôle de cohérence décider (un CSV
-# non conforme fait échouer le run AVANT toute écriture), puis écrit Firestore
+# Le fichier est déposé chaque lundi entre 00h50 et 01h15 UTC (relevé sur les
+# dépôts du 13/07 au 24/08/2026 dans le bucket d'historisation de data.gouv.fr) ;
+# ce workflow le récupère peu après, laisse le contrôle de cohérence décider (un
+# CSV non conforme fait échouer le run AVANT toute écriture), puis écrit Firestore
 # (petitions + meta/stats + meta/sitemap) et synchronise Algolia — exactement
 # `npm run import:petitions`, sans le --env-file local.
+#
+# Trois passages plutôt qu'un : les crons GitHub partent avec un retard variable,
+# et le dépôt a déjà glissé au soir (06/07/2026). Les passages sont sans effet
+# tant que le fichier n'a pas changé — l'import compare son en-tête `last-modified`
+# à celui de la version déjà importée et sort sans rien écrire s'ils sont égaux.
 #
 # Auth : compte de service `import-petitions@suiteadonner.iam.gserviceaccount.com`
 # (rôle datastore.user uniquement), clé JSON dans le secret GCP_SA_KEY. Un
@@ -23,9 +29,18 @@ name: Import hebdomadaire des pétitions
 
 on:
   schedule:
-    # Lundi 10:00 UTC (11h/12h à Paris) — marge sur la republication du matin.
-    - cron: "0 10 * * 1"
+    # Lundi 02:20 UTC (04h20 à Paris), une heure après le dépôt habituel, puis
+    # deux rattrapages. Minutes décalées : les crons à l'heure pile sont les
+    # plus retardés par GitHub.
+    - cron: "20 2 * * 1"
+    - cron: "20 5 * * 1"
+    - cron: "20 9 * * 1"
   workflow_dispatch:
+    inputs:
+      force:
+        description: "Réimporter même si le fichier officiel est inchangé"
+        type: boolean
+        default: false
 
 concurrency:
   group: import-petitions
@@ -64,4 +79,4 @@ jobs:
           NEXT_PUBLIC_ALGOLIA_APP_ID: B8GIER7BSB
           NEXT_PUBLIC_ALGOLIA_INDEX_NAME: petitions
           ALGOLIA_ADMIN_KEY: ${{ secrets.ALGOLIA_ADMIN_KEY }}
-        run: npm run verifier && node scripts/import-petitions.mjs
+        run: npm run verifier && node scripts/import-petitions.mjs ${{ inputs.force && '--force' || '' }}
