@@ -59,6 +59,10 @@ export const LEGAL = {
   naf: "6201Z — Programmation informatique",
   dateCreation: "25 mai 2006",
   adresse: ["7 place de l'Hôtel de Ville", "74000 Annecy", "France"],
+  // Champs séparés pour les données structurées (PostalAddress du layout) ;
+  // `adresse` reste la forme d'affichage des pages légales.
+  codePostal: "74000",
+  ville: "Annecy",
   email: "clement@nucom.fr",
   emailDonnees: "clement@nucom.fr",
   directeurPublication: "Clément Tournier",

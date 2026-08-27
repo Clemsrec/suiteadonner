@@ -1,0 +1,11 @@
+/* ÉQUIPE */
+Éditeur : NuCom — Clément Tournier
+Contact : clement@nucom.fr
+Localisation : Annecy, France
+
+/* SITE */
+Langue : français
+Technologies : Next.js, React, Cloud Firestore, Algolia
+Hébergement : Firebase App Hosting (europe-west4)
+Sources : data.gouv.fr (Licence Ouverte 2.0), DILA
+Mise à jour des données : hebdomadaire (lundi)
