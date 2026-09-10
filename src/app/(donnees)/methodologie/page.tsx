@@ -194,6 +194,14 @@ export default function Methodologie() {
             <Link href="/passages-en-commission">voir ces décisions</Link>.
           </li>
           <li>
+            <strong>Examen voté, rapport attendu</strong>{" "}— la commission
+            s&apos;est prononcée pour l&apos;examen d&apos;une pétition, et aucun
+            rapport n&apos;a encore été déposé. Le Règlement ne fixe aucun délai&nbsp;:
+            nous comptons le temps écoulé depuis le vote, nous n&apos;en tirons aucune
+            conclusion. Ce délai est calculé au moment où la page est rendue, jamais
+            figé en base — un compteur arrêté vieillirait sans que rien ne le signale.
+          </li>
+          <li>
             <strong>Rapport de commission</strong>{" "}— au terme d&apos;un examen, la
             commission dépose un rapport. C&apos;est la seule suite écrite, argumentée
             et signée qu&apos;une pétition puisse recevoir. Le document ne porte aucun
@@ -202,12 +210,14 @@ export default function Methodologie() {
             <Link href="/passages-en-commission">voir les suites en commission</Link>.
           </li>
           <li>
-            <strong>Classement d&apos;office en bloc</strong>{" "}— une commission classe
-            en une séance toutes les pétitions de son ressort restées six mois sous le
-            seuil, sans en nommer aucune. Nous relevons la date, l&apos;effectif annoncé
-            et la phrase qui l&apos;énonce&nbsp;; jamais la liste, que le compte rendu
-            ne donne pas. Un rappel d&apos;une séance antérieure n&apos;est pas recompté
-            —{" "}
+            <strong>Classement d&apos;office en bloc</strong>{" "}— une pétition restée
+            six mois sous les 10&nbsp;000 signatures est classée d&apos;office, sans
+            examen&nbsp;: c&apos;est la règle, et rien n&apos;a à être motivé. Une
+            commission le fait pour toutes celles de son ressort à la fois. Nous
+            relevons la date, l&apos;effectif annoncé et la phrase qui l&apos;énonce —
+            jamais la liste, que le compte rendu ne donne pas. Ce n&apos;est donc pas
+            un manquement que nous constatons, mais ce que le document ne permet pas de
+            savoir. Un rappel d&apos;une séance antérieure n&apos;est pas recompté —{" "}
             <Link href="/passages-en-commission#en-bloc">voir ces séances</Link>.
           </li>
         </ul>

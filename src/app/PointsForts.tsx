@@ -1,8 +1,10 @@
 import Link from "next/link";
 import styles from "./page.module.css";
 import {
+  formatDelaiMois,
   formatFrDate,
   formatSignatures,
+  moisDepuis,
   pointFinal,
   type SyntheseCommission,
 } from "@/lib/petitions";
@@ -25,6 +27,9 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
   // Le plus récent des rapports, quand il y en a. La carte parle au singulier
   // tant qu'il n'y en a qu'un — c'est le cas depuis le début de la législature.
   const rapport = synthese.rapports?.at(-1) ?? null;
+  // La plus ancienne des attentes : c'est le délai qui parle, pas le dernier
+  // examen voté. La liste arrive triée par date d'examen croissante.
+  const attente = synthese.attenteRapport?.[0] ?? null;
 
   return (
     <section className={styles.pointsForts} aria-labelledby="etabli">
@@ -80,19 +85,39 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
           </article>
         )}
 
+        {attente && (
+          <article className={styles.pfCarte}>
+            <p className={styles.pfCarteTitre}>Examen voté, rapport attendu</p>
+            <p className={styles.pfCarteChiffre}>
+              {formatDelaiMois(moisDepuis(attente.dateExamen))}
+            </p>
+            <p className={styles.pfCarteTexte}>
+              que la commission a voté l&apos;examen de la pétition{" "}
+              <Link href={`/petition/${attente.identifiant}`}>{attente.titre}</Link>
+              {pointFinal(attente.titre)} Un examen se conclut par un rapport&nbsp;; aucun
+              n&apos;a encore été déposé.{" "}
+              {synthese.nbAttenteRapport > 1
+                ? `${synthese.nbAttenteRapport} pétitions sont dans ce cas.`
+                : "Aucun délai n’est fixé par le Règlement."}
+            </p>
+          </article>
+        )}
+
         {synthese.petitionsClasseesEnBloc > 0 && (
           <article className={styles.pfCarte}>
-            <p className={styles.pfCarteTitre}>Classées en bloc, sans être nommées</p>
+            <p className={styles.pfCarteTitre}>Classées d&apos;office, en bloc</p>
             <p className={styles.pfCarteChiffre}>
               {synthese.petitionsClasseesEnBloc.toLocaleString("fr-FR")}
             </p>
             <p className={styles.pfCarteTexte}>
-              pétitions classées d&apos;office en{" "}
+              pétitions restées six mois sous les 10&nbsp;000 signatures, classées en{" "}
               {synthese.nbClassementsEnBloc === 1
-                ? "une seule séance,"
-                : `${synthese.nbClassementsEnBloc} séances,`}{" "}
-              comptées puis expédiées d&apos;un même vote. Le compte rendu donne leur nombre,
-              jamais leur liste&nbsp;: aucun signataire ne peut y retrouver la sienne —{" "}
+                ? "une seule séance."
+                : `${synthese.nbClassementsEnBloc} séances.`}{" "}
+              C&apos;est la règle&nbsp;: sous ce seuil, le classement est automatique et aucune
+              commission n&apos;a à s&apos;en expliquer. Nous le relevons parce que le compte
+              rendu en donne le nombre et jamais la liste — un signataire ne peut pas y vérifier
+              le sort de la sienne —{" "}
               <Link href="/passages-en-commission#en-bloc">voir ces séances</Link>.
             </p>
           </article>

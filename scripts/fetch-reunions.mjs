@@ -462,6 +462,23 @@ async function collecterRapports(resultats, petitions) {
 function construireSynthese(resultats, classementsEnBloc = []) {
   const decidees = resultats.filter((r) => r.derniereDecision);
   const avecRapport = resultats.filter((r) => r.rapport);
+
+  // Une commission qui vote l'examen d'une pétition s'engage à l'examiner, et
+  // cet examen se conclut par un rapport. Entre les deux, rien n'a de date
+  // limite : ces pétitions sont donc en attente, et c'est le seul délai que le
+  // site puisse mesurer sur une obligation que l'Assemblée s'est donnée.
+  const attenteRapport = resultats
+    .filter((r) => r.derniereDecision?.sens === "examen" && !r.rapport)
+    .map((r) => ({
+      identifiant: r.identifiant,
+      titre: r.titre,
+      nbVotes: r.nbVotes,
+      statut: r.statut,
+      dateExamen: r.derniereDecision.date,
+      citation: r.derniereDecision.citation,
+      url: r.derniereDecision.url,
+    }))
+    .sort((a, b) => a.dateExamen.localeCompare(b.dateExamen));
   const absentesDuFichier = decidees.filter((r) => !r.decisionTexte);
   const divergentes = decidees.filter((r) => r.decisionTexte);
 
@@ -510,6 +527,12 @@ function construireSynthese(resultats, classementsEnBloc = []) {
     petitionsClasseesEnBloc: classementsEnBloc.reduce((t, c) => t + c.nombre, 0),
     // Le rapport est la seule suite écrite, argumentée et signée qu'une
     // pétition puisse recevoir. Il y en a très peu : c'est le constat.
+    // Le délai en mois n'est pas figé ici : il vieillirait entre deux
+    // collectes. Seule la date de l'examen est stockée, le site compte à
+    // partir d'elle au moment où il rend la page.
+    attenteRapport,
+    nbAttenteRapport: attenteRapport.length,
+    signaturesAttenteRapport: attenteRapport.reduce((t, r) => t + (r.nbVotes ?? 0), 0),
     nbRapports: avecRapport.length,
     // `titre` reste celui du rapport, tel que le document le porte ; le titre
     // de la pétition a son champ à lui, pour qu'aucun des deux n'écrase l'autre.

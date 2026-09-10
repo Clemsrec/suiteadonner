@@ -86,6 +86,32 @@ export function pointFinal(texte: string | null): string {
   return texte && /[.!?»]$/.test(texte.trim()) ? "" : ".";
 }
 
+/**
+ * Nombre de mois entiers écoulés depuis une date. Calculé au rendu et non à la
+ * collecte : un délai figé en base vieillirait d'une semaine à l'autre sans que
+ * rien ne le signale.
+ */
+export function moisDepuis(iso: string | null, aujourdhui = new Date()): number | null {
+  if (!iso) return null;
+  const d = new Date(`${iso}T00:00:00`);
+  if (Number.isNaN(d.getTime())) return null;
+  const mois =
+    (aujourdhui.getFullYear() - d.getFullYear()) * 12 + (aujourdhui.getMonth() - d.getMonth());
+  // Le mois n'est révolu qu'une fois le quantième atteint.
+  return Math.max(0, aujourdhui.getDate() < d.getDate() ? mois - 1 : mois);
+}
+
+/** « depuis onze mois », « depuis un an et deux mois ». */
+export function formatDelaiMois(mois: number | null): string {
+  if (mois === null) return "—";
+  if (mois === 0) return "ce mois-ci";
+  if (mois < 12) return `${mois} mois`;
+  const ans = Math.floor(mois / 12);
+  const reste = mois % 12;
+  const libelleAns = ans === 1 ? "un an" : `${ans} ans`;
+  return reste ? `${libelleAns} et ${reste} mois` : libelleAns;
+}
+
 export function formatFrDate(iso: string | null): string {
   if (!iso) return "—";
   const d = new Date(`${iso}T00:00:00`);
@@ -447,6 +473,18 @@ export type SyntheseCommission = {
   classementsEnBloc: ClassementEnBloc[];
   nbClassementsEnBloc: number;
   petitionsClasseesEnBloc: number;
+  attenteRapport: {
+    identifiant: string;
+    titre: string;
+    nbVotes: number | null;
+    statut: string;
+    /** Date à laquelle la commission a voté l'examen. */
+    dateExamen: string;
+    citation: string;
+    url: string;
+  }[];
+  nbAttenteRapport: number;
+  signaturesAttenteRapport: number;
   nbRapports: number;
   rapports: (RapportCommission & {
     identifiant: string;

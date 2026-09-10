@@ -21,6 +21,10 @@ et des comptes rendus des débats publiés par la DILA.
   compte rendu publié de sa réunion. La phrase est reproduite telle quelle, avec
   le lien vers le texte officiel — y compris quand le champ
   `decision_commission` du fichier reste vide, ou dit autre chose.
+- **Examen voté, rapport attendu** — la commission s'est prononcée pour
+  l'examen d'une pétition et aucun rapport n'a suivi. Le Règlement ne fixe aucun
+  délai : le site compte le temps écoulé depuis le vote, sans en tirer de
+  conclusion.
 - **Rapport de commission** — la suite écrite d'un examen : un rapport déposé,
   numéroté et signé. Aucun champ ne le relie à la pétition ; son intitulé
   officiel la nomme par son numéro, et c'est ce lien-là qui est retenu. Ni le

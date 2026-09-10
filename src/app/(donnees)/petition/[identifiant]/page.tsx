@@ -8,10 +8,12 @@ import { FriseReunions } from "@/app/FriseReunions";
 import {
   MOTIF_LABELS,
   SEUIL_SIGNATURES,
+  formatDelaiMois,
   formatFrDate,
   formatSignatures,
   getPetition,
   getReunionsPetition,
+  moisDepuis,
   type Petition,
 } from "@/lib/petitions";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
@@ -256,6 +258,19 @@ export default async function FichePetition({ params }: Params) {
                 </p>
               )}
             </>
+          )}
+
+          {decisionLue?.sens === "examen" && !rapport && (
+            <p className={styles.encadre}>
+              <strong>
+                Examen voté, rapport attendu depuis{" "}
+                {formatDelaiMois(moisDepuis(decisionLue.date))}.
+              </strong>{" "}
+              La commission s&apos;est prononcée pour l&apos;examen de cette pétition, et un
+              examen se conclut par un rapport. Aucun n&apos;a été déposé à ce jour. Le
+              Règlement ne fixe aucun délai&nbsp;: nous comptons le temps écoulé, nous n&apos;en
+              tirons aucune conclusion.
+            </p>
           )}
 
           {rapport && (

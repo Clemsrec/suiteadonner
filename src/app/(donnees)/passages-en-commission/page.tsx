@@ -145,17 +145,20 @@ export default async function PassagesEnCommission() {
         <section className={styles.section} id="en-bloc">
           <h2>Le classement en bloc</h2>
           <p className={styles.lede}>
-            Les pétitions qui précèdent ont au moins été nommées. La plupart ne le sont
-            jamais&nbsp;: passé six mois sous le seuil de dix mille signatures, une commission
-            les classe d&apos;office, toutes ensemble, en un vote. Le compte rendu en donne le
-            nombre et non la liste — {synthese.petitionsClasseesEnBloc.toLocaleString("fr-FR")}{" "}
-            pétitions à ce jour, contre {avecDecisionLue.length} dont nous pouvons citer la
-            décision individuelle.
+            Une pétition qui n&apos;atteint pas dix mille signatures en six mois est classée
+            d&apos;office, sans examen&nbsp;: c&apos;est la règle, et la commission n&apos;a
+            aucune décision à motiver. Elle le fait pour toutes celles de son ressort à la fois,
+            en une séance et d&apos;un même vote —{" "}
+            {synthese.petitionsClasseesEnBloc.toLocaleString("fr-FR")} pétitions à ce jour,
+            contre {avecDecisionLue.length} dont nous pouvons citer la décision individuelle.
           </p>
           <p className={styles.lede}>
-            Nous ne pouvons donc pas dire à un signataire si la sienne en faisait partie. Nous
-            relevons la séance, son effectif et son compte rendu&nbsp;; le reste, le document
-            public ne le contient pas.
+            Nous ne relevons donc pas un manquement, mais une limite de ce que le document
+            public permet de savoir&nbsp;: le compte rendu annonce un effectif, jamais la liste
+            des pétitions concernées. Un signataire dont la pétition est restée sous le seuil ne
+            peut pas y vérifier qu&apos;elle a bien été classée ce jour-là, ni lequel de ces
+            votes la concernait. Nous relevons la séance, son effectif et son compte
+            rendu&nbsp;; le reste, le document ne le contient pas.
           </p>
 
           <ol className={cartes.frise}>
