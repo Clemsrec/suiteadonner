@@ -2,12 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import styles from "../donnees.module.css";
 import cartes from "@/app/page.module.css";
-import {
-  acteCommission,
-  formatFrDate,
-  formatSignatures,
-  getPassagesEnCommission,
-} from "@/lib/petitions";
+import { FriseReunions } from "@/app/FriseReunions";
+import { formatFrDate, formatSignatures, getPassagesEnCommission } from "@/lib/petitions";
 import { SITE_NAME } from "@/lib/site";
 
 export const revalidate = 86400;
@@ -15,12 +11,20 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: `Ce que les commissions ont fait des pétitions — ${SITE_NAME}`,
   description:
-    "Les pétitions que les commissions de l'Assemblée nationale ont inscrites à leur ordre du jour, désignées par leur numéro ou leur titre exact — et dont le fichier public ne mentionne aucune décision.",
+    "Les pétitions que les commissions de l'Assemblée nationale ont examinées en les désignant elles-mêmes, et la décision qu'elles ont votée — reprise mot pour mot du compte rendu officiel, là où le fichier public laisse le champ vide.",
   alternates: { canonical: "/passages-en-commission" },
 };
 
-// La correspondance certaine (numéro ou titre exact cité à l'ordre du jour)
-// ne concerne qu'une poignée de pétitions : la limite est très au-dessus.
+// Une citation qui porte déjà sa ponctuation finale n'en réclame pas une
+// seconde à l'extérieur des guillemets. Deux textes de décision sur 1 560 en
+// sont dépourvus : on ponctue alors la phrase, sans toucher à la citation.
+function pointFinal(citation: string): string {
+  return /[.!?»]$/.test(citation.trim()) ? "" : ".";
+}
+
+// La correspondance certaine (numéro ou titre exact cité par la commission,
+// à son ordre du jour ou dans son compte rendu) ne concerne qu'une poignée de
+// pétitions : la limite est très au-dessus.
 const LIMITE = 50;
 
 export default async function PassagesEnCommission() {
@@ -28,6 +32,13 @@ export default async function PassagesEnCommission() {
     console.error("Lecture Firestore impossible :", err);
     return [];
   });
+
+  // Ces décomptes étaient écrits en dur dans le chapeau. Ils ont cessé d'être
+  // vrais le jour où une pétition de la liste a eu, elle, un texte de décision
+  // au fichier : on les calcule désormais sur les données affichées.
+  const sansDecision = passages.filter((p) => !p.decisionPubliee);
+  const avecDecisionLue = passages.filter((p) => p.derniereDecision);
+  const divergentes = passages.filter((p) => p.derniereDecision && p.decisionTexte);
 
   return (
     <>
@@ -39,9 +50,10 @@ export default async function PassagesEnCommission() {
         <h1>Ce que les commissions ont fait</h1>
         <p className={styles.lede}>
           Ces rapprochements ne sont pas des déductions de notre part&nbsp;: la
-          commission a inscrit ces pétitions à son ordre du jour en les désignant
-          elle-même, par leur numéro ou par leur titre exact. Chaque étape indique
-          laquelle des deux, et donne accès au texte officiel intégral.
+          commission a désigné ces pétitions elle-même, par leur numéro ou par
+          leur titre exact, à son ordre du jour ou dans le compte rendu de sa
+          réunion. Chaque étape indique laquelle des trois, et donne accès au
+          texte officiel intégral.
         </p>
         <p className={styles.lede}>
           Nous écartons volontairement tout rapprochement incertain&nbsp;: lorsque
@@ -49,13 +61,35 @@ export default async function PassagesEnCommission() {
           n&apos;est cité, nous préférons une lacune à une attribution douteuse.
           Cette liste est donc un minimum, pas un total.
         </p>
-        <p className={styles.encadre}>
-          <strong>
-            Pour aucune d&apos;entre elles, le fichier public ne mentionne la moindre
-            décision.
-          </strong>{" "}
-          Le travail a eu lieu&nbsp;; le signataire n&apos;en saura rien.
-        </p>
+        {sansDecision.length > 0 && (
+          <p className={styles.encadre}>
+            <strong>
+              Pour {sansDecision.length === passages.length ? "aucune" : sansDecision.length}{" "}
+              d&apos;entre elles, le fichier public ne mentionne la moindre décision.
+            </strong>{" "}
+            {avecDecisionLue.length > 0 && (
+              <>
+                Le compte rendu de la réunion, lui, énonce la décision de la
+                commission pour {avecDecisionLue.length} d&apos;entre elles&nbsp;:
+                nous la reproduisons mot pour mot, avec le lien vers le texte
+                officiel.{" "}
+              </>
+            )}
+            Le travail a eu lieu&nbsp;; le signataire n&apos;en saura rien par le
+            fichier qu&apos;on lui donne à lire.
+          </p>
+        )}
+        {divergentes.length > 0 && (
+          <p className={styles.lede}>
+            Pour{" "}
+            {divergentes.length === 1
+              ? "l’une d’elles"
+              : `${divergentes.length} d’entre elles`}
+            , le fichier public publie bien un texte de décision — mais il ne dit pas la même
+            chose que le compte rendu de la commission. Les deux sont reproduits côte à côte,
+            sans que nous départagions.
+          </p>
+        )}
       </header>
 
       <section className={styles.section}>
@@ -66,7 +100,11 @@ export default async function PassagesEnCommission() {
                 <Link className={cartes.petitionTitle} href={`/petition/${p.identifiant}`}>
                   {p.titre}
                 </Link>
-                <span className={`${cartes.tag} ${cartes.tagNone}`}>Décision non publiée</span>
+                <span
+                  className={`${cartes.tag} ${p.decisionPubliee ? cartes.tagExamined : cartes.tagNone}`}
+                >
+                  {p.decisionPubliee ? "Décision publiée au fichier" : "Décision non publiée"}
+                </span>
               </div>
               <div className={cartes.petitionMeta}>
                 <span>
@@ -75,26 +113,19 @@ export default async function PassagesEnCommission() {
                 <span>{p.commission || "Commission non précisée"}</span>
               </div>
 
-              <ol className={cartes.frise}>
-                {p.reunions.map((r) => (
-                  <li key={`${r.date}-${r.compteRenduRef ?? r.intitule.slice(0, 20)}`}>
-                    <span className={cartes.friseDate}>{formatFrDate(r.date)}</span>
-                    <span className={cartes.friseActe}>{acteCommission(r.intitule)}</span>
-                    <span className={cartes.preuve}>
-                      {r.appariement === "numero"
-                        ? "La commission cite le numéro de la pétition"
-                        : "La commission cite le titre exact de la pétition"}
-                    </span>
-                    <details className={cartes.friseDetail}>
-                      <summary>Texte officiel</summary>
-                      <p>{r.intitule}</p>
-                      {r.compteRenduRef && (
-                        <p className={cartes.friseCr}>Compte rendu de la réunion : {r.compteRenduRef}</p>
-                      )}
-                    </details>
-                  </li>
-                ))}
-              </ol>
+              <FriseReunions reunions={p.reunions} />
+
+              {p.decisionTexte && p.derniereDecision && (
+                <div className={styles.encadre}>
+                  <strong>Les deux sources officielles ne disent pas la même chose.</strong>{" "}
+                  Le fichier public écrit&nbsp;: «&nbsp;{p.decisionTexte}&nbsp;»
+                  {pointFinal(p.decisionTexte)} Le compte rendu de la réunion du{" "}
+                  {formatFrDate(p.derniereDecision.date)} écrit&nbsp;: «&nbsp;
+                  {p.derniereDecision.citation}&nbsp;»
+                  {pointFinal(p.derniereDecision.citation)} Nous reproduisons les deux textes et
+                  n&apos;en départageons aucun.
+                </div>
+              )}
             </div>
           ))
         ) : (
@@ -105,7 +136,9 @@ export default async function PassagesEnCommission() {
       <p className={styles.source}>
         Passages établis depuis l&apos;agenda officiel des réunions de
         l&apos;Assemblée nationale, croisé avec le fichier des pétitions de
-        data.gouv.fr. Règles de rapprochement sur la page{" "}
+        data.gouv.fr. Les décisions citées sont reprises mot pour mot des comptes
+        rendus publiés par l&apos;Assemblée, dont le lien accompagne chaque
+        étape. Règles de rapprochement sur la page{" "}
         <Link href="/methodologie">méthodologie</Link>.
       </p>
     </>

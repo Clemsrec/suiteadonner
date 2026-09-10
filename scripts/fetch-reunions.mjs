@@ -14,13 +14,23 @@
 // exact. Le rapprochement cesse d'être un recoupement thématique pour devenir
 // une correspondance certaine, avec date de réunion et référence de compte rendu.
 //
-// Source : https://data.assemblee-nationale.fr/reunions/reunions
-//          Agenda.json.zip — un fichier JSON par réunion, avec organe réuni,
-//          date, ordre du jour en texte clair et référence du compte rendu.
+// Cette référence de compte rendu ouvre à son tour le texte intégral de la
+// réunion, où la décision figure en toutes lettres — souvent là où le fichier
+// public, lui, laisse le champ `decision_commission` vide. L'extraction de
+// cette décision vit dans scripts/lib/comptes-rendus.mjs, qui documente les
+// deux filtres évitant de prendre l'avis d'un groupe pour une décision.
+//
+// Sources : https://data.assemblee-nationale.fr/reunions/reunions
+//           Agenda.json.zip — un fichier JSON par réunion, avec organe réuni,
+//           date, ordre du jour en texte clair et référence du compte rendu.
+//           https://www.assemblee-nationale.fr/dyn/opendata/<référence>.html
+//           — le compte rendu intégral de chaque réunion de commission.
 //
 // Usage :
 //   node scripts/fetch-reunions.mjs           # analyse et écrit le JSON local
 //   node scripts/fetch-reunions.mjs --push    # écrit aussi dans Firestore
+//   node scripts/fetch-reunions.mjs --sans-comptes-rendus   # saute la collecte
+//                                             # des comptes rendus (itération)
 //
 // Sortie : .corpus/reunions.json, et collection `reunions` avec --push.
 
@@ -29,6 +39,12 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { parse } from "csv-parse/sync";
+import {
+  CRAWL_DELAY_MS,
+  estCompteRenduCommission,
+  extraireDecisions,
+  urlCompteRendu,
+} from "./lib/comptes-rendus.mjs";
 
 const AGENDA_URL =
   "https://data.assemblee-nationale.fr/static/openData/repository/17/vp/reunions/Agenda.json.zip";
@@ -37,8 +53,10 @@ const PETITIONS_URL =
 
 const CORPUS_DIR = path.resolve(".corpus");
 const CACHE = path.join(CORPUS_DIR, "cache", "Agenda.json.zip");
+const CACHE_CR = path.join(CORPUS_DIR, "cache", "comptes-rendus");
 
 const push = process.argv.includes("--push");
+const sansComptesRendus = process.argv.includes("--sans-comptes-rendus");
 
 // --- Lecture ZIP ----------------------------------------------------------
 
@@ -205,10 +223,171 @@ async function chargerPetitions() {
       statut: r.statut.trim(),
       commission: r.commission.trim(),
       decisionPubliee: r.decision_commission.trim().length > 0,
+      // Conservé mot pour mot : quand un compte rendu donne une décision, la
+      // fiche affiche les deux textes en regard et laisse le lecteur juger.
+      decisionTexte: r.decision_commission.trim() || null,
       url: r.url.trim(),
     });
   }
   return map;
+}
+
+// --- Comptes rendus de réunion -------------------------------------------
+
+// Le compte rendu d'une réunion ne change plus une fois publié : un cache
+// disque par référence suffit, et il évite de repayer le Crawl-delay de 30 s
+// imposé par robots.txt à chaque exécution. Vider .corpus/cache/ force la
+// recollecte, comme pour l'agenda et les débats.
+async function chargerCompteRendu(ref) {
+  const fichier = path.join(CACHE_CR, `${ref}.html`);
+  if (existsSync(fichier)) return readFile(fichier, "utf8");
+
+  const url = urlCompteRendu(ref);
+  const res = await fetch(url, { headers: { "User-Agent": "suiteadonner/1.0" } });
+  // Un compte rendu annoncé par l'agenda mais pas encore publié répond 404.
+  // C'est un état normal, pas une panne : on le signale et on continue.
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`Compte rendu ${ref} : ${res.status} ${res.statusText}`);
+  const html = await res.text();
+  await writeFile(fichier, html);
+  return html;
+}
+
+// Lit les comptes rendus et attache chaque décision à la pétition que la
+// commission nomme elle-même. Une même réunion statue souvent sur plusieurs
+// pétitions : le rattachement se fait sur le numéro cité dans la phrase de
+// décision, jamais sur la position du paragraphe.
+//
+// Le compte rendu ouvre une troisième voie d'appariement, à côté du numéro et
+// du titre lus dans l'ordre du jour. Elle est du même ordre de certitude : la
+// commission écrit « La commission adopte la proposition de classement de la
+// pétition n° 4553 » — c'est elle qui désigne, nous ne déduisons rien.
+async function collecterDecisions(resultats, petitions, reunionsParCR) {
+  if (!reunionsParCR.size) return { lus: 0, absents: 0, decisions: 0, parCompteRendu: 0 };
+
+  await mkdir(CACHE_CR, { recursive: true });
+  console.log(`\nComptes rendus de commission à lire : ${reunionsParCR.size}`);
+
+  const parReference = new Map();
+  let lus = 0;
+  let absents = 0;
+  let attente = false;
+
+  for (const ref of reunionsParCR.keys()) {
+    // robots.txt impose Crawl-delay: 30. Un fichier déjà en cache ne déclenche
+    // aucune requête, donc aucune attente.
+    if (!existsSync(path.join(CACHE_CR, `${ref}.html`))) {
+      if (attente) await new Promise((resolve) => setTimeout(resolve, CRAWL_DELAY_MS));
+      attente = true;
+    }
+
+    const html = await chargerCompteRendu(ref);
+    if (html === null) {
+      absents += 1;
+      console.log(`  ${ref} — pas encore publié`);
+      continue;
+    }
+    lus += 1;
+    parReference.set(ref, extraireDecisions(html));
+  }
+
+  const parIdentifiant = new Map(resultats.map((r) => [r.identifiant, r]));
+  let decisions = 0;
+  let parCompteRendu = 0;
+
+  for (const [ref, trouvees] of parReference) {
+    for (const d of trouvees) {
+      const p = petitions.get(d.numero);
+      // Le compte rendu peut trancher sur une pétition absente du fichier
+      // public — c'est arrivé pour la n° 3603. Sans ligne au CSV, aucune fiche
+      // à enrichir : on ne l'invente pas.
+      if (!p) continue;
+
+      let entree = parIdentifiant.get(d.numero);
+      if (!entree) {
+        entree = {
+          identifiant: p.identifiant,
+          titre: p.titre,
+          nbVotes: p.nbVotes,
+          statut: p.statut,
+          commission: p.commission,
+          decisionPubliee: p.decisionPubliee,
+          decisionTexte: p.decisionTexte,
+          url: p.url,
+          nbReunions: 0,
+          premiereReunion: null,
+          derniereReunion: null,
+          derniereDecision: null,
+          reunions: [],
+        };
+        parIdentifiant.set(d.numero, entree);
+        resultats.push(entree);
+      }
+
+      let reunion = entree.reunions.find((x) => x.compteRenduRef === ref);
+      if (!reunion) {
+        reunion = { ...reunionsParCR.get(ref), appariement: "compte-rendu", decision: null };
+        entree.reunions.push(reunion);
+        parCompteRendu += 1;
+      }
+      reunion.decision = { sens: d.sens, citation: d.citation, url: urlCompteRendu(ref) };
+      decisions += 1;
+    }
+  }
+
+  for (const r of resultats) {
+    r.reunions.sort((a, b) => a.date.localeCompare(b.date));
+    r.nbReunions = r.reunions.length;
+    r.premiereReunion = r.reunions[0]?.date ?? null;
+    r.derniereReunion = r.reunions.at(-1)?.date ?? null;
+    const derniere = r.reunions.filter((x) => x.decision).at(-1) ?? null;
+    // Règle 2 : sans décision extractible, le champ reste null.
+    r.derniereDecision = derniere
+      ? { ...derniere.decision, date: derniere.date, compteRenduRef: derniere.compteRenduRef }
+      : null;
+  }
+
+  return { lus, absents, decisions, parCompteRendu };
+}
+
+// Une décision publiée engage le site : elle affirme, citation à l'appui, ce
+// qu'une commission a voté. Ces contrôles cassent plutôt que de laisser passer
+// un rattachement douteux — même logique que verifier-coherence.mjs sur le CSV.
+function verifierDecisions(resultats) {
+  const echecs = [];
+
+  for (const r of resultats) {
+    for (const x of r.reunions) {
+      if (!x.decision) continue;
+      const ou = `n°${r.identifiant} · ${x.date}`;
+
+      if (!x.decision.citation?.trim()) {
+        echecs.push(`${ou} : décision sans citation.`);
+      }
+      if (!["examen", "classement"].includes(x.decision.sens)) {
+        echecs.push(`${ou} : sens inattendu «${x.decision.sens}».`);
+      }
+      // Le garde-fou central : on n'affiche une décision que si la commission
+      // nomme la pétition dans la phrase même. Sans ce numéro, le rattachement
+      // reposerait sur le contexte, donc sur une déduction.
+      if (!new RegExp(`\\b${r.identifiant}\\b`).test(x.decision.citation ?? "")) {
+        echecs.push(`${ou} : la citation ne cite pas le numéro de la pétition.`);
+      }
+      if (!x.decision.url?.startsWith("https://www.assemblee-nationale.fr/dyn/opendata/")) {
+        echecs.push(`${ou} : lien de compte rendu inattendu.`);
+      }
+    }
+
+    const derniere = r.reunions.filter((x) => x.decision).at(-1) ?? null;
+    if (Boolean(r.derniereDecision) !== Boolean(derniere)) {
+      echecs.push(`n°${r.identifiant} : derniereDecision incohérente avec les réunions.`);
+    }
+  }
+
+  if (echecs.length) {
+    for (const e of echecs) console.error(`  ✗ ${e}`);
+    throw new Error(`${echecs.length} décision(s) non conforme(s) : rien n'a été écrit.`);
+  }
 }
 
 // --- Traitement -----------------------------------------------------------
@@ -226,6 +405,9 @@ async function main() {
   const ambigus = titresAmbigus(petitions);
   const rejets = [];
   const parPetition = new Map();
+  // Référence de compte rendu → la réunion qu'elle documente. Sert à rattacher
+  // une décision à sa date même quand l'ordre du jour ne nommait pas la pétition.
+  const reunionsParCR = new Map();
   let reunionsCommission = 0;
   let itemsMentionnantPetition = 0;
 
@@ -238,17 +420,29 @@ async function main() {
       if (!/p[ée]tition/i.test(item)) continue;
       itemsMentionnantPetition += 1;
 
+      const reunion = {
+        date: (r.timeStampDebut ?? "").slice(0, 10),
+        etat: r.cycleDeVie?.etat ?? null,
+        organeRef: r.organeReuniRef ?? null,
+        compteRenduRef: r.compteRenduRef ?? null,
+        intitule: item.replace(/\s+/g, " ").trim(),
+        estCommission,
+      };
+
+      // Toute réunion parlant de pétitions vaut d'être lue, même si son ordre
+      // du jour n'en nomme aucune précisément : le compte rendu, lui, cite les
+      // numéros. La commission du 14/01/2026 annonçait « les pétitions
+      // renvoyées à la commission » et son compte rendu tranche nommément sur
+      // les n° 3603 et 4553.
+      if (estCompteRenduCommission(reunion.compteRenduRef)) {
+        if (!reunionsParCR.has(reunion.compteRenduRef)) {
+          reunionsParCR.set(reunion.compteRenduRef, reunion);
+        }
+      }
+
       for (const [id, voie] of apparier(item, petitions, ambigus, rejets)) {
         if (!parPetition.has(id)) parPetition.set(id, []);
-        parPetition.get(id).push({
-          date: (r.timeStampDebut ?? "").slice(0, 10),
-          etat: r.cycleDeVie?.etat ?? null,
-          organeRef: r.organeReuniRef ?? null,
-          compteRenduRef: r.compteRenduRef ?? null,
-          intitule: item.replace(/\s+/g, " ").trim(),
-          appariement: voie,
-          estCommission,
-        });
+        parPetition.get(id).push({ ...reunion, appariement: voie });
       }
     }
   }
@@ -266,26 +460,42 @@ async function main() {
         statut: p.statut,
         commission: p.commission,
         decisionPubliee: p.decisionPubliee,
+        decisionTexte: p.decisionTexte,
         url: p.url,
         nbReunions: uniques.length,
         premiereReunion: uniques[0].date,
         derniereReunion: uniques.at(-1).date,
+        // Renseignée par collecterDecisions() : la décision la plus récente
+        // qu'un compte rendu officiel énonce pour cette pétition, s'il y en a.
+        derniereDecision: null,
         // Le référentiel des organes n'est pas fourni dans cette archive : on
         // conserve l'identifiant brut pour la traçabilité et on affiche la
         // commission déjà connue par la fiche de pétition.
-        reunions: uniques,
+        reunions: uniques.map((x) => ({ ...x, decision: null })),
       };
     })
     .sort((a, b) => b.nbVotes - a.nbVotes);
 
-  const parVoie = { numero: 0, titre: 0 };
-  for (const r of resultats) for (const x of r.reunions) parVoie[x.appariement] += 1;
-
   console.log(`Réunions de commission : ${reunionsCommission}`);
   console.log(`Points d'ordre du jour mentionnant une pétition : ${itemsMentionnantPetition}`);
+
+  // La lecture des comptes rendus peut ajouter des pétitions et des réunions :
+  // elle passe donc avant tout décompte.
+  let cr = null;
+  if (sansComptesRendus) {
+    console.log("\nComptes rendus : collecte sautée (--sans-comptes-rendus).\n");
+  } else {
+    cr = await collecterDecisions(resultats, petitions, reunionsParCR);
+    resultats.sort((a, b) => b.nbVotes - a.nbVotes);
+  }
+
+  const parVoie = { numero: 0, titre: 0, "compte-rendu": 0 };
+  for (const r of resultats) for (const x of r.reunions) parVoie[x.appariement] += 1;
+
   console.log(
-    `Pétitions appariées : ${resultats.length} ` +
-      `(${parVoie.numero} correspondances par numéro, ${parVoie.titre} par titre)`
+    `\nPétitions appariées : ${resultats.length} ` +
+      `(${parVoie.numero} correspondances par numéro, ${parVoie.titre} par titre, ` +
+      `${parVoie["compte-rendu"]} par le compte rendu)`
   );
   console.log(`Titres partagés par plusieurs pétitions : ${ambigus.size}`);
   if (rejets.length) {
@@ -301,14 +511,43 @@ async function main() {
     `  dont la décision reste vide dans le jeu public : ${sansDecision.length}/${resultats.length}`
   );
 
+  if (cr) {
+    console.log(
+      `\nComptes rendus lus : ${cr.lus}` +
+        (cr.absents ? ` · pas encore publiés : ${cr.absents}` : "") +
+        ` · décisions rattachées avec certitude : ${cr.decisions}`
+    );
+
+    // Le constat que ces décisions rendent possible : la commission a tranché,
+    // le fichier réutilisable n'en dit rien.
+    const decidees = resultats.filter((r) => r.derniereDecision);
+    const muettes = decidees.filter((r) => !r.decisionPubliee);
+    const divergentes = decidees.filter((r) => r.decisionPubliee);
+    console.log(
+      `  dont le fichier public ne publie aucune décision : ${muettes.length}/${decidees.length}`
+    );
+    if (divergentes.length) {
+      // Deux sources officielles publient chacune une décision. On ne conclut
+      // pas : on garde les deux textes pour les afficher en regard.
+      console.log(`  dont le fichier publie un texte de son côté : ${divergentes.length}`);
+      for (const r of divergentes) {
+        console.log(`    n°${r.identifiant} — compte rendu : ${r.derniereDecision.sens}`);
+        console.log(`      fichier : ${r.decisionTexte.slice(0, 90)}`);
+      }
+    }
+  }
+
   for (const r of resultats.slice(0, 8)) {
     console.log(`\n[${r.identifiant}] ${r.nbVotes.toLocaleString("fr-FR")} sig · ${r.titre.slice(0, 62)}`);
     console.log(`  statut : ${r.statut} · décision publiée : ${r.decisionPubliee ? "oui" : "NON"}`);
     for (const x of r.reunions) {
       console.log(`  → ${x.date} [${x.appariement}] CR=${x.compteRenduRef ?? "—"}`);
       console.log(`     ${x.intitule.slice(0, 110)}`);
+      if (x.decision) console.log(`     décision [${x.decision.sens}] « ${x.decision.citation} »`);
     }
   }
+
+  verifierDecisions(resultats);
 
   const sortie = path.join(CORPUS_DIR, "reunions.json");
   await writeFile(sortie, JSON.stringify({ genere: resultats.length, resultats }, null, 2));
@@ -327,6 +566,9 @@ async function main() {
     batch.set(db.collection("meta").doc("reunions"), {
       nbPetitions: resultats.length,
       nbSansDecision: sansDecision.length,
+      nbDecisionsCompteRendu: resultats.filter((r) => r.derniereDecision).length,
+      nbDecisionsAbsentesDuFichier: resultats.filter((r) => r.derniereDecision && !r.decisionPubliee)
+        .length,
       updatedAt: Timestamp.now(),
     });
     await batch.commit();

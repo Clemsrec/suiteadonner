@@ -101,6 +101,15 @@ const ACTES: Array<[RegExp, string]> = [
   [/^(audition|table ronde)/, "Audition"],
 ];
 
+// Le compte rendu intégral d'une réunion de commission, à partir de la
+// référence que porte l'agenda officiel. Les comptes rendus de séance publique
+// (préfixe CRS) ne sont pas servis à cette adresse : on ne propose alors aucun
+// lien plutôt qu'un lien mort.
+export function urlCompteRendu(reference: string | null): string | null {
+  if (!reference?.startsWith("CRCANR")) return null;
+  return `https://www.assemblee-nationale.fr/dyn/opendata/${reference}.html`;
+}
+
 export function acteCommission(intitule: string): string {
   const debut = intitule
     .replace(/^[\s\-–—•]+/, "")
@@ -308,12 +317,34 @@ export async function getEcartStatutDates(max = 5): Promise<Petition[]> {
   return snap.docs.map((d) => d.data() as Petition);
 }
 
+/**
+ * Décision énoncée par la commission dans le compte rendu de sa réunion, là où
+ * le fichier public laisse souvent le champ prévu vide. Extraite par
+ * scripts/lib/comptes-rendus.mjs, qui n'en retient que les formes citant le
+ * numéro de la pétition : la commission désigne elle-même, rien n'est déduit.
+ */
+export type DecisionCompteRendu = {
+  sens: "examen" | "classement";
+  /** La phrase officielle, reproduite sans modification. */
+  citation: string;
+  url: string;
+};
+
 export type ReunionCommission = {
   date: string;
+  etat: string | null;
+  organeRef: string | null;
   compteRenduRef: string | null;
   intitule: string;
-  /** « numero » : la commission cite le numéro — correspondance certaine. */
-  appariement: "numero" | "titre";
+  estCommission: boolean;
+  /**
+   * Comment la commission a désigné la pétition — les trois voies sont d'égale
+   * certitude, aucune ne repose sur une déduction de notre part :
+   * « numero » et « titre », lus dans l'ordre du jour ; « compte-rendu »,
+   * lorsque seul le compte rendu de la réunion la nomme.
+   */
+  appariement: "numero" | "titre" | "compte-rendu";
+  decision: DecisionCompteRendu | null;
 };
 
 export type PassageEnCommission = {
@@ -323,10 +354,14 @@ export type PassageEnCommission = {
   statut: string;
   commission: string;
   decisionPubliee: boolean;
+  /** Le champ « décision de la commission » du fichier public, mot pour mot. */
+  decisionTexte: string | null;
   url: string;
   nbReunions: number;
   premiereReunion: string;
   derniereReunion: string;
+  /** La plus récente des décisions lues dans les comptes rendus. */
+  derniereDecision: (DecisionCompteRendu & { date: string; compteRenduRef: string }) | null;
   reunions: ReunionCommission[];
 };
 

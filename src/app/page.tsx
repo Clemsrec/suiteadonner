@@ -4,6 +4,7 @@ import SearchBar from "./SearchBar";
 import TableauPetitions, { type LignePetition } from "./TableauPetitions";
 import EmpreinteCarbone from "./EmpreinteCarbone";
 import CetteSemaine from "./CetteSemaine";
+import { FriseReunions } from "./FriseReunions";
 import {
   getDernierImport,
   getFlagshipPetitions,
@@ -11,7 +12,6 @@ import {
   getSansDecision,
   getStats,
   getEcartStatutDates,
-  acteCommission,
   formatFrDate,
   formatSignatures,
   type ImportDelta,
@@ -70,6 +70,10 @@ async function loadData(): Promise<PageData> {
 export default async function Home() {
   const { stats, flagship, sansDecision, statutObsolete, commission, dernierImport, error } =
     await loadData();
+
+  // Le constat était écrit en dur. Il a cessé d'être vrai le jour où une
+  // pétition passée en commission a eu, elle, un texte de décision au fichier.
+  const commissionSansDecision = commission.filter((p) => !p.decisionPubliee);
 
   return (
     <>
@@ -304,10 +308,11 @@ export default async function Home() {
 
             <p className={styles.blockLede}>
               Ces rapprochements ne sont pas des déductions de notre part&nbsp;:
-              la commission a inscrit ces pétitions à son ordre du jour en les
-              désignant elle-même, par leur numéro ou par leur titre exact. Chaque
-              étape ci-dessous indique laquelle des deux, et donne accès au texte
-              officiel intégral pour que vous puissiez le vérifier.
+              la commission a désigné ces pétitions elle-même, par leur numéro ou
+              par leur titre exact, à son ordre du jour ou dans le compte rendu de
+              sa réunion. Chaque étape ci-dessous indique laquelle des trois, et
+              donne accès au texte officiel intégral pour que vous puissiez le
+              vérifier.
             </p>
             <p className={styles.blockLede}>
               Nous écartons volontairement tout rapprochement incertain&nbsp;:
@@ -315,13 +320,20 @@ export default async function Home() {
               numéro n&apos;est cité, nous préférons une lacune à une attribution
               douteuse. Cette liste est donc un minimum, pas un total.
             </p>
-            <p className={styles.blockLede}>
-              <strong>
-                Pour aucune d&apos;entre elles, le fichier public ne mentionne la
-                moindre décision.
-              </strong>{" "}
-              Le travail a eu lieu&nbsp;; le signataire n&apos;en saura rien.
-            </p>
+            {commissionSansDecision.length > 0 && (
+              <p className={styles.blockLede}>
+                <strong>
+                  Pour{" "}
+                  {commissionSansDecision.length === commission.length
+                    ? "aucune"
+                    : commissionSansDecision.length}{" "}
+                  d&apos;entre elles, le fichier public ne mentionne la moindre
+                  décision.
+                </strong>{" "}
+                Le travail a eu lieu&nbsp;; le signataire n&apos;en saura rien par
+                le fichier qu&apos;on lui donne à lire.
+              </p>
+            )}
 
             {commission.map((p) => (
               <div className={styles.passage} key={p.identifiant}>
@@ -329,7 +341,11 @@ export default async function Home() {
                   <Link className={styles.petitionTitle} href={`/petition/${p.identifiant}`}>
                     {p.titre}
                   </Link>
-                  <span className={`${styles.tag} ${styles.tagNone}`}>Décision non publiée</span>
+                  <span
+                    className={`${styles.tag} ${p.decisionPubliee ? styles.tagExamined : styles.tagNone}`}
+                  >
+                    {p.decisionPubliee ? "Décision publiée au fichier" : "Décision non publiée"}
+                  </span>
                 </div>
                 <div className={styles.petitionMeta}>
                   <span>
@@ -338,32 +354,7 @@ export default async function Home() {
                   <span>{p.commission || "Commission non précisée"}</span>
                 </div>
 
-                <ol className={styles.frise}>
-                  {p.reunions.map((r) => (
-                    <li key={`${r.date}-${r.compteRenduRef ?? r.intitule.slice(0, 20)}`}>
-                      <span className={styles.friseDate}>{formatFrDate(r.date)}</span>
-                      <span className={styles.friseActe}>{acteCommission(r.intitule)}</span>
-                      {/* Comment le lien a été établi : le visiteur doit pouvoir
-                          juger lui-même de la solidité de chaque rapprochement. */}
-                      <span className={styles.preuve}>
-                        {r.appariement === "numero"
-                          ? "La commission cite le numéro de la pétition"
-                          : "La commission cite le titre exact de la pétition"}
-                      </span>
-                      {/* <details> natif : le texte officiel n'est jamais tronqué,
-                          il est replié. Fonctionne sans JavaScript. */}
-                      <details className={styles.friseDetail}>
-                        <summary>Texte officiel</summary>
-                        <p>{r.intitule}</p>
-                        {r.compteRenduRef && (
-                          <p className={styles.friseCr}>
-                            Compte rendu de la réunion : {r.compteRenduRef}
-                          </p>
-                        )}
-                      </details>
-                    </li>
-                  ))}
-                </ol>
+                <FriseReunions reunions={p.reunions} />
               </div>
             ))}
 

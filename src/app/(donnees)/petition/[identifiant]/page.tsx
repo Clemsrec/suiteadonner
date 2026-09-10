@@ -4,10 +4,10 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import styles from "../../donnees.module.css";
 import cartes from "@/app/page.module.css";
+import { FriseReunions } from "@/app/FriseReunions";
 import {
   MOTIF_LABELS,
   SEUIL_SIGNATURES,
-  acteCommission,
   formatFrDate,
   formatSignatures,
   getPetition,
@@ -116,6 +116,9 @@ export default async function FichePetition({ params }: Params) {
 
   const annee = p.datePublication?.slice(0, 4) ?? null;
   const sansDecisionPubliee = p.statutSource === "classee" && p.motifClassement === "absent";
+  // La décision que la commission a énoncée dans son compte rendu, quand elle y
+  // nomme la pétition. Le plus souvent absente : c'est le cas normal.
+  const decisionLue = passages?.derniereDecision ?? null;
 
   const filAriane = {
     "@context": "https://schema.org",
@@ -214,6 +217,43 @@ export default async function FichePetition({ params }: Params) {
               </span>
             </p>
           )}
+
+          {decisionLue && (
+            <>
+              <h3>Ce que le compte rendu de la commission indique</h3>
+              <p>
+                Le fichier de données n&apos;est pas la seule trace publique. Le
+                compte rendu de la réunion du {formatFrDate(decisionLue.date)},
+                publié par l&apos;Assemblée nationale, énonce la décision en ces
+                termes.
+              </p>
+              <blockquote className={styles.citation}>
+                {decisionLue.citation}
+                <span className={styles.citationSource}>
+                  Compte rendu {decisionLue.compteRenduRef}, reproduit sans modification —{" "}
+                  <a href={decisionLue.url} target="_blank" rel="noopener noreferrer">
+                    lire le compte rendu intégral
+                  </a>
+                  .
+                </span>
+              </blockquote>
+              {p.decisionTexte ? (
+                <p className={styles.encadre}>
+                  <strong>Les deux sources officielles ne disent pas la même chose.</strong>{" "}
+                  Le fichier réutilisable et le compte rendu de la commission émanent tous deux
+                  de l&apos;Assemblée nationale. Nous reproduisons les deux textes, chacun daté
+                  et sourcé, et n&apos;en départageons aucun.
+                </p>
+              ) : (
+                <p className={styles.encadre}>
+                  <strong>La décision existe, le fichier n&apos;en dit rien.</strong>{" "}
+                  La commission s&apos;est prononcée et l&apos;a écrit dans son compte rendu. Le
+                  fichier que l&apos;Assemblée publie en données ouvertes, lui, laisse le champ
+                  vide&nbsp;: qui s&apos;y fie ne peut pas savoir ce qui a été décidé.
+                </p>
+              )}
+            </>
+          )}
         </section>
 
         <section className={styles.section}>
@@ -228,9 +268,20 @@ export default async function FichePetition({ params }: Params) {
             <p className={styles.encadre}>
               <strong>Classée sans décision publiée.</strong>{" "}Le jeu de données officiel
               prévoit un champ pour motiver le classement d&apos;une pétition&nbsp;:
-              pour celle-ci, il est resté vide. Nous constatons une absence, nous
-              n&apos;en déduisons rien — nous ignorons si une décision a été prise sans
-              être rendue publique, ou si aucune ne l&apos;a été.{" "}
+              pour celle-ci, il est resté vide.{" "}
+              {decisionLue ? (
+                <>
+                  Le compte rendu de la commission, lui, énonce la décision&nbsp;: elle a
+                  donc bien été prise, et rendue publique ailleurs que dans le fichier
+                  réutilisable.
+                </>
+              ) : (
+                <>
+                  Nous constatons une absence, nous n&apos;en déduisons rien — nous
+                  ignorons si une décision a été prise sans être rendue publique, ou si
+                  aucune ne l&apos;a été.
+                </>
+              )}{" "}
               <Link href="/decisions-non-publiees">Voir toutes les pétitions concernées</Link>.
             </p>
           )}
@@ -252,30 +303,11 @@ export default async function FichePetition({ params }: Params) {
             <h2>Ce que la commission a fait</h2>
             <p>
               Ces étapes ne sont pas des déductions de notre part&nbsp;: la commission a
-              inscrit cette pétition à son ordre du jour en la désignant elle-même, par
-              son numéro ou par son titre exact. Chaque étape indique laquelle des deux,
-              avec le texte officiel intégral.
+              désigné cette pétition elle-même, par son numéro ou par son titre exact, à
+              son ordre du jour ou dans le compte rendu de sa réunion. Chaque étape
+              indique laquelle des trois, avec le texte officiel intégral.
             </p>
-            <ol className={cartes.frise}>
-              {passages.reunions.map((r) => (
-                <li key={`${r.date}-${r.compteRenduRef ?? r.intitule.slice(0, 20)}`}>
-                  <span className={cartes.friseDate}>{formatFrDate(r.date)}</span>
-                  <span className={cartes.friseActe}>{acteCommission(r.intitule)}</span>
-                  <span className={cartes.preuve}>
-                    {r.appariement === "numero"
-                      ? "La commission cite le numéro de la pétition"
-                      : "La commission cite le titre exact de la pétition"}
-                  </span>
-                  <details className={cartes.friseDetail}>
-                    <summary>Texte officiel</summary>
-                    <p>{r.intitule}</p>
-                    {r.compteRenduRef && (
-                      <p className={cartes.friseCr}>Compte rendu de la réunion : {r.compteRenduRef}</p>
-                    )}
-                  </details>
-                </li>
-              ))}
-            </ol>
+            <FriseReunions reunions={passages.reunions} />
           </section>
         )}
 

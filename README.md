@@ -16,6 +16,11 @@ et des comptes rendus des débats publiés par la DILA.
   `decision_commission`. Constat brut tiré du jeu de données, sans inférence.
 - **Statut non mis à jour** — pétitions dont la date limite de signature est
   passée mais que le jeu de données affiche toujours « en cours de signature ».
+- **Décision lue au compte rendu** — la commission a voté le classement ou
+  l'examen d'une pétition en la nommant par son numéro, et l'a écrit dans le
+  compte rendu publié de sa réunion. La phrase est reproduite telle quelle, avec
+  le lien vers le texte officiel — y compris quand le champ
+  `decision_commission` du fichier reste vide, ou dit autre chose.
 - **Recoupement thématique** — rapprochement entre une pétition close et les
   interventions prononcées en séance dans les douze mois suivants.
 
@@ -37,7 +42,9 @@ changement.
    thématique**, jamais un lien officiel : il n'existe aucun identifiant commun
    entre les deux corpus. Le site mesure d'abord le *silence* (aucune
    intervention sur une fenêtre explicite), affirmation vérifiable, plutôt que
-   des corrélations positives fragiles.
+   des corrélations positives fragiles. Font seules exception les réunions de
+   commission, où c'est l'Assemblée qui désigne : un numéro ou un titre exact
+   cité à l'ordre du jour, ou un numéro cité dans le compte rendu de la réunion.
 
 ## Architecture
 
@@ -57,7 +64,7 @@ framework, abondamment commentés :
 | [verifier-coherence.mjs](scripts/verifier-coherence.mjs) | `npm run verifier` | Contrôles de cohérence sur le CSV canonique (fraîcheur, volume). Casse bruyamment plutôt que laisser passer des chiffres périmés. |
 | [import-petitions.mjs](scripts/import-petitions.mjs) | `npm run import:petitions` | Vérifie, puis importe le CSV dans Firestore et synchronise l'index Algolia. `--dry-run` pour analyser sans écrire. |
 | [fetch-debats.mjs](scripts/fetch-debats.mjs) | `npm run fetch:debats` | Aspire les comptes rendus intégraux des séances publiques (flux XML DILA) vers `.corpus/`. |
-| [fetch-reunions.mjs](scripts/fetch-reunions.mjs) | `npm run fetch:reunions` | Extrait de l'agenda de l'Assemblée les réunions de commission où une pétition figure à l'ordre du jour. |
+| [fetch-reunions.mjs](scripts/fetch-reunions.mjs) | `npm run fetch:reunions` | Extrait de l'agenda de l'Assemblée les réunions de commission où une pétition figure à l'ordre du jour, lit les comptes rendus de ces réunions et en tire la décision votée. `--push` pour écrire dans Firestore. |
 | [croiser-petitions-debats.mjs](scripts/croiser-petitions-debats.mjs) | `npm run croiser` | Croise pétitions closes et interventions en séance (sortie locale uniquement). |
 
 La logique de lecture, normalisation et classification est centralisée dans
@@ -65,6 +72,14 @@ La logique de lecture, normalisation et classification est centralisée dans
 entre l'import et les contrôles : une règle ne peut pas diverger entre ce qui
 est importé et ce qui est testé. Son miroir TypeScript côté site est
 [src/lib/petitions.ts](src/lib/petitions.ts).
+
+La lecture des comptes rendus de commission vit dans
+[scripts/lib/comptes-rendus.mjs](scripts/lib/comptes-rendus.mjs). Son en-tête
+documente les deux filtres qui évitent de prendre l'avis d'un groupe politique
+ou l'annonce d'un ordre du jour pour une décision : ne retenir que les
+paragraphes composés en italique — la convention typographique du récit
+procédural — puis, parmi eux, les seules phrases où la commission cite le numéro
+de la pétition. Sans numéro dans la phrase, rien n'est publié.
 
 ## Démarrer en local
 

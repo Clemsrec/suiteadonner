@@ -41,8 +41,16 @@ export default function Methodologie() {
           >
             fichier officiel des pétitions de l&apos;Assemblée nationale
           </a>{" "}
-          publié sur data.gouv.fr, complété par l&apos;agenda officiel des réunions
-          de l&apos;Assemblée pour les passages en commission. La plateforme{" "}
+          publié sur data.gouv.fr, complété par l&apos;
+          <a
+            href="https://data.assemblee-nationale.fr/reunions/reunions"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            agenda officiel des réunions de l&apos;Assemblée
+          </a>{" "}
+          et par les comptes rendus que ces réunions produisent, pour les passages
+          en commission. La plateforme{" "}
           <a href="https://petitions.assemblee-nationale.fr" target="_blank" rel="noopener noreferrer">
             petitions.assemblee-nationale.fr
           </a>{" "}
@@ -94,11 +102,20 @@ export default function Methodologie() {
         <p>
           Il n&apos;existe aucun identifiant commun entre une pétition et un débat
           parlementaire. Les seuls rapprochements que nous publions sont ceux que
-          l&apos;Assemblée a elle-même établis&nbsp;: une commission qui inscrit une
-          pétition à son ordre du jour en la désignant par son numéro ou par son
-          titre exact. Chaque étape indique laquelle des deux, avec le texte officiel
-          intégral —{" "}
+          l&apos;Assemblée a elle-même établis, par l&apos;une de ces trois voies&nbsp;:
+          une commission qui inscrit une pétition à son ordre du jour en la désignant
+          par son numéro ou par son titre exact, ou dont le compte rendu de réunion
+          cite ce numéro. Chaque étape indique laquelle des trois a servi, avec le
+          texte officiel intégral —{" "}
           <Link href="/passages-en-commission">voir ces passages en commission</Link>.
+        </p>
+        <p>
+          La même exigence vaut pour les décisions que nous citons. Une commission
+          énonce souvent sa décision sans nommer la pétition&nbsp;: «&nbsp;la
+          commission adopte la proposition de classement de la pétition&nbsp;».
+          Deviner laquelle en suivant le fil du débat serait une déduction&nbsp;: nous
+          n&apos;affichons alors rien. Seules les phrases où la commission cite
+          elle-même le numéro sont reproduites.
         </p>
         <p>
           Nous calculons par ailleurs des rapprochements thématiques entre pétitions
@@ -149,6 +166,14 @@ export default function Methodologie() {
             qu&apos;une pétition n&apos;a pas atteint un seuil si on ignore combien
             elle a recueilli.
           </li>
+          <li>
+            <strong>Décision lue au compte rendu</strong>{" "}— la commission énonce le
+            classement ou l&apos;examen de la pétition en la nommant par son numéro,
+            dans le compte rendu publié de sa réunion. La phrase est reproduite telle
+            quelle, jamais reformulée, et le lien vers le compte rendu intégral
+            l&apos;accompagne. Sans numéro cité, rien n&apos;est affiché —{" "}
+            <Link href="/passages-en-commission">voir ces décisions</Link>.
+          </li>
         </ul>
       </section>
 
@@ -159,17 +184,33 @@ export default function Methodologie() {
           ensuite, recalculons toutes les catégories dérivées et mettons le site à
           jour. La date du dernier import figure sur chaque fiche et chaque liste.
         </p>
+        <p>
+          L&apos;agenda des réunions et les comptes rendus suivent leur propre
+          calendrier, celui des travaux des commissions. Un compte rendu paraît
+          quelques jours après la réunion&nbsp;: tant qu&apos;il n&apos;est pas
+          publié, l&apos;étape figure sans décision, et la décision apparaît lors
+          d&apos;une collecte suivante.
+        </p>
       </section>
 
       <section className={styles.section}>
         <h2>Ce que nous ne pouvons pas savoir</h2>
         <p>
           L&apos;ordre du jour d&apos;une réunion dit qu&apos;une pétition a été
-          examinée, pas ce qui s&apos;y est dit. Les échanges, les arguments et le
-          sens d&apos;un vote ne figurent pas dans les données que nous exploitons.
-          Un travail réel a donc pu avoir lieu sans que nous puissions le décrire —
-          et sans que le signataire puisse le savoir&nbsp;: c&apos;est précisément ce
-          que ce site mesure.
+          examinée, pas ce qui s&apos;y est dit. Le compte rendu de cette réunion,
+          lui, le dit&nbsp;: quand il existe et qu&apos;il nomme la pétition, nous
+          reproduisons la décision votée, mot pour mot, avec le lien vers le texte
+          officiel. Ce n&apos;est donc plus le sort de la pétition qui nous échappe,
+          mais ce que le fichier réutilisable en laisse voir — et l&apos;écart entre
+          les deux est précisément ce que ce site mesure.
+        </p>
+        <p>
+          Trois limites demeurent. Un compte rendu peut n&apos;être pas encore publié
+          au moment où nous lisons l&apos;agenda. Une commission peut classer des
+          centaines de pétitions d&apos;office en une séance sans en nommer aucune.
+          Et les motivations réelles d&apos;un vote — ce que chacun pense, ce qui
+          s&apos;est décidé ailleurs — ne figurent dans aucun document&nbsp;: nous
+          rapportons ce qui a été écrit, pas ce qui a été voulu.
         </p>
       </section>
 
@@ -177,8 +218,10 @@ export default function Methodologie() {
         <h2>Refaire nos calculs</h2>
         <p>
           Le dépôt public contient l&apos;intégralité du pipeline&nbsp;:
-          téléchargement du CSV canonique, normalisation, classification et contrôles
-          de cohérence. Toute erreur peut être signalée — elle sera corrigée et
+          téléchargement du CSV canonique, normalisation, classification, lecture de
+          l&apos;agenda et des comptes rendus de commission, et contrôles de
+          cohérence. Les motifs exacts qui reconnaissent une décision dans un compte
+          rendu y figurent, commentés. Toute erreur peut être signalée — elle sera corrigée et
           signalée publiquement. Les données republiées ici restent sous{" "}
           <strong>Licence Ouverte 2.0 (Etalab)</strong>, librement réutilisables avec
           mention de la source.

@@ -20,8 +20,13 @@ qui les enfreint sera refusée même si le code est excellent.
    (« Aucune décision publiée »), jamais des intentions.
 4. **Recoupement ≠ lien officiel.** Il n'existe aucun identifiant commun entre
    une pétition et un débat parlementaire. Tout rapprochement est thématique et
-   doit être présenté comme tel. Seules les réunions de commission qui citent
-   une pétition par son numéro constituent une correspondance certaine.
+   doit être présenté comme tel. Seules constituent une correspondance certaine
+   les réunions de commission où l'Assemblée désigne elle-même la pétition, par
+   l'une de ces trois voies : un numéro cité à l'ordre du jour, un titre exact
+   cité à l'ordre du jour, ou un numéro cité dans le compte rendu de la réunion.
+   La même exigence vaut pour toute décision citée : sans numéro de pétition
+   dans la phrase même, on n'affiche rien — deviner le référent en suivant le
+   fil du débat serait une déduction.
 
 Ces règles sont détaillées dans les commentaires d'en-tête des scripts —
 lisez-les avant de modifier un seuil ou une classification.
