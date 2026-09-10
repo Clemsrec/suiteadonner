@@ -40,6 +40,10 @@ export const SORT_PETITION = {
   // issues à zéro ne sont pas une panne. Valeur figée par nature — c'est un
   // relevé manuel — mais elle vit désormais avec sa date.
   archivees: 1454,
+  // Au-delà de ce délai, l'accueil signale lui-même que le relevé a vieilli.
+  // Un relevé manuel ne se périme pas tout seul : sans cette alerte, il reste
+  // affiché indéfiniment avec sa date, et c'est au lecteur de faire le calcul.
+  peremptionJours: 120,
   etats: [
     { cle: "published", libelle: "Enregistrée", nombre: 1656 },
     { cle: "classified", libelle: "Classée par la commission", nombre: 0 },
@@ -53,8 +57,10 @@ export function lienSortPetition(cle: string): string {
 }
 
 // Informations légales — source unique pour les trois pages réglementaires.
-// Les valeurs d'identification proviennent de l'éditeur ; les valeurs
-// techniques (régions d'hébergement) ont été relevées sur l'infrastructure.
+// Les valeurs d'identification proviennent de l'éditeur ; les régions
+// d'hébergement ont été relues sur l'infrastructure le 10/09/2026 par l'API
+// Firebase — App Hosting en europe-west4, Firestore en nam5 — et non recopiées
+// d'une console.
 export const LEGAL = {
   denomination: "NuCom",
   formeJuridique: "Entrepreneur individuel",

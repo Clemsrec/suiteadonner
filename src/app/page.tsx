@@ -16,6 +16,7 @@ import {
   getEcartStatutDates,
   formatFrDate,
   formatSignatures,
+  joursDepuis,
   type ImportDelta,
   type PassageEnCommission,
   type SyntheseCommission,
@@ -490,6 +491,19 @@ export default async function Home() {
           <p className={styles.eyebrow}>
             Comparaison avec l&apos;interface officielle · relevé du{" "}
             {formatFrDate(SORT_PETITION.releveLe)}
+            {(() => {
+              // La plateforme rejette les requêtes automatisées (HTTP 422) : ce
+              // relevé est fait à la main et ne se rafraîchit pas tout seul. Il
+              // annonce donc lui-même quand il a vieilli, plutôt que de laisser
+              // sa date en petit et le lecteur faire la soustraction.
+              const jours = joursDepuis(SORT_PETITION.releveLe);
+              return jours !== null && jours > SORT_PETITION.peremptionJours ? (
+                <>
+                  {" · "}
+                  <strong>à revérifier — {jours} jours</strong>
+                </>
+              ) : null;
+            })()}
           </p>
           <h2>
             La plateforme prévoit de dire ce qu&apos;est devenue une pétition. Le jour de notre

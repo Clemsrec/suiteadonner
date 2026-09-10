@@ -175,3 +175,27 @@
     padding-top: 2px;
   }
 }
+
+/* Fiche d'un traitement : finalité, base légale, localisation, conservation.
+   Une liste de définitions plutôt qu'un paragraphe — chaque rubrique doit
+   pouvoir être trouvée et citée séparément. */
+.traitement {
+  margin: 14px 0 0;
+  padding: 16px 18px;
+  background: var(--surface-sunk);
+  border-left: 3px solid var(--rule-strong);
+}
+.traitement dt {
+  margin-top: 12px;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--ink-faint);
+}
+.traitement dt:first-child {
+  margin-top: 0;
+}
+.traitement dd {
+  margin: 4px 0 0;
+  line-height: 1.6;
+}

@@ -127,6 +127,14 @@ export function formatDelaiMois(mois: number | null): string {
   return reste ? `${libelleAns} et ${reste} mois` : libelleAns;
 }
 
+/** Jours écoulés depuis une date ISO. null si la date est absente ou illisible. */
+export function joursDepuis(iso: string | null): number | null {
+  if (!iso) return null;
+  const t = new Date(`${iso}T12:00:00Z`).getTime();
+  if (Number.isNaN(t)) return null;
+  return Math.floor((Date.now() - t) / 86_400_000);
+}
+
 export function formatFrDate(iso: string | null): string {
   if (!iso) return "—";
   const d = new Date(`${iso}T00:00:00`);

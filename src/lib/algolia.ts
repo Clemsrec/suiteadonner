@@ -1,5 +1,5 @@
 import { liteClient } from "algoliasearch/lite";
-import type { StatutSource } from "./petitions";
+import type { StatutSource } from "./petitions-format";
 
 export const ALGOLIA_INDEX_NAME = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "petitions";
 
@@ -39,6 +39,16 @@ export async function searchPetitionsIndex(
         query: keyword,
         filters: filter === "toutes" ? undefined : `statutSource:${filter}`,
         hitsPerPage: 30,
+        // La politique de confidentialité affirme que l'éditeur ne conserve
+        // pas les requêtes et ne peut pas les relier à un visiteur. Sans ce
+        // drapeau, Algolia les agrège dans sa Search Analytics, consultable
+        // depuis le tableau de bord : l'affirmation dépendrait d'un réglage
+        // externe au lieu d'être vraie par construction.
+        analytics: false,
+        // Aucun identifiant de visiteur n'est transmis : ni userToken, ni
+        // clickAnalytics, qui supposeraient de suivre un même utilisateur
+        // d'une requête à l'autre.
+        clickAnalytics: false,
       },
     ],
   });

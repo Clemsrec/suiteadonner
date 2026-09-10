@@ -82,8 +82,39 @@ export default function PolitiqueConfidentialite() {
         Lorsque vous utilisez le champ de recherche, votre requête est envoyée depuis votre
         navigateur au service <strong>Algolia</strong>, qui renvoie les résultats. Aucun
         identifiant de session, aucun cookie et aucune donnée de compte n&apos;est associé à
-        cette requête, l&apos;éditeur ne la conserve pas et ne peut pas la relier à un visiteur.
+        cette requête.
       </p>
+      <dl className={styles.traitement}>
+        <dt>Finalité</dt>
+        <dd>Exécuter la recherche que vous demandez, et rien d&apos;autre.</dd>
+        <dt>Base légale</dt>
+        <dd>
+          Intérêt légitime de l&apos;éditeur à fournir une fonction de recherche sur des
+          données publiques (article 6.1.f du RGPD).
+        </dd>
+        <dt>Analytique désactivée</dt>
+        <dd>
+          Les requêtes sont envoyées avec les options <code>analytics</code> et{" "}
+          <code>clickAnalytics</code> à <code>false</code>&nbsp;: elles ne sont pas agrégées
+          dans les statistiques de recherche d&apos;Algolia, et l&apos;éditeur n&apos;y a donc
+          accès ni individuellement, ni sous forme de tendances. Ce réglage est dans le code,
+          consultable dans <code>src/lib/algolia.ts</code>.
+        </dd>
+        <dt>Localisation</dt>
+        <dd>
+          Union européenne. L&apos;application est servie par le cluster{" "}
+          <code>c67-eu</code> d&apos;Algolia, dont les serveurs répondent depuis
+          l&apos;Allemagne — vérifié le 10 septembre 2026 par résolution de nom sur{" "}
+          <code>B8GIER7BSB-dsn.algolia.net</code>. Aucun transfert hors Union européenne
+          n&apos;est opéré de ce fait.
+        </dd>
+        <dt>Conservation</dt>
+        <dd>
+          Algolia conserve ses propres journaux techniques pour une durée courte, définie par
+          son contrat de sous-traitance et non par l&apos;éditeur. Ce dernier ne conserve
+          aucune requête.
+        </dd>
+      </dl>
 
       <h3>Mesure d&apos;audience — uniquement après consentement</h3>
       <p>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import styles from "./semaine.module.css";
-import { formatFrDate, formatSignatures, type ImportDelta, type PetitionResume } from "@/lib/petitions";
+import { formatFrDate, formatSignatures, joursDepuis, type ImportDelta, type PetitionResume } from "@/lib/petitions";
 
 // Un import réussi qui n'apporte presque rien ressemble à un import manqué :
 // ce bloc lève l'ambiguïté en disant, chiffres à l'appui, ce que le fichier
@@ -9,10 +9,6 @@ import { formatFrDate, formatSignatures, type ImportDelta, type PetitionResume }
 // Au-delà de ce délai sans import, on le dit tel quel : la page continue de
 // servir les dernières données, mais annoncer « cette semaine » serait faux.
 const JOURS_AVANT_ALERTE = 9;
-
-function joursDepuis(iso: string): number {
-  return Math.floor((Date.now() - new Date(`${iso}T12:00:00Z`).getTime()) / 86_400_000);
-}
 
 function pluriel(n: number, un: string, plusieurs: string): string {
   return `${n.toLocaleString("fr-FR")} ${n > 1 ? plusieurs : un}`;
@@ -40,7 +36,7 @@ export default function CetteSemaine({ delta }: { delta: ImportDelta | null }) {
   // et surtout rien à inventer.
   if (!delta) return null;
 
-  const age = joursDepuis(delta.calculeLe);
+  const age = joursDepuis(delta.calculeLe) ?? 0;
   const perime = age > JOURS_AVANT_ALERTE;
   const rienDeNeuf =
     delta.nbNouvelles + delta.nbSeuilFranchi + delta.nbRecueilsClos + delta.nbDecisionsPubliees + delta.nbStatutsChanges === 0;
