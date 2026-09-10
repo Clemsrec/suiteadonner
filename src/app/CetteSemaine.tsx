@@ -75,16 +75,17 @@ export default function CetteSemaine({ delta }: { delta: ImportDelta | null }) {
       {rienDeNeuf ? (
         <p className={styles.resume}>
           Le fichier officiel a été relu&nbsp;: <strong>aucune pétition ajoutée, aucun
-          statut ni aucune décision modifiés</strong> depuis la lecture précédente
+          changement de statut, aucun champ de décision rempli</strong> depuis la lecture
+          précédente
           {delta.signaturesGagnees > 0
-            ? ` — seuls les compteurs de signatures ont bougé (+${delta.signaturesGagnees.toLocaleString("fr-FR")}).`
+            ? ` — seuls les compteurs de signatures ont augmenté (+${delta.signaturesGagnees.toLocaleString("fr-FR")}).`
             : "."}
         </p>
       ) : (
         <p className={styles.resume}>
           Depuis la lecture précédente&nbsp;: <strong>{faits.join(", ")}</strong>
           {delta.signaturesGagnees > 0
-            ? `, et ${delta.signaturesGagnees.toLocaleString("fr-FR")} signatures supplémentaires au total.`
+            ? `, et ${delta.signaturesGagnees.toLocaleString("fr-FR")} signatures gagnées, hausses seules comptées.`
             : "."}
         </p>
       )}
@@ -119,7 +120,9 @@ export default function CetteSemaine({ delta }: { delta: ImportDelta | null }) {
       <p className={styles.note}>
         Différences constatées entre deux lectures du même fichier officiel, sans
         interprétation. Une «&nbsp;décision publiée&nbsp;» signifie seulement que le
-        champ prévu à cet effet, vide jusque-là, a été renseigné.
+        champ prévu à cet effet, vide jusque-là, a été renseigné. La comparaison ne
+        voit ni les textes réécrits ou effacés, ni les pétitions retirées du fichier,
+        ni les baisses de compteur&nbsp;: elle relève des apparitions, pas un bilan.
       </p>
     </section>
   );
