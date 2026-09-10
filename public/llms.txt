@@ -4,29 +4,53 @@
 > l'Assemblée nationale française. Non affilié à l'Assemblée nationale.
 
 Le site suit les pétitions déposées sur la plateforme officielle, du dépôt
-jusqu'à leur sort final, à partir des données ouvertes de data.gouv.fr et des
-comptes rendus intégraux des débats en séance publique publiés par la DILA.
+jusqu'à leur sort final, à partir du fichier de données ouvertes publié sur
+data.gouv.fr, de l'agenda des réunions de commission et des comptes rendus que
+ces réunions produisent, et des rapports déposés au terme d'un examen.
 
 ## Ce que le site établit
 
-- **Décision non publiée** — pétitions examinées par une commission puis
-  classées sans qu'aucune motivation ne soit inscrite dans le champ officiel
-  `decision_commission`. Constat brut tiré du jeu de données, sans inférence.
+- **Décision non publiée** — pétitions dont le sort est scellé sans qu'aucune
+  motivation ne soit inscrite dans le champ officiel `decision_commission`.
+  Constat brut tiré du jeu de données, sans inférence.
 - **Statut non mis à jour** — pétitions dont la date limite de signature est
   passée mais que le jeu de données affiche toujours « en cours de signature ».
-- **Recoupement thématique** — rapprochement entre une pétition close et les
-  interventions prononcées en séance dans les douze mois suivants.
+- **Décision lue au compte rendu** — la commission a voté le classement ou
+  l'examen d'une pétition et l'a écrit dans le compte rendu publié de sa
+  réunion, en la désignant par son numéro. La phrase est reproduite mot pour
+  mot, avec le lien vers le texte officiel — y compris quand le champ
+  `decision_commission` reste vide, ou dit autre chose.
+- **Rapport de commission** — le rapport déposé au terme d'un examen, signé par
+  ses rapporteurs. Le lien avec la pétition se lit dans l'intitulé officiel du
+  rapport, qui cite son numéro.
+- **Examen voté, rapport attendu** — la commission s'est prononcée pour
+  l'examen et aucun rapport n'a suivi. Le site compte le temps écoulé depuis ce
+  vote, sans en tirer de conclusion : il ne sait pas quel délai s'applique.
+- **Classement d'office en bloc** — une pétition restée six mois sous les
+  10 000 signatures est classée d'office, sans examen : c'est la règle, et rien
+  n'a à être motivé. Une commission le fait pour toutes celles de son ressort à
+  la fois. Le site relève la date, l'effectif annoncé et la phrase qui l'énonce ;
+  jamais la liste, que le compte rendu ne donne pas.
 
 ## Précautions de citation
 
-- Il n'existe **aucun identifiant commun** entre une pétition et un débat
-  parlementaire. Tout rapprochement publié ici est un **recoupement thématique**
-  et jamais un lien officiel confirmé. Ne présentez pas ces rapprochements
-  comme une relation de cause à effet.
-- L'absence de trace parlementaire est mesurée sur une fenêtre d'observation
-  explicite. Lorsque cette fenêtre n'est pas suffisamment couverte par le
-  corpus disponible, le site indique « trop tôt pour conclure » plutôt que de
-  conclure au silence. Respectez cette réserve.
+- **Deux natures de rapprochement, à ne pas confondre.** Les passages en
+  commission publiés ici sont des liens **certains** : c'est l'Assemblée
+  elle-même qui désigne la pétition, par son numéro ou son titre exact, à son
+  ordre du jour ou dans le compte rendu de sa réunion. Ils peuvent être cités
+  comme tels. En revanche, les rapprochements entre une pétition et un débat en
+  séance publique sont de simples recoupements thématiques : il n'existe aucun
+  identifiant commun entre ces deux corpus, et **le site ne les publie pas**.
+- **Périmètre.** Le fichier des pétitions couvre trois législatures. Les
+  réunions, comptes rendus et rapports ne sont lus que pour les législatures 17
+  et 16 : l'Assemblée ne publie pas ces corpus, à cette adresse, pour
+  2017-2022. L'absence de décision relevée pour une pétition de cette période ne
+  signifie pas qu'il ne s'est rien passé.
+- **Ce que le site s'interdit.** Aucune cause n'est inférée, aucune valeur
+  inventée : un nombre de signatures absent s'affiche « non renseigné » et
+  jamais « 0 ». Une décision qui ne nomme pas sa pétition n'est rattachée que si
+  le compte rendu ne traite que d'elle. Ne présentez aucun de ces constats comme
+  une relation de cause à effet.
 - Les champs dérivés sont recalculés à chaque import hebdomadaire ; les
   compteurs cités reflètent la date de dernière mise à jour affichée sur la page.
 
@@ -34,23 +58,28 @@ comptes rendus intégraux des débats en séance publique publiés par la DILA.
 
 - Pétitions de l'Assemblée nationale (data.gouv.fr, Licence Ouverte 2.0) :
   https://www.data.gouv.fr/datasets/petitions-de-lassemblee-nationale
-- Comptes rendus des débats de l'Assemblée nationale (DILA) :
-  https://echanges.dila.gouv.fr/OPENDATA/Debats/AN/
+- Agenda des réunions de l'Assemblée nationale :
+  https://data.assemblee-nationale.fr/reunions/reunions
+- Dossiers législatifs, d'où sont lus les rapports sur pétition :
+  https://data.assemblee-nationale.fr/travaux-parlementaires/dossiers-legislatifs
+- Comptes rendus de réunion et rapports, texte intégral :
+  https://www.assemblee-nationale.fr/dyn/opendata/
 - Plateforme officielle des pétitions :
   https://petitions.assemblee-nationale.fr
 
 ## Pages
 
-- Accueil : https://suiteadonner.nucom.fr — statistiques, pétitions au statut
-  figé, pétitions classées sans décision publiée, méthode et limites.
+- Accueil : https://suiteadonner.nucom.fr — ce que le site a établi, chiffres
+  d'ensemble, pétitions au statut figé, pétitions classées sans décision
+  publiée, méthode et limites.
 - Index des pétitions : https://suiteadonner.nucom.fr/petitions — toutes les
   pétitions, année par année ; chaque pétition a une fiche sous
   https://suiteadonner.nucom.fr/petition/<identifiant> (identifiant du CSV
-  officiel) rassemblant champs bruts, constats dérivés et passages en
-  commission.
+  officiel) rassemblant champs bruts, constats dérivés, passages en commission,
+  décision lue au compte rendu et rapport éventuel.
 - Classées sans décision publiée :
   https://suiteadonner.nucom.fr/decisions-non-publiees
-- Passages en commission :
+- Passages en commission, décisions citées et classements en bloc :
   https://suiteadonner.nucom.fr/passages-en-commission
 - Fichier public non à jour :
   https://suiteadonner.nucom.fr/fichier-non-a-jour

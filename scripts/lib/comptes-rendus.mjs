@@ -8,8 +8,9 @@
 // intégral, où la décision de la commission est écrite en toutes lettres —
 // alors que le champ `decision_commission` du fichier public reste vide.
 //
-// Constat du 10/09/2026, sur les 20 comptes rendus alors référencés : 6 des 8
-// pétitions dont la décision est extractible ont un `decision_commission` vide.
+// Constat du 10/09/2026, sur les 34 comptes rendus des législatures 17 et 16 :
+// 13 des 14 pétitions dont la décision est extractible ont un
+// `decision_commission` vide.
 // La n° 2760 va plus loin : le fichier la dit « rejetée car elle n'a pas
 // atteint le nombre de signatures requis », le compte rendu du 08/04/2026 dit
 // « La commission se prononce pour l'examen de la pétition n° 2760 ».
@@ -31,11 +32,12 @@
 //
 // CE QUE CE MODULE REFUSE DE FAIRE
 //
-// 18 phrases de décision ne nomment aucun numéro : « La commission adopte la
-// proposition de classement de la pétition. » Les rattacher demanderait de
-// suivre le fil de la discussion pour deviner de quelle pétition il s'agit —
-// une inférence. On ne retourne rien pour elles : mieux vaut une lacune qu'une
-// attribution douteuse.
+// Au 10/09/2026, 11 phrases de décision ne nomment aucun numéro : « La
+// commission adopte la proposition de classement de la pétition. » Les
+// rattacher demanderait de suivre le fil de la discussion pour deviner de
+// quelle pétition il s'agit — une inférence. On ne retourne rien pour elles,
+// sauf lorsque le référent est unique et vérifié (voir extraireDecisions) :
+// mieux vaut une lacune qu'une attribution douteuse.
 
 // robots.txt de assemblee-nationale.fr impose `Crawl-delay: 30` à tous les
 // agents. Le cache disque de fetch-reunions.mjs fait que ce délai n'est payé

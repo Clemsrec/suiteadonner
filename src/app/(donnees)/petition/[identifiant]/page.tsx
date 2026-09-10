@@ -121,8 +121,8 @@ export default async function FichePetition({ params }: Params) {
   // La décision que la commission a énoncée dans son compte rendu, quand elle y
   // nomme la pétition. Le plus souvent absente : c'est le cas normal.
   const decisionLue = passages?.derniereDecision ?? null;
-  // Le rapport déposé au terme d'un examen. Très rare : une pétition sur les
-  // 4 102 du fichier en a reçu un à ce jour.
+  // Le rapport déposé au terme d'un examen. Très rare : trois pétitions du
+  // fichier en ont reçu un au 10/09/2026, sur les corpus que nous lisons.
   const rapport = passages?.rapport ?? null;
 
   const filAriane = {

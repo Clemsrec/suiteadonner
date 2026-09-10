@@ -6,8 +6,11 @@ l'Assemblée nationale française.** Non affilié à l'Assemblée nationale.
 🌐 **[suiteadonner.nucom.fr](https://suiteadonner.nucom.fr)**
 
 Le site suit les pétitions déposées sur la [plateforme officielle](https://petitions.assemblee-nationale.fr),
-du dépôt jusqu'à leur sort final, à partir des données ouvertes de data.gouv.fr
-et des comptes rendus des débats publiés par la DILA.
+du dépôt jusqu'à leur sort final, à partir du fichier de données ouvertes publié
+sur data.gouv.fr, de l'agenda des réunions de commission, des comptes rendus que
+ces réunions produisent et des rapports déposés au terme d'un examen. Le corpus
+DILA des débats en séance sert à des recoupements thématiques que le site ne
+publie pas — voir la règle 4.
 
 ## Ce que le site établit
 
