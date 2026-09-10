@@ -181,8 +181,8 @@ export default async function Home() {
           <section className={styles.constat} id="constat">
             <p className={styles.eyebrow}>Le constat d&apos;ensemble</p>
             <h2>
-              Quand une pétition est classée pour une autre raison que le nombre de signatures,
-              l&apos;Assemblée n&apos;explique pas pourquoi&nbsp;:{" "}
+              Quand le fichier ne rattache pas un classement au nombre de signatures, il
+              n&apos;écrit le plus souvent aucune motivation&nbsp;:{" "}
               {stats.classeesHorsSeuilSansTexte.toLocaleString("fr-FR")} fois sur{" "}
               {stats.classeesHorsSeuil.toLocaleString("fr-FR")}.
             </h2>

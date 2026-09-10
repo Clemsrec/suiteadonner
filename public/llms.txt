@@ -17,8 +17,8 @@ ces réunions produisent, et des rapports déposés au terme d'un examen.
   passée mais que le jeu de données affiche toujours « en cours de signature ».
 - **Décision lue au compte rendu** — la commission a voté le classement ou
   l'examen d'une pétition et l'a écrit dans le compte rendu publié de sa
-  réunion, en la désignant par son numéro. La phrase est reproduite mot pour
-  mot, avec le lien vers le texte officiel — y compris quand le champ
+  réunion, en la désignant par son numéro. La phrase est reproduite
+  intégralement, avec le lien vers le texte officiel — y compris quand le champ
   `decision_commission` reste vide, ou dit autre chose.
 - **Rapport de commission** — le rapport déposé au terme d'un examen, signé par
   ses rapporteurs. Le lien avec la pétition se lit dans l'intitulé officiel du
@@ -26,17 +26,22 @@ ces réunions produisent, et des rapports déposés au terme d'un examen.
 - **Examen voté, rapport attendu** — la commission s'est prononcée pour
   l'examen et aucun rapport n'a suivi. Le site compte le temps écoulé depuis ce
   vote, sans en tirer de conclusion : il ne sait pas quel délai s'applique.
-- **Classement d'office en bloc** — une pétition restée six mois sous les
-  10 000 signatures est classée d'office, sans examen : c'est la règle, et rien
-  n'a à être motivé. Une commission le fait pour toutes celles de son ressort à
-  la fois. Le site relève la date, l'effectif annoncé et la phrase qui l'énonce ;
+- **Classement d'office en bloc** — une pétition restée six mois sous le seuil
+  fixé par sa commission est classée d'office, sans examen : c'est la règle, et
+  rien n'a à être motivé. Une commission traite ensemble toutes celles de son
+  ressort. Le site relève la date, l'effectif annoncé, la phrase qui l'énonce et
+  sa nature — classement constaté, ou seulement proposé par un rapporteur ;
   jamais la liste, que le compte rendu ne donne pas.
+- **Le seuil varie selon la commission.** Les textes de décision l'énoncent
+  eux-mêmes : cinq mille signatures en six mois pour la commission des lois, dix
+  mille pour les affaires sociales. Sur 1 560 textes, 811 énoncent cinq mille et
+  688 dix mille. Ne présentez pas 10 000 comme le seuil unique de l'Assemblée.
 
 ## Précautions de citation
 
 - **Deux natures de rapprochement, à ne pas confondre.** Les passages en
   commission publiés ici sont des liens **certains** : c'est l'Assemblée
-  elle-même qui désigne la pétition, par son numéro ou son titre exact, à son
+  elle-même qui désigne la pétition, par son numéro ou son titre, à son
   ordre du jour ou dans le compte rendu de sa réunion. Ils peuvent être cités
   comme tels. En revanche, les rapprochements entre une pétition et un débat en
   séance publique sont de simples recoupements thématiques : il n'existe aucun

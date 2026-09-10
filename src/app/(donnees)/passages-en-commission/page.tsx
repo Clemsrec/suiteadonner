@@ -17,7 +17,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: `Ce que les commissions ont fait des pétitions — ${SITE_NAME}`,
   description:
-    "Les pétitions dont une commission de l'Assemblée nationale s'est saisie en les désignant elle-même, et la décision qu'elle a énoncée dans son compte rendu — reprise mot pour mot, le plus souvent là où le fichier public laisse le champ vide.",
+    "Les pétitions dont une commission de l'Assemblée nationale s'est saisie en les désignant elle-même, et la décision qu'elle a énoncée dans son compte rendu — reprise intégralement, le plus souvent là où le fichier public laisse le champ vide.",
   alternates: { canonical: "/passages-en-commission" },
 };
 
@@ -73,7 +73,7 @@ export default async function PassagesEnCommission() {
               <>
                 Le compte rendu de la réunion, lui, énonce la décision de la
                 commission pour {avecDecisionLue.length} d&apos;entre elles&nbsp;:
-                nous la reproduisons mot pour mot, avec le lien vers le texte
+                nous la reproduisons intégralement, avec le lien vers le texte
                 officiel.{" "}
               </>
             )}
@@ -183,7 +183,7 @@ export default async function PassagesEnCommission() {
                 <blockquote className={cartes.friseDecision}>
                   {c.citation}
                   <span className={cartes.friseDecisionSource}>
-                    Compte rendu {c.compteRenduRef}, reproduit sans modification —{" "}
+                    Compte rendu {c.compteRenduRef}, phrase reproduite intégralement —{" "}
                     <a href={c.url} target="_blank" rel="noopener noreferrer">
                       lire le compte rendu intégral
                     </a>
@@ -199,7 +199,7 @@ export default async function PassagesEnCommission() {
       <p className={styles.source}>
         Passages établis depuis l&apos;agenda officiel des réunions de
         l&apos;Assemblée nationale, croisé avec le fichier des pétitions de
-        data.gouv.fr. Les décisions citées sont reprises mot pour mot des comptes
+        data.gouv.fr. Les décisions citées sont reprises intégralement des comptes
         rendus publiés par l&apos;Assemblée, dont le lien accompagne chaque
         étape. Règles de rapprochement sur la page{" "}
         <Link href="/methodologie">méthodologie</Link>.

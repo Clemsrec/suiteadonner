@@ -217,15 +217,17 @@ export default async function FichePetition({ params }: Params) {
         <section className={styles.section}>
           <h2>La décision de la commission</h2>
           <p>
-            Voici, mot pour mot, ce que le jeu de données ouvert de l&apos;Assemblée
-            nationale consacre au sort de cette pétition. Rien n&apos;est reformulé, et
-            un champ vide est affiché vide.
+            Voici ce que le jeu de données ouvert de l&apos;Assemblée nationale consacre au
+            sort de cette pétition. Rien n&apos;est reformulé ni résumé&nbsp;; seules les
+            apostrophes typographiques et les espaces multiples sont normalisés, pour que
+            deux libellés identiques à l&apos;œil ne comptent pas pour deux. Un champ vide
+            est affiché vide.
           </p>
           {p.decisionTexte ? (
             <blockquote className={styles.citation}>
               {p.decisionTexte}
               <span className={styles.citationSource}>
-                Champ «&nbsp;décision de la commission&nbsp;», reproduit sans modification.
+                Champ «&nbsp;décision de la commission&nbsp;», reproduit intégralement.
               </span>
             </blockquote>
           ) : (
@@ -249,7 +251,7 @@ export default async function FichePetition({ params }: Params) {
               <blockquote className={styles.citation}>
                 {decisionLue.citation}
                 <span className={styles.citationSource}>
-                  Compte rendu {decisionLue.compteRenduRef}, reproduit sans modification —{" "}
+                  Compte rendu {decisionLue.compteRenduRef}, phrase reproduite intégralement —{" "}
                   <a href={decisionLue.url} target="_blank" rel="noopener noreferrer">
                     lire le compte rendu intégral
                   </a>
@@ -372,7 +374,7 @@ export default async function FichePetition({ params }: Params) {
           <h2>Texte de la pétition</h2>
           <p className={styles.texteIntegral}>{p.description}</p>
           <p className={styles.provenance}>
-            Texte republié sans modification depuis le{" "}
+            Texte republié intégralement depuis le{" "}
             <a
               href="https://www.data.gouv.fr/datasets/petitions-de-lassemblee-nationale"
               target="_blank"

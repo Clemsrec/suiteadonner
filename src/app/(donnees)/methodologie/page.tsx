@@ -165,12 +165,15 @@ export default function Methodologie() {
           <li>
             <strong>Classée d&apos;office (seuil de signatures non atteint)</strong>{" "}—
             le texte de décision énonce lui-même un classement d&apos;office faute de
-            signatures. <strong>Le seuil n&apos;est pas le même partout</strong>&nbsp;:
-            le bureau de la commission des lois retient cinq mille signatures en six
-            mois, celui des affaires sociales dix mille. Sur les 1 560 textes du
-            fichier relevés le 10 septembre 2026, 811 énoncent cinq mille et 688 dix
-            mille. Nous affichons le seuil que le texte de la pétition écrit, et aucun
-            quand il n&apos;en écrit pas — il ne se déduit pas de la commission.
+            signatures, et dit d&apos;où vient la règle&nbsp;: dans 1 275 cas sur 1 560,
+            d&apos;une décision du <em>bureau</em> de la commission saisie, et non
+            d&apos;un texte général.{" "}
+            <strong>Le seuil n&apos;est donc pas le même partout</strong> — le bureau de
+            la commission des lois retient cinq mille signatures en six mois, celui des
+            affaires sociales dix mille. Sur les 1 560 textes relevés le 10 septembre
+            2026, 811 énoncent cinq mille et 688 dix mille. Nous affichons le seuil que
+            le texte de la pétition écrit, et aucun quand il n&apos;en écrit pas&nbsp;:
+            il ne se déduit pas de la commission, un bureau pouvant changer sa règle.
           </li>
           <li>
             <strong>Classement constaté, sans motif</strong> — un texte de décision
@@ -264,7 +267,7 @@ export default function Methodologie() {
           L&apos;ordre du jour d&apos;une réunion dit qu&apos;une pétition a été
           examinée, pas ce qui s&apos;y est dit. Le compte rendu de cette réunion,
           lui, le dit&nbsp;: quand il existe et qu&apos;il nomme la pétition, nous
-          reproduisons la décision votée, mot pour mot, avec le lien vers le texte
+          reproduisons la décision votée intégralement, avec le lien vers le texte
           officiel. Ce n&apos;est donc plus le sort de la pétition qui nous échappe,
           mais ce que le fichier réutilisable en laisse voir — et l&apos;écart entre
           les deux est précisément ce que ce site mesure.

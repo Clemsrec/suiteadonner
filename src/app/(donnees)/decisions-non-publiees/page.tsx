@@ -54,7 +54,9 @@ export default async function DecisionsNonPubliees() {
               cumulées
             </strong>{" "}
             pour les {stats.classeesHorsSeuilSansTexte.toLocaleString("fr-FR")}{" "}pétitions
-            de cette liste, sans qu&apos;aucune motivation ne soit publiée.
+            de cette liste, sans qu&apos;aucune motivation ne soit publiée. Ce total est un
+            minimum&nbsp;: les pétitions dont le fichier ne renseigne pas le nombre de
+            signatures comptent pour zéro dans cette somme, faute de mieux.
           </p>
         ) : null}
       </header>

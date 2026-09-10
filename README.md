@@ -14,30 +14,39 @@ publie pas — voir la règle 4.
 
 ## Ce que le site établit
 
-- **Décision non publiée** — pétitions examinées par une commission puis
-  classées sans qu'aucune motivation ne soit inscrite dans le champ officiel
-  `decision_commission`. Constat brut tiré du jeu de données, sans inférence.
+- **Décision non publiée** — pétitions que le fichier donne pour classées sans
+  qu'aucune motivation ne soit inscrite dans le champ officiel
+  `decision_commission`. Constat brut tiré du jeu de données, sans inférence :
+  rien n'y atteste qu'une commission les ait examinées.
 - **Statut non mis à jour** — pétitions dont la date limite de signature est
   passée mais que le jeu de données affiche toujours « en cours de signature ».
 - **Décision lue au compte rendu** — la commission a voté le classement ou
   l'examen d'une pétition en la nommant par son numéro, et l'a écrit dans le
-  compte rendu publié de sa réunion. La phrase est reproduite telle quelle, avec
+  compte rendu publié de sa réunion. La phrase est reproduite intégralement, avec
   le lien vers le texte officiel — y compris quand le champ
   `decision_commission` du fichier reste vide, ou dit autre chose.
 - **Examen voté, rapport attendu** — la commission s'est prononcée pour
-  l'examen d'une pétition et aucun rapport n'a suivi. Le Règlement ne fixe aucun
-  délai : le site compte le temps écoulé depuis le vote, sans en tirer de
-  conclusion.
+  l'examen d'une pétition et aucun rapport n'a suivi. Le site compte le temps
+  écoulé depuis le vote, sans en tirer de conclusion : il ne sait pas quel délai
+  s'applique.
 - **Rapport de commission** — la suite écrite d'un examen : un rapport déposé,
   numéroté et signé. Aucun champ ne le relie à la pétition ; son intitulé
   officiel la nomme par son numéro, et c'est ce lien-là qui est retenu. Ni le
   fichier de data.gouv.fr ni la fiche de la pétition sur la plateforme n'y
   renvoient.
-- **Classement d'office en bloc** — une commission classe en une séance toutes
-  les pétitions de son ressort restées six mois sous le seuil de signatures,
-  sans en nommer aucune. Le site relève la date, l'effectif annoncé et la phrase
-  qui l'énonce ; le compte rendu ne donne pas la liste, et aucun signataire ne
-  peut donc savoir si la sienne en faisait partie.
+- **Classement d'office en bloc** — une commission traite en une séance toutes
+  les pétitions de son ressort restées six mois sous le seuil qu'elle a fixé,
+  sans en nommer aucune. Le site relève la date, l'effectif annoncé, la phrase
+  qui l'énonce et sa nature — classement constaté, ou proposé par un rapporteur.
+  Le compte rendu ne publie pas la liste : un signataire n'y retrouve donc pas
+  sa pétition.
+
+**Le seuil n'est pas le même pour toutes les commissions.** Les textes de
+décision l'énoncent eux-mêmes, en renvoyant le plus souvent à une décision du
+bureau de la commission saisie : cinq mille signatures en six mois pour la
+commission des lois, dix mille pour les affaires sociales. Sur 1 560 textes,
+811 énoncent cinq mille et 688 dix mille. Le site lit le seuil dans le texte de
+la pétition et ne le déduit jamais de sa commission.
 - **Recoupement thématique** — rapprochement entre une pétition close et les
   interventions prononcées en séance dans les douze mois suivants.
 
@@ -61,14 +70,15 @@ changement.
    devient pas zéro.
 3. **Aucune cause n'est inférée.** Les catégories dérivées se lisent dans le
    texte de décision et dans les dates, jamais déduites du champ `statut`
-   (dont 890 lignes contredisent leur propre texte de décision).
+   (plusieurs centaines de lignes contredisent leur propre texte de décision ;
+   `npm run verifier` en donne le compte à jour).
 4. **Un rapprochement pétition ↔ débat est toujours un recoupement
    thématique**, jamais un lien officiel : il n'existe aucun identifiant commun
    entre les deux corpus. Le site mesure d'abord le *silence* (aucune
    intervention sur une fenêtre explicite), affirmation vérifiable, plutôt que
    des corrélations positives fragiles. Font seules exception les réunions de
-   commission, où c'est l'Assemblée qui désigne : un numéro ou un titre exact
-   cité à l'ordre du jour, ou un numéro cité dans le compte rendu de la réunion.
+   commission, où c'est l'Assemblée qui désigne : un numéro ou un titre cité à
+   l'ordre du jour, ou un numéro cité dans le compte rendu de la réunion.
 
 ## Architecture
 
@@ -103,7 +113,10 @@ documente les deux filtres qui évitent de prendre l'avis d'un groupe politique
 ou l'annonce d'un ordre du jour pour une décision : ne retenir que les
 paragraphes composés en italique — la convention typographique du récit
 procédural — puis, parmi eux, les seules phrases où la commission cite le numéro
-de la pétition. Sans numéro dans la phrase, rien n'est publié.
+de la pétition. Sans numéro dans la phrase, rien n'est publié — sauf lorsque le
+compte rendu ne traite que d'une seule pétition, nommée par son numéro à l'ordre
+du jour et seule citée dans le document : le référent est alors unique, et le
+site l'indique sous la citation.
 
 ## Démarrer en local
 
