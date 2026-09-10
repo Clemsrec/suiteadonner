@@ -585,9 +585,11 @@ export default async function Home() {
               <dd>
                 Quand le fichier ne dit rien, nous n&apos;inventons pas. Un
                 nombre de signatures absent s&apos;affiche « non renseigné » et
-                non «&nbsp;0&nbsp;» — cela concerne {""}
-                {stats?.signaturesInconnues ?? 0}{" "}
-                pétitions. Une date manquante
+                non «&nbsp;0&nbsp;»
+                {stats
+                  ? ` — cela concerne ${stats.signaturesInconnues.toLocaleString("fr-FR")} pétitions.`
+                  : "."}{" "}
+                Une date manquante
                 ne devient pas une date par défaut. Un regroupement de clôtures
                 est constaté sans qu&apos;une cause lui soit attribuée.
               </dd>
@@ -598,10 +600,10 @@ export default async function Home() {
               <dd>
                 Quand le fichier se contredit, nous le signalons au lieu de
                 choisir à sa place. Aujourd&apos;hui&nbsp;:{" "}
-                {stats?.ecartStatutDates ?? 0}{" "}
+                {stats ? stats.ecartStatutDates.toLocaleString("fr-FR") : "—"}{" "}
                 pétitions portent le statut
                 «&nbsp;ouverte&nbsp;» alors que leur date limite est passée, et{" "}
-                {stats ? stats.classee - stats.classeesHorsSeuil : 0}{" "}
+                {stats ? (stats.classee - stats.classeesHorsSeuil).toLocaleString("fr-FR") : "—"}{" "}
                 pétitions marquées «&nbsp;classée&nbsp;» ont un texte de décision indiquant
                 en réalité un classement d&apos;office. C&apos;est pourquoi nous
                 lisons le motif dans le texte, et jamais dans le statut.

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
 import TableauPetitions, { type LignePetition } from "./TableauPetitions";
-import { STATUT_LABELS, STATUT_TAG } from "@/lib/petitions";
+import { STATUT_LABELS, STATUT_TAG } from "@/lib/petitions-format";
 import { algoliaConfigured, searchPetitionsIndex, type AlgoliaPetitionHit, type SearchFilter } from "@/lib/algolia";
 
 const FILTERS: { key: SearchFilter; label: string }[] = [

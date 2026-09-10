@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import styles from "./page.module.css";
-import { formatFrDate, formatSignatures } from "@/lib/petitions";
+import { formatFrDate, formatSignatures } from "@/lib/petitions-format";
 
 export type TagType = "done" | "pending" | "none" | "examined";
 
