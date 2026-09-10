@@ -47,6 +47,7 @@ import {
   extraireDecisions,
   urlCompteRendu,
 } from "./lib/comptes-rendus.mjs";
+import { DOSSIERS_URL, lireRapport } from "./lib/rapports.mjs";
 
 const AGENDA_URL =
   "https://data.assemblee-nationale.fr/static/openData/repository/17/vp/reunions/Agenda.json.zip";
@@ -56,6 +57,7 @@ const PETITIONS_URL =
 const CORPUS_DIR = path.resolve(".corpus");
 const CACHE = path.join(CORPUS_DIR, "cache", "Agenda.json.zip");
 const CACHE_CR = path.join(CORPUS_DIR, "cache", "comptes-rendus");
+const CACHE_DOSSIERS = path.join(CORPUS_DIR, "cache", "Dossiers_Legislatifs.json.zip");
 
 const push = process.argv.includes("--push");
 const sansComptesRendus = process.argv.includes("--sans-comptes-rendus");
@@ -384,12 +386,82 @@ async function collecterDecisions(resultats, petitions, reunionsParCR) {
   return { lus, absents, decisions, parCompteRendu, classementsEnBloc };
 }
 
+// --- Rapports de commission ----------------------------------------------
+
+// Le jeu des dossiers législatifs est régénéré chaque jour et pèse 10 Mo. Il
+// est mis en cache comme l'agenda : vider .corpus/cache/ force la recollecte.
+async function chargerDossiers() {
+  if (existsSync(CACHE_DOSSIERS)) return lireZip(await readFile(CACHE_DOSSIERS));
+  console.log(`Téléchargement des dossiers législatifs : ${DOSSIERS_URL}`);
+  const res = await fetch(DOSSIERS_URL, { headers: { "User-Agent": "suiteadonner/1.0" } });
+  if (!res.ok) throw new Error(`Téléchargement des dossiers échoué : ${res.status}`);
+  const buf = Buffer.from(await res.arrayBuffer());
+  await writeFile(CACHE_DOSSIERS, buf);
+  return lireZip(buf);
+}
+
+// Attache à chaque pétition le rapport que la commission a déposé sur elle.
+// Le rapport peut exister sans qu'aucune réunion n'ait été appariée : c'est
+// une trace de plein droit, pas un complément des réunions.
+async function collecterRapports(resultats, petitions) {
+  const fichiers = await chargerDossiers();
+  const rapports = [];
+
+  for (const f of fichiers) {
+    if (!f.nom.includes("/document/") || !f.nom.endsWith(".json")) continue;
+    // Le JSON échappe les accents (« p\u00e9tition ») : chercher le mot en
+    // clair dans les octets ne trouve rien. On filtre sur le code de
+    // classification, seul marqueur fiable, quitte à parser un peu plus.
+    if (!f.data.includes("PETITION")) continue;
+
+    const rapport = lireRapport(JSON.parse(f.data.toString("utf8")));
+    if (rapport) rapports.push(rapport);
+  }
+
+  const parIdentifiant = new Map(resultats.map((r) => [r.identifiant, r]));
+  let rattaches = 0;
+
+  for (const rapport of rapports) {
+    const p = petitions.get(rapport.numeroPetition);
+    // Un rapport sur une pétition absente du fichier public ne peut enrichir
+    // aucune fiche : on ne fabrique pas la pétition manquante.
+    if (!p) continue;
+
+    let entree = parIdentifiant.get(rapport.numeroPetition);
+    if (!entree) {
+      entree = {
+        identifiant: p.identifiant,
+        titre: p.titre,
+        nbVotes: p.nbVotes,
+        statut: p.statut,
+        commission: p.commission,
+        decisionPubliee: p.decisionPubliee,
+        decisionTexte: p.decisionTexte,
+        url: p.url,
+        nbReunions: 0,
+        premiereReunion: null,
+        derniereReunion: null,
+        derniereDecision: null,
+        rapport: null,
+        reunions: [],
+      };
+      parIdentifiant.set(p.identifiant, entree);
+      resultats.push(entree);
+    }
+    entree.rapport = rapport;
+    rattaches += 1;
+  }
+
+  return { lus: rapports.length, rattaches };
+}
+
 // Ce que l'accueil met en tête. Calculé ici, à côté des données qui le
 // fondent, et relu d'un seul document `meta/reunions` : la page n'a pas à
 // charger les fiches pour compter, et aucun de ces chiffres ne peut être écrit
 // en dur — deux constats de l'accueil l'avaient été, et ont fini par mentir.
 function construireSynthese(resultats, classementsEnBloc = []) {
   const decidees = resultats.filter((r) => r.derniereDecision);
+  const avecRapport = resultats.filter((r) => r.rapport);
   const absentesDuFichier = decidees.filter((r) => !r.decisionTexte);
   const divergentes = decidees.filter((r) => r.decisionTexte);
 
@@ -436,6 +508,17 @@ function construireSynthese(resultats, classementsEnBloc = []) {
     classementsEnBloc,
     nbClassementsEnBloc: classementsEnBloc.length,
     petitionsClasseesEnBloc: classementsEnBloc.reduce((t, c) => t + c.nombre, 0),
+    // Le rapport est la seule suite écrite, argumentée et signée qu'une
+    // pétition puisse recevoir. Il y en a très peu : c'est le constat.
+    nbRapports: avecRapport.length,
+    // `titre` reste celui du rapport, tel que le document le porte ; le titre
+    // de la pétition a son champ à lui, pour qu'aucun des deux n'écrase l'autre.
+    rapports: avecRapport.map((r) => ({
+      identifiant: r.identifiant,
+      titrePetition: r.titre,
+      nbVotes: r.nbVotes,
+      ...r.rapport,
+    })),
   };
 }
 
@@ -589,6 +672,8 @@ async function main() {
         // Renseignée par collecterDecisions() : la décision la plus récente
         // qu'un compte rendu officiel énonce pour cette pétition, s'il y en a.
         derniereDecision: null,
+        // Le rapport que la commission publie au terme d'un examen, s'il existe.
+        rapport: null,
         // Le référentiel des organes n'est pas fourni dans cette archive : on
         // conserve l'identifiant brut pour la traçabilité et on affiche la
         // commission déjà connue par la fiche de pétition.
@@ -607,6 +692,10 @@ async function main() {
     console.log("\nComptes rendus : collecte sautée (--sans-comptes-rendus).\n");
   } else {
     cr = await collecterDecisions(resultats, petitions, reunionsParCR);
+    const rap = await collecterRapports(resultats, petitions);
+    console.log(
+      `Rapports de commission sur pétition : ${rap.lus} publié(s), ${rap.rattaches} rattaché(s)`
+    );
     resultats.sort(parSoutienDecroissant);
   }
 

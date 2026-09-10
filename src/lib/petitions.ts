@@ -381,6 +381,8 @@ export type PassageEnCommission = {
   derniereReunion: string;
   /** La plus récente des décisions lues dans les comptes rendus. */
   derniereDecision: (DecisionCompteRendu & { date: string; compteRenduRef: string }) | null;
+  /** Le rapport déposé au terme d'un examen, quand il existe. */
+  rapport: RapportCommission | null;
   reunions: ReunionCommission[];
 };
 
@@ -396,6 +398,22 @@ export type CasCommission = {
   decisionTexte: string | null;
   /** Ce que la commission a écrit dans son compte rendu. */
   citation: string | null;
+};
+
+/**
+ * Le rapport qu'une commission dépose au terme de l'examen d'une pétition — la
+ * seule suite écrite, argumentée et signée qu'une pétition puisse recevoir. Ni
+ * le fichier de data.gouv.fr ni la fiche de la pétition sur la plateforme n'y
+ * renvoient : le lien se lit dans le titre du rapport, qui cite son numéro.
+ */
+export type RapportCommission = {
+  /** Numéro du rapport parlementaire, ex. « 2069 ». */
+  numero: string | null;
+  uid: string;
+  dateDepot: string | null;
+  /** L'intitulé officiel du document, reproduit sans modification. */
+  titre: string;
+  url: string;
 };
 
 /**
@@ -429,6 +447,12 @@ export type SyntheseCommission = {
   classementsEnBloc: ClassementEnBloc[];
   nbClassementsEnBloc: number;
   petitionsClasseesEnBloc: number;
+  nbRapports: number;
+  rapports: (RapportCommission & {
+    identifiant: string;
+    titrePetition: string;
+    nbVotes: number | null;
+  })[];
 };
 
 export async function getSyntheseCommission(): Promise<SyntheseCommission | null> {

@@ -50,7 +50,16 @@ export default function Methodologie() {
             agenda officiel des réunions de l&apos;Assemblée
           </a>{" "}
           et par les comptes rendus que ces réunions produisent, pour les passages
-          en commission. La plateforme{" "}
+          en commission. Les rapports déposés au terme d&apos;un examen sont lus dans
+          le jeu des{" "}
+          <a
+            href="https://data.assemblee-nationale.fr/travaux-parlementaires/dossiers-legislatifs"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            dossiers législatifs
+          </a>
+          . La plateforme{" "}
           <a href="https://petitions.assemblee-nationale.fr" target="_blank" rel="noopener noreferrer">
             petitions.assemblee-nationale.fr
           </a>{" "}
@@ -183,6 +192,14 @@ export default function Methodologie() {
             quelle, jamais reformulée, et le lien vers le compte rendu intégral
             l&apos;accompagne. Sans numéro cité, rien n&apos;est affiché —{" "}
             <Link href="/passages-en-commission">voir ces décisions</Link>.
+          </li>
+          <li>
+            <strong>Rapport de commission</strong>{" "}— au terme d&apos;un examen, la
+            commission dépose un rapport. C&apos;est la seule suite écrite, argumentée
+            et signée qu&apos;une pétition puisse recevoir. Le document ne porte aucun
+            champ reliant au numéro de pétition&nbsp;: c&apos;est son intitulé officiel
+            qui la nomme, et sans ce numéro nous ne rattachons rien —{" "}
+            <Link href="/passages-en-commission">voir les suites en commission</Link>.
           </li>
           <li>
             <strong>Classement d&apos;office en bloc</strong>{" "}— une commission classe

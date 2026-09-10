@@ -21,6 +21,11 @@ et des comptes rendus des débats publiés par la DILA.
   compte rendu publié de sa réunion. La phrase est reproduite telle quelle, avec
   le lien vers le texte officiel — y compris quand le champ
   `decision_commission` du fichier reste vide, ou dit autre chose.
+- **Rapport de commission** — la suite écrite d'un examen : un rapport déposé,
+  numéroté et signé. Aucun champ ne le relie à la pétition ; son intitulé
+  officiel la nomme par son numéro, et c'est ce lien-là qui est retenu. Ni le
+  fichier de data.gouv.fr ni la fiche de la pétition sur la plateforme n'y
+  renvoient.
 - **Classement d'office en bloc** — une commission classe en une séance toutes
   les pétitions de son ressort restées six mois sous le seuil de signatures,
   sans en nommer aucune. Le site relève la date, l'effectif annoncé et la phrase
@@ -69,7 +74,7 @@ framework, abondamment commentés :
 | [verifier-coherence.mjs](scripts/verifier-coherence.mjs) | `npm run verifier` | Contrôles de cohérence sur le CSV canonique (fraîcheur, volume). Casse bruyamment plutôt que laisser passer des chiffres périmés. |
 | [import-petitions.mjs](scripts/import-petitions.mjs) | `npm run import:petitions` | Vérifie, puis importe le CSV dans Firestore et synchronise l'index Algolia. `--dry-run` pour analyser sans écrire. |
 | [fetch-debats.mjs](scripts/fetch-debats.mjs) | `npm run fetch:debats` | Aspire les comptes rendus intégraux des séances publiques (flux XML DILA) vers `.corpus/`. |
-| [fetch-reunions.mjs](scripts/fetch-reunions.mjs) | `npm run fetch:reunions` | Extrait de l'agenda de l'Assemblée les réunions de commission où une pétition figure à l'ordre du jour, lit les comptes rendus de ces réunions et en tire la décision votée. `--push` pour écrire dans Firestore. |
+| [fetch-reunions.mjs](scripts/fetch-reunions.mjs) | `npm run fetch:reunions` | Extrait de l'agenda de l'Assemblée les réunions de commission où une pétition figure à l'ordre du jour, lit les comptes rendus de ces réunions et en tire la décision votée, relève les classements d'office en bloc, et rattache les rapports déposés au terme d'un examen. `--push` pour écrire dans Firestore. |
 | [croiser-petitions-debats.mjs](scripts/croiser-petitions-debats.mjs) | `npm run croiser` | Croise pétitions closes et interventions en séance (sortie locale uniquement). |
 
 La logique de lecture, normalisation et classification est centralisée dans

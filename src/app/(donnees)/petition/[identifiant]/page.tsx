@@ -119,6 +119,9 @@ export default async function FichePetition({ params }: Params) {
   // La décision que la commission a énoncée dans son compte rendu, quand elle y
   // nomme la pétition. Le plus souvent absente : c'est le cas normal.
   const decisionLue = passages?.derniereDecision ?? null;
+  // Le rapport déposé au terme d'un examen. Très rare : une pétition sur les
+  // 4 102 du fichier en a reçu un à ce jour.
+  const rapport = passages?.rapport ?? null;
 
   const filAriane = {
     "@context": "https://schema.org",
@@ -252,6 +255,30 @@ export default async function FichePetition({ params }: Params) {
                   vide&nbsp;: qui s&apos;y fie ne peut pas savoir ce qui a été décidé.
                 </p>
               )}
+            </>
+          )}
+
+          {rapport && (
+            <>
+              <h3>Le rapport de la commission</h3>
+              <p>
+                L&apos;examen s&apos;est conclu par un rapport, déposé le{" "}
+                {formatFrDate(rapport.dateDepot)}
+                {rapport.numero ? ` sous le numéro ${rapport.numero}` : ""}. C&apos;est la seule
+                suite écrite, argumentée et signée qu&apos;une pétition puisse recevoir. Ni le
+                fichier de données ouvertes, ni la page où cette pétition a été signée n&apos;y
+                renvoient.
+              </p>
+              <blockquote className={styles.citation}>
+                {rapport.titre}
+                <span className={styles.citationSource}>
+                  Intitulé officiel du document, reproduit sans modification —{" "}
+                  <a href={rapport.url} target="_blank" rel="noopener noreferrer">
+                    lire le rapport intégral
+                  </a>
+                  .
+                </span>
+              </blockquote>
             </>
           )}
         </section>

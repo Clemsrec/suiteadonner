@@ -22,6 +22,9 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
   const { emblematique, divergence } = synthese;
   const nb = synthese.nbDecisionsAbsentesDuFichier;
   const attendues = synthese.nbDecisionsAttendues;
+  // Le plus récent des rapports, quand il y en a. La carte parle au singulier
+  // tant qu'il n'y en a qu'un — c'est le cas depuis le début de la législature.
+  const rapport = synthese.rapports?.at(-1) ?? null;
 
   return (
     <section className={styles.pointsForts} aria-labelledby="etabli">
@@ -55,6 +58,24 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
               {emblematique.sens === "examen" ? "examen" : "classement"}. Le fichier public lui
               donne toujours le statut <code>{emblematique.statut}</code> et ne mentionne aucune
               décision.
+            </p>
+          </article>
+        )}
+
+        {synthese.nbRapports > 0 && rapport && (
+          <article className={styles.pfCarte}>
+            <p className={styles.pfCarteTitre}>Pétitions ayant obtenu un rapport</p>
+            <p className={styles.pfCarteChiffre}>{synthese.nbRapports.toLocaleString("fr-FR")}</p>
+            <p className={styles.pfCarteTexte}>
+              À ce jour, une seule suite écrite, argumentée et signée&nbsp;: le rapport
+              n<sup>o</sup> {rapport.numero} du {formatFrDate(rapport.dateDepot)} sur{" "}
+              <Link href={`/petition/${rapport.identifiant}`}>{rapport.titrePetition}</Link>
+              {pointFinal(rapport.titrePetition)} Ni le fichier de données ouvertes, ni la page
+              où elle a été signée n&apos;y renvoient —{" "}
+              <a href={rapport.url} target="_blank" rel="noopener noreferrer">
+                lire le rapport
+              </a>
+              .
             </p>
           </article>
         )}
