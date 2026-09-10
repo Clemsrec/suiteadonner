@@ -59,6 +59,24 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
           </article>
         )}
 
+        {synthese.petitionsClasseesEnBloc > 0 && (
+          <article className={styles.pfCarte}>
+            <p className={styles.pfCarteTitre}>Classées en bloc, sans être nommées</p>
+            <p className={styles.pfCarteChiffre}>
+              {synthese.petitionsClasseesEnBloc.toLocaleString("fr-FR")}
+            </p>
+            <p className={styles.pfCarteTexte}>
+              pétitions classées d&apos;office en{" "}
+              {synthese.nbClassementsEnBloc === 1
+                ? "une seule séance,"
+                : `${synthese.nbClassementsEnBloc} séances,`}{" "}
+              comptées puis expédiées d&apos;un même vote. Le compte rendu donne leur nombre,
+              jamais leur liste&nbsp;: aucun signataire ne peut y retrouver la sienne —{" "}
+              <Link href="/passages-en-commission#en-bloc">voir ces séances</Link>.
+            </p>
+          </article>
+        )}
+
         {divergence && (
           <article className={styles.pfCarte}>
             <p className={styles.pfCarteTitre}>Deux sources officielles, deux versions</p>

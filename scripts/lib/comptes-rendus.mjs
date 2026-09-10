@@ -161,6 +161,91 @@ const FORMES_SANS_NUMERO = [
   [new RegExp(`^La [Cc]ommission rejette l${A}examen de la pétition\\s*\\.`), "classement"],
 ];
 
+// --- Classement d'office en bloc -----------------------------------------
+
+// Les commissions expédient périodiquement, en une séance, toutes les pétitions
+// de leur ressort déposées depuis plus de six mois sous le seuil de 10 000
+// signatures. Aucune n'est nommée : elles sont comptées, projetées sur un
+// tableau, et classées d'un bloc. C'est le sort le plus fréquent d'une pétition,
+// et il ne laisse aucune trace individuelle — d'où ce relevé séparé, qui porte
+// sur la séance et non sur une pétition.
+const UNITES = {
+  une: 1, un: 1, deux: 2, trois: 3, quatre: 4, cinq: 5, six: 6, sept: 7, huit: 8,
+  neuf: 9, dix: 10, onze: 11, douze: 12, treize: 13, quatorze: 14, quinze: 15,
+  seize: 16, vingt: 20, trente: 30, quarante: 40, cinquante: 50, soixante: 60,
+  cent: 100, cents: 100, mille: 1000,
+};
+
+// « trente-neuf », « quatre-vingt-douze », « cent quatre-vingts ». Suffisant
+// pour des effectifs de pétitions ; au-delà, les comptes rendus écrivent en
+// chiffres (« 212 pétitions »).
+function nombreEnLettres(texte) {
+  const mots = texte
+    .toLowerCase()
+    .replace(/[-–—]/g, " ")
+    .split(/\s+/)
+    .filter((m) => m && m !== "et");
+  if (!mots.length || !mots.every((m) => m in UNITES)) return null;
+
+  let total = 0;
+  let courant = 0;
+  for (const mot of mots) {
+    const v = UNITES[mot];
+    if (v === 100) courant = (courant || 1) * 100;
+    else if (v === 1000) {
+      total += (courant || 1) * 1000;
+      courant = 0;
+    } else courant += v;
+  }
+  return total + courant;
+}
+
+// Le nombre qui précède « pétitions ». On remonte mot à mot plutôt que de
+// capturer d'un coup : « classer d'office ces trente-neuf pétitions » ferait
+// sinon avaler « ces », et « de quinze pétitions » avalerait « de ». On essaie
+// donc le dernier mot, puis les deux derniers, jusqu'à quatre.
+function nombreAvantPetitions(phrase) {
+  const m = phrase.match(/([^.;:!?]*?)\s*pétitions/i);
+  if (!m) return null;
+
+  const mots = m[1].trim().split(/\s+/);
+  for (let n = 1; n <= Math.min(4, mots.length); n++) {
+    const bout = mots.slice(-n).join(" ");
+    if (/^\d{1,4}$/.test(bout)) return Number(bout);
+    const valeur = nombreEnLettres(bout);
+    if (valeur) return valeur;
+  }
+  return null;
+}
+
+// Formes qui énoncent le classement en bloc. Le nombre doit figurer dans la
+// phrase : sans lui, il faudrait aller le chercher dans un paragraphe voisin,
+// ce qui reviendrait à rapprocher par proximité.
+const CLASSEMENT_BLOC =
+  /(?:proc[ée]d[ée]r?\s+au\s+classement\s+d['’]office|classer\s+d['’]office|classement\s+d['’]office)/i;
+
+// « Le 14 janvier dernier, la commission avait déjà procédé au classement
+// d'office de 39 pétitions » rappelle une séance passée, déjà relevée par
+// ailleurs : la compter ici la ferait figurer deux fois.
+const RAPPEL = /avait\s+déjà|dernier,|précédemment|de la même façon/i;
+
+export function extraireClassementsEnBloc(html) {
+  const trouves = [];
+  for (const paragraphe of parasItaliques(html)) {
+    if (!CLASSEMENT_BLOC.test(paragraphe)) continue;
+
+    for (const { texte, cle } of phrases(paragraphe)) {
+      if (!CLASSEMENT_BLOC.test(cle) || RAPPEL.test(cle)) continue;
+      const nombre = nombreAvantPetitions(cle);
+      if (!nombre) continue;
+      trouves.push({ nombre, citation: texte });
+    }
+  }
+  // Une même séance peut énoncer la proposition puis son adoption : on ne
+  // retient qu'une entrée par effectif annoncé.
+  return [...new Map(trouves.map((t) => [t.nombre, t])).values()];
+}
+
 // Tous les numéros de pétition que le compte rendu cite, quels qu'ils soient.
 // Sert à vérifier qu'un document ne parle bien que d'une seule pétition avant
 // de lui attribuer une décision qui ne la nomme pas.
@@ -179,15 +264,20 @@ export function numerosCites(html) {
 // de débat.
 const CITATION_PARAGRAPHE_MAX = 400;
 
+// Découpe un paragraphe en phrases, chacune sous deux formes : `texte` est ce
+// que le compte rendu écrit, seul à pouvoir être cité ; `cle` est la même
+// phrase débarrassée de son amorce de liaison, et sert uniquement à reconnaître
+// les motifs ancrés en début de phrase. Les mélanger reviendrait à publier sous
+// la mention « reproduit sans modification » un texte qu'on aurait retouché.
 function phrases(paragraphe) {
   return paragraphe
     .split(/(?<=\.)\s+/)
     .map((ph) => ph.trim())
-    // « Puis, la commission se prononce… », « En conséquence, la pétition… » :
-    // l'amorce de liaison masque l'ancrage sans rien changer au sens.
-    .map((ph) => ph.replace(/^(?:Puis,?|Enfin,?|En conséquence,?)\s+/i, ""))
-    .map((ph) => (ph ? ph[0].toUpperCase() + ph.slice(1) : ph))
-    .filter(Boolean);
+    .filter(Boolean)
+    .map((texte) => {
+      const sansAmorce = texte.replace(/^(?:Puis,?|Enfin,?|En conséquence,?)\s+/i, "");
+      return { texte, cle: sansAmorce ? sansAmorce[0].toUpperCase() + sansAmorce.slice(1) : texte };
+    });
 }
 
 // Retourne [{ numero, sens, citation, referent }], une entrée par décision.
@@ -214,12 +304,12 @@ export function extraireDecisions(html, petitionUnique = null) {
   for (const paragraphe of parasItaliques(html)) {
     if (!/p[ée]tition/i.test(paragraphe)) continue;
 
-    for (const phrase of phrases(paragraphe)) {
-      const citation = paragraphe.length <= CITATION_PARAGRAPHE_MAX ? paragraphe : phrase;
+    for (const { texte, cle } of phrases(paragraphe)) {
+      const citation = paragraphe.length <= CITATION_PARAGRAPHE_MAX ? paragraphe : texte;
 
       let trouve = false;
       for (const [motif, sens] of FORMES) {
-        const m = phrase.match(motif);
+        const m = cle.match(motif);
         if (!m) continue;
         decisions.push({ numero: m[1], sens, citation, referent: "cite" });
         trouve = true;
@@ -228,7 +318,7 @@ export function extraireDecisions(html, petitionUnique = null) {
       if (trouve || !referentUnique) continue;
 
       for (const [motif, sens] of FORMES_SANS_NUMERO) {
-        if (!motif.test(phrase)) continue;
+        if (!motif.test(cle)) continue;
         decisions.push({ numero: referentUnique, sens, citation, referent: "unique" });
         break;
       }

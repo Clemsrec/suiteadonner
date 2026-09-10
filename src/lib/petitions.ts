@@ -399,6 +399,19 @@ export type CasCommission = {
 };
 
 /**
+ * Une séance où une commission classe d'office, en bloc, toutes les pétitions
+ * de son ressort restées sous le seuil de signatures. Aucune n'y est nommée :
+ * le relevé porte donc sur la séance, jamais sur une pétition en particulier.
+ */
+export type ClassementEnBloc = {
+  date: string;
+  nombre: number;
+  citation: string;
+  compteRenduRef: string;
+  url: string;
+};
+
+/**
  * Les points forts de l'accueil, calculés par scripts/fetch-reunions.mjs et
  * relus d'un seul document. Aucun de ces chiffres n'est écrit dans le code :
  * deux constats de l'accueil l'ont été et ont fini par affirmer le faux.
@@ -413,6 +426,9 @@ export type SyntheseCommission = {
   divergence: CasCommission | null;
   nbDecisionsAttendues: number;
   signaturesDecisionsAttendues: number;
+  classementsEnBloc: ClassementEnBloc[];
+  nbClassementsEnBloc: number;
+  petitionsClasseesEnBloc: number;
 };
 
 export async function getSyntheseCommission(): Promise<SyntheseCommission | null> {

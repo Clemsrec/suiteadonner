@@ -43,6 +43,7 @@ import { parseNombre } from "./lib/petitions-source.mjs";
 import {
   CRAWL_DELAY_MS,
   estCompteRenduCommission,
+  extraireClassementsEnBloc,
   extraireDecisions,
   urlCompteRendu,
 } from "./lib/comptes-rendus.mjs";
@@ -268,12 +269,15 @@ async function chargerCompteRendu(ref) {
 // commission écrit « La commission adopte la proposition de classement de la
 // pétition n° 4553 » — c'est elle qui désigne, nous ne déduisons rien.
 async function collecterDecisions(resultats, petitions, reunionsParCR) {
-  if (!reunionsParCR.size) return { lus: 0, absents: 0, decisions: 0, parCompteRendu: 0 };
+  if (!reunionsParCR.size) {
+    return { lus: 0, absents: 0, decisions: 0, parCompteRendu: 0, classementsEnBloc: [] };
+  }
 
   await mkdir(CACHE_CR, { recursive: true });
   console.log(`\nComptes rendus de commission à lire : ${reunionsParCR.size}`);
 
   const parReference = new Map();
+  const classementsEnBloc = [];
   let lus = 0;
   let absents = 0;
   let attente = false;
@@ -298,7 +302,19 @@ async function collecterDecisions(resultats, petitions, reunionsParCR) {
     const nommees = reunionsParCR.get(ref)?.nommees ?? new Set();
     const unique = nommees.size === 1 ? [...nommees][0] : null;
     parReference.set(ref, extraireDecisions(html, unique));
+
+    // Le classement en bloc ne concerne aucune pétition nommément : il est
+    // relevé par séance, à côté des décisions individuelles.
+    for (const bloc of extraireClassementsEnBloc(html)) {
+      classementsEnBloc.push({
+        date: reunionsParCR.get(ref).reunion.date,
+        compteRenduRef: ref,
+        url: urlCompteRendu(ref),
+        ...bloc,
+      });
+    }
   }
+  classementsEnBloc.sort((a, b) => a.date.localeCompare(b.date));
 
   const parIdentifiant = new Map(resultats.map((r) => [r.identifiant, r]));
   let decisions = 0;
@@ -365,14 +381,14 @@ async function collecterDecisions(resultats, petitions, reunionsParCR) {
       : null;
   }
 
-  return { lus, absents, decisions, parCompteRendu };
+  return { lus, absents, decisions, parCompteRendu, classementsEnBloc };
 }
 
 // Ce que l'accueil met en tête. Calculé ici, à côté des données qui le
 // fondent, et relu d'un seul document `meta/reunions` : la page n'a pas à
 // charger les fiches pour compter, et aucun de ces chiffres ne peut être écrit
 // en dur — deux constats de l'accueil l'avaient été, et ont fini par mentir.
-function construireSynthese(resultats) {
+function construireSynthese(resultats, classementsEnBloc = []) {
   const decidees = resultats.filter((r) => r.derniereDecision);
   const absentesDuFichier = decidees.filter((r) => !r.decisionTexte);
   const divergentes = decidees.filter((r) => r.decisionTexte);
@@ -415,6 +431,11 @@ function construireSynthese(resultats) {
     divergence: divergentes.length ? resume(divergentes[0]) : null,
     nbDecisionsAttendues: attendues.length,
     signaturesDecisionsAttendues: attendues.reduce((t, r) => t + (r.nbVotes ?? 0), 0),
+    // Le classement en bloc : le sort le plus courant, et le seul qui ne
+    // laisse aucune trace au nom de la pétition concernée.
+    classementsEnBloc,
+    nbClassementsEnBloc: classementsEnBloc.length,
+    petitionsClasseesEnBloc: classementsEnBloc.reduce((t, c) => t + c.nombre, 0),
   };
 }
 
@@ -650,7 +671,7 @@ async function main() {
 
   verifierDecisions(resultats);
 
-  const synthese = construireSynthese(resultats);
+  const synthese = construireSynthese(resultats, cr?.classementsEnBloc ?? []);
   console.log(
     `\nSynthèse : ${synthese.nbDecisionsAbsentesDuFichier} décision(s) absente(s) du fichier, ` +
       `${(synthese.signaturesDecisionsAbsentes ?? 0).toLocaleString("fr-FR")} signatures cumulées` +

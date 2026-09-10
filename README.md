@@ -21,6 +21,11 @@ et des comptes rendus des débats publiés par la DILA.
   compte rendu publié de sa réunion. La phrase est reproduite telle quelle, avec
   le lien vers le texte officiel — y compris quand le champ
   `decision_commission` du fichier reste vide, ou dit autre chose.
+- **Classement d'office en bloc** — une commission classe en une séance toutes
+  les pétitions de son ressort restées six mois sous le seuil de signatures,
+  sans en nommer aucune. Le site relève la date, l'effectif annoncé et la phrase
+  qui l'énonce ; le compte rendu ne donne pas la liste, et aucun signataire ne
+  peut donc savoir si la sienne en faisait partie.
 - **Recoupement thématique** — rapprochement entre une pétition close et les
   interventions prononcées en séance dans les douze mois suivants.
 

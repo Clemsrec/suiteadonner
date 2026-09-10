@@ -184,6 +184,15 @@ export default function Methodologie() {
             l&apos;accompagne. Sans numéro cité, rien n&apos;est affiché —{" "}
             <Link href="/passages-en-commission">voir ces décisions</Link>.
           </li>
+          <li>
+            <strong>Classement d&apos;office en bloc</strong>{" "}— une commission classe
+            en une séance toutes les pétitions de son ressort restées six mois sous le
+            seuil, sans en nommer aucune. Nous relevons la date, l&apos;effectif annoncé
+            et la phrase qui l&apos;énonce&nbsp;; jamais la liste, que le compte rendu
+            ne donne pas. Un rappel d&apos;une séance antérieure n&apos;est pas recompté
+            —{" "}
+            <Link href="/passages-en-commission#en-bloc">voir ces séances</Link>.
+          </li>
         </ul>
       </section>
 
@@ -216,11 +225,13 @@ export default function Methodologie() {
         </p>
         <p>
           Trois limites demeurent. Un compte rendu peut n&apos;être pas encore publié
-          au moment où nous lisons l&apos;agenda. Une commission peut classer des
-          centaines de pétitions d&apos;office en une séance sans en nommer aucune.
-          Et les motivations réelles d&apos;un vote — ce que chacun pense, ce qui
-          s&apos;est décidé ailleurs — ne figurent dans aucun document&nbsp;: nous
-          rapportons ce qui a été écrit, pas ce qui a été voulu.
+          au moment où nous lisons l&apos;agenda. Surtout, une commission classe des
+          centaines de pétitions d&apos;office en une séance sans en nommer
+          aucune&nbsp;: nous relevons alors la séance et son effectif, mais aucun
+          signataire ne peut savoir si la sienne en faisait partie — le compte rendu
+          ne contient pas la liste. Enfin, les motivations réelles d&apos;un vote — ce
+          que chacun pense, ce qui s&apos;est décidé ailleurs — ne figurent dans aucun
+          document&nbsp;: nous rapportons ce qui a été écrit, pas ce qui a été voulu.
         </p>
       </section>
 

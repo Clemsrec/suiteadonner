@@ -7,6 +7,7 @@ import {
   formatFrDate,
   formatSignatures,
   getPassagesEnCommission,
+  getSyntheseCommission,
   pointFinal,
 } from "@/lib/petitions";
 import { SITE_NAME } from "@/lib/site";
@@ -26,10 +27,13 @@ export const metadata: Metadata = {
 const LIMITE = 50;
 
 export default async function PassagesEnCommission() {
-  const passages = await getPassagesEnCommission(LIMITE).catch((err) => {
-    console.error("Lecture Firestore impossible :", err);
-    return [];
-  });
+  const [passages, synthese] = await Promise.all([
+    getPassagesEnCommission(LIMITE).catch((err) => {
+      console.error("Lecture Firestore impossible :", err);
+      return [];
+    }),
+    getSyntheseCommission().catch(() => null),
+  ]);
 
   // Ces décomptes étaient écrits en dur dans le chapeau. Ils ont cessé d'être
   // vrais le jour où une pétition de la liste a eu, elle, un texte de décision
@@ -136,6 +140,46 @@ export default async function PassagesEnCommission() {
           <p>Les données ne sont pas accessibles pour le moment. Merci de réessayer dans quelques minutes.</p>
         )}
       </section>
+
+      {synthese?.classementsEnBloc?.length ? (
+        <section className={styles.section} id="en-bloc">
+          <h2>Le classement en bloc</h2>
+          <p className={styles.lede}>
+            Les pétitions qui précèdent ont au moins été nommées. La plupart ne le sont
+            jamais&nbsp;: passé six mois sous le seuil de dix mille signatures, une commission
+            les classe d&apos;office, toutes ensemble, en un vote. Le compte rendu en donne le
+            nombre et non la liste — {synthese.petitionsClasseesEnBloc.toLocaleString("fr-FR")}{" "}
+            pétitions à ce jour, contre {avecDecisionLue.length} dont nous pouvons citer la
+            décision individuelle.
+          </p>
+          <p className={styles.lede}>
+            Nous ne pouvons donc pas dire à un signataire si la sienne en faisait partie. Nous
+            relevons la séance, son effectif et son compte rendu&nbsp;; le reste, le document
+            public ne le contient pas.
+          </p>
+
+          <ol className={cartes.frise}>
+            {synthese.classementsEnBloc.map((c) => (
+              <li key={c.compteRenduRef}>
+                <span className={cartes.friseDate}>{formatFrDate(c.date)}</span>
+                <span className={cartes.friseActe}>
+                  {c.nombre.toLocaleString("fr-FR")} pétitions classées d&apos;office
+                </span>
+                <blockquote className={cartes.friseDecision}>
+                  {c.citation}
+                  <span className={cartes.friseDecisionSource}>
+                    Compte rendu {c.compteRenduRef}, reproduit sans modification —{" "}
+                    <a href={c.url} target="_blank" rel="noopener noreferrer">
+                      lire le compte rendu intégral
+                    </a>
+                    .
+                  </span>
+                </blockquote>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ) : null}
 
       <p className={styles.source}>
         Passages établis depuis l&apos;agenda officiel des réunions de
