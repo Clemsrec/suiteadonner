@@ -38,6 +38,13 @@ et des comptes rendus des débats publiés par la DILA.
 - **Recoupement thématique** — rapprochement entre une pétition close et les
   interventions prononcées en séance dans les douze mois suivants.
 
+**Périmètre.** Le fichier des pétitions couvre trois législatures. Les réunions,
+comptes rendus et rapports ne sont lus que pour les législatures 17 et 16 :
+l'Assemblée ne publie pas ces corpus, à cette adresse, pour 2017-2022. Les
+totaux de commission portent donc sur ce périmètre, et le site le déclare —
+lire un sous-ensemble sans le dire produisait « un seul rapport publié » là où
+il y en a trois.
+
 ## Méthodologie
 
 Quatre règles gouvernent tout le code de ce dépôt. Elles ne sont pas

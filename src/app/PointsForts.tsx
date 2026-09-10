@@ -72,8 +72,9 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
             <p className={styles.pfCarteTitre}>Pétitions ayant obtenu un rapport</p>
             <p className={styles.pfCarteChiffre}>{synthese.nbRapports.toLocaleString("fr-FR")}</p>
             <p className={styles.pfCarteTexte}>
-              À ce jour, une seule suite écrite, argumentée et signée&nbsp;: le rapport
-              n<sup>o</sup> {rapport.numero} du {formatFrDate(rapport.dateDepot)} sur{" "}
+              {synthese.nbRapports === 1 ? "rapport publié" : "rapports publiés"} sur une
+              pétition, dans les corpus que nous lisons. Le plus récent est le rapport
+              n<sup>o</sup> {rapport.numero} du {formatFrDate(rapport.dateDepot)}, sur{" "}
               <Link href={`/petition/${rapport.identifiant}`}>{rapport.titrePetition}</Link>
               {pointFinal(rapport.titrePetition)} Ni le fichier de données ouvertes, ni la page
               où elle a été signée n&apos;y renvoient —{" "}
@@ -98,7 +99,7 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
               n&apos;a encore été déposé.{" "}
               {synthese.nbAttenteRapport > 1
                 ? `${synthese.nbAttenteRapport} pétitions sont dans ce cas.`
-                : "Aucun délai n’est fixé par le Règlement."}
+                : ""}
             </p>
           </article>
         )}
@@ -116,8 +117,8 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
                 : `${synthese.nbClassementsEnBloc} séances.`}{" "}
               C&apos;est la règle&nbsp;: sous ce seuil, le classement est automatique et aucune
               commission n&apos;a à s&apos;en expliquer. Nous le relevons parce que le compte
-              rendu en donne le nombre et jamais la liste — un signataire ne peut pas y vérifier
-              le sort de la sienne —{" "}
+              rendu en donne le nombre et jamais la liste — elle a été projetée en séance, pas
+              publiée, et un signataire n&apos;y retrouve donc pas sa pétition —{" "}
               <Link href="/passages-en-commission#en-bloc">voir ces séances</Link>.
             </p>
           </article>

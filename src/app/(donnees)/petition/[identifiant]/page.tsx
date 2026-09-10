@@ -267,9 +267,9 @@ export default async function FichePetition({ params }: Params) {
                 {formatDelaiMois(moisDepuis(decisionLue.date))}.
               </strong>{" "}
               La commission s&apos;est prononcée pour l&apos;examen de cette pétition, et un
-              examen se conclut par un rapport. Aucun n&apos;a été déposé à ce jour. Le
-              Règlement ne fixe aucun délai&nbsp;: nous comptons le temps écoulé, nous n&apos;en
-              tirons aucune conclusion.
+              examen se conclut par un rapport. Aucun n&apos;a été déposé à ce jour. Nous
+              comptons le temps écoulé depuis ce vote&nbsp;; nous n&apos;en tirons aucune
+              conclusion, et nous ignorons quel délai s&apos;applique.
             </p>
           )}
 

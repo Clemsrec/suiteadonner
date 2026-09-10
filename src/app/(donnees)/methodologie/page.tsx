@@ -66,6 +66,16 @@ export default function Methodologie() {
           sert de contexte et de comparaison, jamais de référence.
         </p>
         <p>
+          <strong>Ce que ces corpus couvrent, et ce qu&apos;ils ne couvrent pas.</strong>{" "}
+          Le fichier des pétitions contient des pétitions de trois législatures. Les
+          réunions, comptes rendus et rapports ne sont lus que pour les deux
+          dernières&nbsp;: l&apos;Assemblée ne publie pas ces corpus, à cette adresse,
+          pour la législature 2017-2022. Les pétitions de cette période figurent donc
+          dans nos chiffres tirés du fichier, mais aucune décision de commission ne peut
+          leur être rattachée — leur absence de nos relevés ne signifie pas qu&apos;il ne
+          s&apos;est rien passé.
+        </p>
+        <p>
           Attention si vous refaites nos calculs&nbsp;: plusieurs copies de ce fichier
           circulent, et l&apos;une d&apos;elles avait un mois de retard lorsque nous
           l&apos;avons contrôlée le 27 juillet 2026. Nous lisons la ressource déclarée
@@ -196,15 +206,14 @@ export default function Methodologie() {
           <li>
             <strong>Examen voté, rapport attendu</strong>{" "}— la commission
             s&apos;est prononcée pour l&apos;examen d&apos;une pétition, et aucun
-            rapport n&apos;a encore été déposé. Le Règlement ne fixe aucun délai&nbsp;:
-            nous comptons le temps écoulé depuis le vote, nous n&apos;en tirons aucune
-            conclusion. Ce délai est calculé au moment où la page est rendue, jamais
+            rapport n&apos;a encore été déposé. Nous comptons le temps écoulé depuis
+            le vote et n&apos;en tirons aucune conclusion&nbsp;: nous ne savons pas quel
+            délai s&apos;applique, ni si un rapport viendra. Ce délai est calculé au moment où la page est rendue, jamais
             figé en base — un compteur arrêté vieillirait sans que rien ne le signale.
           </li>
           <li>
             <strong>Rapport de commission</strong>{" "}— au terme d&apos;un examen, la
-            commission dépose un rapport. C&apos;est la seule suite écrite, argumentée
-            et signée qu&apos;une pétition puisse recevoir. Le document ne porte aucun
+            commission dépose un rapport, signé par ses rapporteurs. Le document ne porte aucun
             champ reliant au numéro de pétition&nbsp;: c&apos;est son intitulé officiel
             qui la nomme, et sans ce numéro nous ne rattachons rien —{" "}
             <Link href="/passages-en-commission">voir les suites en commission</Link>.

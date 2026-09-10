@@ -47,17 +47,26 @@ import {
   extraireDecisions,
   urlCompteRendu,
 } from "./lib/comptes-rendus.mjs";
-import { DOSSIERS_URL, lireRapport } from "./lib/rapports.mjs";
+import { dossiersUrl, lireRapport } from "./lib/rapports.mjs";
 
-const AGENDA_URL =
-  "https://data.assemblee-nationale.fr/static/openData/repository/17/vp/reunions/Agenda.json.zip";
+// Le fichier des pétitions couvre plusieurs législatures — 2017-2022,
+// 2022-2024 et l'actuelle. Ne lire que la 17e revenait à publier des totaux
+// (« un seul rapport », « 266 pétitions classées en bloc ») calculés sur un
+// sous-ensemble, sans le dire. La 15e n'est pas servie à cette adresse : son
+// absence est déclarée sur la page méthodologie plutôt que passée sous silence.
+const LEGISLATURES = ["17", "16"];
+
+const agendaUrl = (legislature) =>
+  `https://data.assemblee-nationale.fr/static/openData/repository/${legislature}/vp/reunions/Agenda.json.zip`;
 const PETITIONS_URL =
   "https://www.data.gouv.fr/api/1/datasets/r/c94c9dfe-23eb-45aa-acd1-7438c4e977db";
 
 const CORPUS_DIR = path.resolve(".corpus");
-const CACHE = path.join(CORPUS_DIR, "cache", "Agenda.json.zip");
+const cacheAgenda = (legislature) =>
+  path.join(CORPUS_DIR, "cache", `Agenda-L${legislature}.json.zip`);
 const CACHE_CR = path.join(CORPUS_DIR, "cache", "comptes-rendus");
-const CACHE_DOSSIERS = path.join(CORPUS_DIR, "cache", "Dossiers_Legislatifs.json.zip");
+const cacheDossiers = (legislature) =>
+  path.join(CORPUS_DIR, "cache", `Dossiers_Legislatifs-L${legislature}.json.zip`);
 
 const push = process.argv.includes("--push");
 const sansComptesRendus = process.argv.includes("--sans-comptes-rendus");
@@ -197,18 +206,29 @@ function apparier(item, petitions, ambigus, rejets) {
 
 // --- Chargement -----------------------------------------------------------
 
-async function chargerAgenda() {
+async function chargerAgenda(legislature) {
+  const cache = cacheAgenda(legislature);
   let buf;
-  if (existsSync(CACHE)) {
-    buf = await readFile(CACHE);
+  if (existsSync(cache)) {
+    buf = await readFile(cache);
   } else {
-    console.log(`Téléchargement de l'agenda : ${AGENDA_URL}`);
-    const res = await fetch(AGENDA_URL, { headers: { "User-Agent": "suiteadonner/1.0" } });
-    if (!res.ok) throw new Error(`Téléchargement échoué : ${res.status}`);
+    console.log(`Téléchargement de l'agenda (législature ${legislature})`);
+    const res = await fetch(agendaUrl(legislature), {
+      headers: { "User-Agent": "suiteadonner/1.0" },
+    });
+    if (!res.ok) throw new Error(`Téléchargement de l'agenda L${legislature} échoué : ${res.status}`);
     buf = Buffer.from(await res.arrayBuffer());
-    await writeFile(CACHE, buf);
+    await writeFile(cache, buf);
   }
   return lireZip(buf).filter((f) => f.nom.endsWith(".json"));
+}
+
+async function chargerTousLesAgendas() {
+  const fichiers = [];
+  for (const legislature of LEGISLATURES) {
+    fichiers.push(...(await chargerAgenda(legislature)));
+  }
+  return fichiers;
 }
 
 async function chargerPetitions() {
@@ -390,13 +410,16 @@ async function collecterDecisions(resultats, petitions, reunionsParCR) {
 
 // Le jeu des dossiers législatifs est régénéré chaque jour et pèse 10 Mo. Il
 // est mis en cache comme l'agenda : vider .corpus/cache/ force la recollecte.
-async function chargerDossiers() {
-  if (existsSync(CACHE_DOSSIERS)) return lireZip(await readFile(CACHE_DOSSIERS));
-  console.log(`Téléchargement des dossiers législatifs : ${DOSSIERS_URL}`);
-  const res = await fetch(DOSSIERS_URL, { headers: { "User-Agent": "suiteadonner/1.0" } });
-  if (!res.ok) throw new Error(`Téléchargement des dossiers échoué : ${res.status}`);
+async function chargerDossiers(legislature) {
+  const cache = cacheDossiers(legislature);
+  if (existsSync(cache)) return lireZip(await readFile(cache));
+  console.log(`Téléchargement des dossiers législatifs (législature ${legislature})`);
+  const res = await fetch(dossiersUrl(legislature), {
+    headers: { "User-Agent": "suiteadonner/1.0" },
+  });
+  if (!res.ok) throw new Error(`Téléchargement des dossiers L${legislature} échoué : ${res.status}`);
   const buf = Buffer.from(await res.arrayBuffer());
-  await writeFile(CACHE_DOSSIERS, buf);
+  await writeFile(cache, buf);
   return lireZip(buf);
 }
 
@@ -404,7 +427,10 @@ async function chargerDossiers() {
 // Le rapport peut exister sans qu'aucune réunion n'ait été appariée : c'est
 // une trace de plein droit, pas un complément des réunions.
 async function collecterRapports(resultats, petitions) {
-  const fichiers = await chargerDossiers();
+  const fichiers = [];
+  for (const legislature of LEGISLATURES) {
+    fichiers.push(...(await chargerDossiers(legislature)));
+  }
   const rapports = [];
 
   for (const f of fichiers) {
@@ -536,12 +562,17 @@ function construireSynthese(resultats, classementsEnBloc = []) {
     nbRapports: avecRapport.length,
     // `titre` reste celui du rapport, tel que le document le porte ; le titre
     // de la pétition a son champ à lui, pour qu'aucun des deux n'écrase l'autre.
-    rapports: avecRapport.map((r) => ({
-      identifiant: r.identifiant,
-      titrePetition: r.titre,
-      nbVotes: r.nbVotes,
-      ...r.rapport,
-    })),
+    // Triés du plus ancien au plus récent : l'accueil met en avant le dernier
+    // déposé, et l'ordre par signatures faisait remonter un rapport de 2023
+    // comme s'il était le plus récent.
+    rapports: avecRapport
+      .map((r) => ({
+        identifiant: r.identifiant,
+        titrePetition: r.titre,
+        nbVotes: r.nbVotes,
+        ...r.rapport,
+      }))
+      .sort((a, b) => (a.dateDepot ?? "").localeCompare(b.dateDepot ?? "")),
   };
 }
 
@@ -616,7 +647,7 @@ function itemsOrdreDuJour(reunion) {
 
 async function main() {
   await mkdir(path.join(CORPUS_DIR, "cache"), { recursive: true });
-  const [fichiers, petitions] = await Promise.all([chargerAgenda(), chargerPetitions()]);
+  const [fichiers, petitions] = await Promise.all([chargerTousLesAgendas(), chargerPetitions()]);
   console.log(`Agenda : ${fichiers.length} réunions · Pétitions : ${petitions.size}`);
 
   const ambigus = titresAmbigus(petitions);

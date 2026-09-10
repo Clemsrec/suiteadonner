@@ -26,8 +26,8 @@
 // Source : https://data.assemblee-nationale.fr/travaux-parlementaires/dossiers-legislatifs
 //          Dossiers_Legislatifs.json.zip, régénéré quotidiennement.
 
-export const DOSSIERS_URL =
-  "https://data.assemblee-nationale.fr/static/openData/repository/17/loi/dossiers_legislatifs/Dossiers_Legislatifs.json.zip";
+export const dossiersUrl = (legislature) =>
+  `https://data.assemblee-nationale.fr/static/openData/repository/${legislature}/loi/dossiers_legislatifs/Dossiers_Legislatifs.json.zip`;
 
 // Même adresse que les comptes rendus : l'uid du document suffit à ouvrir son
 // texte intégral. Les motifs par commission (/dyn/17/rapports/cion-eco/…)
