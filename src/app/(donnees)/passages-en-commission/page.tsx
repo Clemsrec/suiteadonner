@@ -3,7 +3,12 @@ import Link from "next/link";
 import styles from "../donnees.module.css";
 import cartes from "@/app/page.module.css";
 import { FriseReunions } from "@/app/FriseReunions";
-import { formatFrDate, formatSignatures, getPassagesEnCommission } from "@/lib/petitions";
+import {
+  formatFrDate,
+  formatSignatures,
+  getPassagesEnCommission,
+  pointFinal,
+} from "@/lib/petitions";
 import { SITE_NAME } from "@/lib/site";
 
 export const revalidate = 86400;
@@ -14,13 +19,6 @@ export const metadata: Metadata = {
     "Les pétitions que les commissions de l'Assemblée nationale ont examinées en les désignant elles-mêmes, et la décision qu'elles ont votée — reprise mot pour mot du compte rendu officiel, là où le fichier public laisse le champ vide.",
   alternates: { canonical: "/passages-en-commission" },
 };
-
-// Une citation qui porte déjà sa ponctuation finale n'en réclame pas une
-// seconde à l'extérieur des guillemets. Deux textes de décision sur 1 560 en
-// sont dépourvus : on ponctue alors la phrase, sans toucher à la citation.
-function pointFinal(citation: string): string {
-  return /[.!?»]$/.test(citation.trim()) ? "" : ".";
-}
 
 // La correspondance certaine (numéro ou titre exact cité par la commission,
 // à son ordre du jour ou dans son compte rendu) ne concerne qu'une poignée de
@@ -108,7 +106,13 @@ export default async function PassagesEnCommission() {
               </div>
               <div className={cartes.petitionMeta}>
                 <span>
-                  <span className={cartes.n}>{formatSignatures(p.nbVotes)}</span> soutiens
+                  {p.nbVotes === null ? (
+                    "Nombre de soutiens non renseigné"
+                  ) : (
+                    <>
+                      <span className={cartes.n}>{formatSignatures(p.nbVotes)}</span> soutiens
+                    </>
+                  )}
                 </span>
                 <span>{p.commission || "Commission non précisée"}</span>
               </div>

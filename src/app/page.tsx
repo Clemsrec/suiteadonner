@@ -5,17 +5,20 @@ import TableauPetitions, { type LignePetition } from "./TableauPetitions";
 import EmpreinteCarbone from "./EmpreinteCarbone";
 import CetteSemaine from "./CetteSemaine";
 import { FriseReunions } from "./FriseReunions";
+import { PointsForts } from "./PointsForts";
 import {
   getDernierImport,
   getFlagshipPetitions,
   getPassagesEnCommission,
   getSansDecision,
+  getSyntheseCommission,
   getStats,
   getEcartStatutDates,
   formatFrDate,
   formatSignatures,
   type ImportDelta,
   type PassageEnCommission,
+  type SyntheseCommission,
   type Petition,
   type Stats,
 } from "@/lib/petitions";
@@ -34,6 +37,7 @@ type PageData = {
   sansDecision: Petition[];
   statutObsolete: Petition[];
   commission: PassageEnCommission[];
+  synthese: SyntheseCommission | null;
   dernierImport: ImportDelta | null;
   error: boolean;
 };
@@ -42,17 +46,18 @@ type PageData = {
 // et un index Firestore encore en construction ne doit pas vider les sections
 // qui, elles, fonctionnent. Chaque bloc dégrade indépendamment.
 async function loadData(): Promise<PageData> {
-  const [stats, flagship, sansDecision, statutObsolete, commission, dernierImport] =
+  const [stats, flagship, sansDecision, statutObsolete, commission, synthese, dernierImport] =
     await Promise.allSettled([
       getStats(),
       getFlagshipPetitions(6),
       getSansDecision(8),
       getEcartStatutDates(5),
       getPassagesEnCommission(6),
+      getSyntheseCommission(),
       getDernierImport(),
     ]);
 
-  for (const r of [stats, flagship, sansDecision, statutObsolete, commission, dernierImport]) {
+  for (const r of [stats, flagship, sansDecision, statutObsolete, commission, synthese, dernierImport]) {
     if (r.status === "rejected") console.error("Lecture Firestore impossible :", r.reason);
   }
 
@@ -62,13 +67,14 @@ async function loadData(): Promise<PageData> {
     sansDecision: sansDecision.status === "fulfilled" ? sansDecision.value : [],
     statutObsolete: statutObsolete.status === "fulfilled" ? statutObsolete.value : [],
     commission: commission.status === "fulfilled" ? commission.value : [],
+    synthese: synthese.status === "fulfilled" ? synthese.value : null,
     dernierImport: dernierImport.status === "fulfilled" ? dernierImport.value : null,
     error: stats.status === "rejected",
   };
 }
 
 export default async function Home() {
-  const { stats, flagship, sansDecision, statutObsolete, commission, dernierImport, error } =
+  const { stats, flagship, sansDecision, statutObsolete, commission, synthese, dernierImport, error } =
     await loadData();
 
   // Le constat était écrit en dur. Il a cessé d'être vrai le jour où une
@@ -165,6 +171,8 @@ export default async function Home() {
           )}
         </section>
 
+        <PointsForts synthese={synthese} />
+
         <CetteSemaine delta={dernierImport} />
 
         <SearchBar />
@@ -246,10 +254,16 @@ export default async function Home() {
               <h3>Ce que ces chiffres ne disent pas</h3>
               <p>
                 Ils ne prouvent pas que rien n&apos;a été fait. Une commission a pu auditionner,
-                échanger, tenir compte d&apos;une pétition dans un travail législatif sans
-                qu&apos;aucune trace publique n&apos;en subsiste. Ce que les données établissent,
-                c&apos;est qu&apos;<strong>un citoyen qui signe n&apos;a aucun moyen de le
-                savoir</strong>.
+                échanger, tenir compte d&apos;une pétition dans un travail législatif dont le
+                fichier ne garde aucune trace. Quand cette trace existe ailleurs — un compte
+                rendu de réunion qui nomme la pétition —{" "}
+                <Link href="/passages-en-commission">nous la publions</Link>. Ce que les données
+                établissent, c&apos;est qu&apos;
+                <strong>
+                  un citoyen qui s&apos;en tient au fichier officiel n&apos;a aucun moyen de le
+                  savoir
+                </strong>
+                .
               </p>
               <p>
                 Ils ne désignent personne non plus. Le droit de pétition tel qu&apos;il est
@@ -349,7 +363,13 @@ export default async function Home() {
                 </div>
                 <div className={styles.petitionMeta}>
                   <span>
-                    <span className={styles.n}>{formatSignatures(p.nbVotes)}</span> soutiens
+                    {p.nbVotes === null ? (
+                      "Nombre de soutiens non renseigné"
+                    ) : (
+                      <>
+                        <span className={styles.n}>{formatSignatures(p.nbVotes)}</span> soutiens
+                      </>
+                    )}
                   </span>
                   <span>{p.commission || "Commission non précisée"}</span>
                 </div>

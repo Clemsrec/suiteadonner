@@ -40,6 +40,8 @@ export function FriseReunions({ reunions }: { reunions: ReunionCommission[] }) {
                 {r.decision.citation}
                 <span className={styles.friseDecisionSource}>
                   Compte rendu de la réunion, reproduit sans modification.
+                  {r.decision.referent === "unique" &&
+                    " La commission ne répète pas le numéro ici : ce compte rendu ne traite que de cette pétition, que son ordre du jour désigne par son numéro."}
                 </span>
               </blockquote>
             )}

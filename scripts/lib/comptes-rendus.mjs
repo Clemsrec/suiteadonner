@@ -145,6 +145,32 @@ const FORMES = [
   [new RegExp(`^La pétition ${N} est donc classée`), "classement"],
 ];
 
+// Les mêmes décisions, énoncées sans répéter le numéro : « La commission classe
+// donc la pétition. » Elles ne sont retenues que lorsque le compte rendu ne
+// traite que d'une seule pétition, nommée par son numéro (voir petitionUnique).
+// Le singulier est exigé : « les propositions de classement des pétitions »
+// désigne un lot, et le référent redevient indécidable.
+const FORMES_SANS_NUMERO = [
+  [new RegExp(`^La [Cc]ommission se prononce pour l${A}examen de la pétition\\s*\\.`), "examen"],
+  [new RegExp(`^La [Cc]ommission se prononce pour le classement de la pétition\\s*\\.`), "classement"],
+  [
+    new RegExp(`^La [Cc]ommission adopte la proposition de classement de la pétition\\s*\\.`),
+    "classement",
+  ],
+  [new RegExp(`^La [Cc]ommission (?:classe|décide de classer) (?:donc )?la pétition\\s*\\.`), "classement"],
+  [new RegExp(`^La [Cc]ommission rejette l${A}examen de la pétition\\s*\\.`), "classement"],
+];
+
+// Tous les numéros de pétition que le compte rendu cite, quels qu'ils soient.
+// Sert à vérifier qu'un document ne parle bien que d'une seule pétition avant
+// de lui attribuer une décision qui ne la nomme pas.
+export function numerosCites(html) {
+  const corps = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, "");
+  return new Set(
+    [...texteNu(corps).matchAll(/p[ée]titions?\s*n[°o]\s*(\d{3,5})/gi)].map((m) => m[1])
+  );
+}
+
 // Une décision est parfois énoncée en deux temps dans le même paragraphe :
 // « La commission rejette l'examen de la pétition pour une sortie des
 // pesticides de synthèse. La pétition n° 3021 est donc classée. » Citer le
@@ -164,26 +190,56 @@ function phrases(paragraphe) {
     .filter(Boolean);
 }
 
-// Retourne [{ numero, sens, citation }], une entrée par décision certaine.
-export function extraireDecisions(html) {
+// Retourne [{ numero, sens, citation, referent }], une entrée par décision.
+//
+// `referent` dit comment le rattachement a été établi, et le site l'affiche :
+//   « cite »   — la phrase de décision nomme elle-même la pétition ;
+//   « unique » — elle ne la nomme pas, mais le compte rendu ne traite que
+//                d'elle, et l'ordre du jour la désignait par son numéro.
+//
+// Le second cas ne s'ouvre que si l'appelant fournit `petitionUnique`, après
+// avoir vérifié l'ordre du jour de la réunion. On revérifie ici sur le document
+// lui-même : s'il cite un autre numéro, le référent cesse d'être unique et rien
+// n'est retenu. Sans cette voie, la n° 5158 — 707 957 signatures, classée après
+// un scrutin nominatif — resterait invisible, son compte rendu écrivant
+// seulement « La commission classe donc la pétition. »
+export function extraireDecisions(html, petitionUnique = null) {
+  const cites = numerosCites(html);
+  const referentUnique =
+    petitionUnique && (cites.size === 0 || (cites.size === 1 && cites.has(petitionUnique)))
+      ? petitionUnique
+      : null;
+
   const decisions = [];
   for (const paragraphe of parasItaliques(html)) {
     if (!/p[ée]tition/i.test(paragraphe)) continue;
 
     for (const phrase of phrases(paragraphe)) {
+      const citation = paragraphe.length <= CITATION_PARAGRAPHE_MAX ? paragraphe : phrase;
+
+      let trouve = false;
       for (const [motif, sens] of FORMES) {
         const m = phrase.match(motif);
         if (!m) continue;
-        decisions.push({
-          numero: m[1],
-          sens,
-          citation: paragraphe.length <= CITATION_PARAGRAPHE_MAX ? paragraphe : phrase,
-        });
+        decisions.push({ numero: m[1], sens, citation, referent: "cite" });
+        trouve = true;
+        break;
+      }
+      if (trouve || !referentUnique) continue;
+
+      for (const [motif, sens] of FORMES_SANS_NUMERO) {
+        if (!motif.test(phrase)) continue;
+        decisions.push({ numero: referentUnique, sens, citation, referent: "unique" });
         break;
       }
     }
   }
-  // Un même compte rendu peut rappeler une décision déjà énoncée. On garde la
-  // première occurrence pour chaque pétition.
-  return [...new Map(decisions.map((d) => [d.numero, d])).values()];
+  // Un même compte rendu peut rappeler une décision déjà énoncée. On garde une
+  // seule entrée par pétition, en faisant primer celles qui citent le numéro
+  // sur celles qui reposent sur l'unicité du référent.
+  const parNumero = new Map();
+  for (const d of [...decisions.filter((d) => d.referent === "cite"), ...decisions]) {
+    if (!parNumero.has(d.numero)) parNumero.set(d.numero, d);
+  }
+  return [...parNumero.values()];
 }

@@ -76,6 +76,16 @@ export function formatSignatures(nbVotes: number | null): string {
   return nbVotes === null ? "non renseigné" : nbVotes.toLocaleString("fr-FR");
 }
 
+/**
+ * Le point final d'une phrase qui vient d'enchâsser un texte source — citation
+ * ou titre de pétition. Renvoie une chaîne vide si ce texte porte déjà sa
+ * ponctuation, pour ne pas écrire « … intelligence collective.. ». La source
+ * n'est jamais modifiée : c'est la phrase qui l'entoure qui s'adapte.
+ */
+export function pointFinal(texte: string | null): string {
+  return texte && /[.!?»]$/.test(texte.trim()) ? "" : ".";
+}
+
 export function formatFrDate(iso: string | null): string {
   if (!iso) return "—";
   const d = new Date(`${iso}T00:00:00`);
@@ -327,6 +337,14 @@ export type DecisionCompteRendu = {
   sens: "examen" | "classement";
   /** La phrase officielle, reproduite sans modification. */
   citation: string;
+  /**
+   * Comment la décision a été rattachée à cette pétition — le site l'affiche,
+   * pour que le lecteur juge de la solidité du lien :
+   * « cite » la phrase nomme la pétition ; « unique » elle ne la nomme pas,
+   * mais le compte rendu ne traite que d'elle et l'ordre du jour la désignait
+   * par son numéro.
+   */
+  referent: "cite" | "unique";
   url: string;
 };
 
@@ -350,7 +368,8 @@ export type ReunionCommission = {
 export type PassageEnCommission = {
   identifiant: string;
   titre: string;
-  nbVotes: number;
+  /** Absent du fichier pour certaines pétitions : jamais remplacé par zéro. */
+  nbVotes: number | null;
   statut: string;
   commission: string;
   decisionPubliee: boolean;
@@ -364,6 +383,42 @@ export type PassageEnCommission = {
   derniereDecision: (DecisionCompteRendu & { date: string; compteRenduRef: string }) | null;
   reunions: ReunionCommission[];
 };
+
+/** Une pétition résumée pour l'accueil, sans charger sa fiche. */
+export type CasCommission = {
+  identifiant: string;
+  titre: string;
+  nbVotes: number | null;
+  statut: string;
+  sens: "examen" | "classement" | null;
+  date: string | null;
+  /** Ce que le fichier public écrit, s'il écrit quelque chose. */
+  decisionTexte: string | null;
+  /** Ce que la commission a écrit dans son compte rendu. */
+  citation: string | null;
+};
+
+/**
+ * Les points forts de l'accueil, calculés par scripts/fetch-reunions.mjs et
+ * relus d'un seul document. Aucun de ces chiffres n'est écrit dans le code :
+ * deux constats de l'accueil l'ont été et ont fini par affirmer le faux.
+ */
+export type SyntheseCommission = {
+  nbPetitions: number;
+  nbDecisions: number;
+  nbDecisionsAbsentesDuFichier: number;
+  signaturesDecisionsAbsentes: number;
+  emblematique: CasCommission | null;
+  nbDivergences: number;
+  divergence: CasCommission | null;
+  nbDecisionsAttendues: number;
+  signaturesDecisionsAttendues: number;
+};
+
+export async function getSyntheseCommission(): Promise<SyntheseCommission | null> {
+  const snap = await getDoc(doc(db, "meta", "reunions"));
+  return snap.exists() ? (snap.data() as SyntheseCommission) : null;
+}
 
 // Contrairement aux rapprochements thématiques, ces passages sont établis à
 // partir de l'ordre du jour officiel des commissions, qui désigne la pétition

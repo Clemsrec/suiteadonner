@@ -114,8 +114,18 @@ export default function Methodologie() {
           énonce souvent sa décision sans nommer la pétition&nbsp;: «&nbsp;la
           commission adopte la proposition de classement de la pétition&nbsp;».
           Deviner laquelle en suivant le fil du débat serait une déduction&nbsp;: nous
-          n&apos;affichons alors rien. Seules les phrases où la commission cite
-          elle-même le numéro sont reproduites.
+          n&apos;affichons alors rien.
+        </p>
+        <p>
+          Une seule exception, et elle ne demande aucune déduction&nbsp;: lorsque
+          l&apos;ordre du jour de la réunion ne désigne qu&apos;une pétition, par son
+          numéro, et que le compte rendu n&apos;en cite aucune autre, la décision qui
+          ne la nomme pas ne peut désigner qu&apos;elle. Le référent est unique, pas
+          supposé. Nous l&apos;indiquons alors sous la citation, pour que vous puissiez
+          en juger. Sans cette règle, le classement de la pétition n°&nbsp;5158 —
+          707&nbsp;957 signatures, rejetée par 30 voix contre 21 — resterait invisible,
+          son compte rendu écrivant seulement «&nbsp;la commission classe donc la
+          pétition&nbsp;».
         </p>
         <p>
           Nous calculons par ailleurs des rapprochements thématiques entre pétitions

@@ -26,7 +26,10 @@ qui les enfreint sera refusée même si le code est excellent.
    cité à l'ordre du jour, ou un numéro cité dans le compte rendu de la réunion.
    La même exigence vaut pour toute décision citée : sans numéro de pétition
    dans la phrase même, on n'affiche rien — deviner le référent en suivant le
-   fil du débat serait une déduction.
+   fil du débat serait une déduction. Seule exception, vérifiable et vérifiée
+   par le code : si l'ordre du jour ne désigne qu'une pétition par son numéro
+   et que le compte rendu n'en cite aucune autre, le référent est unique et
+   non supposé. La provenance est alors affichée sous la citation.
 
 Ces règles sont détaillées dans les commentaires d'en-tête des scripts —
 lisez-les avant de modifier un seuil ou une classification.

@@ -39,6 +39,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { parse } from "csv-parse/sync";
+import { parseNombre } from "./lib/petitions-source.mjs";
 import {
   CRAWL_DELAY_MS,
   estCompteRenduCommission,
@@ -219,7 +220,11 @@ async function chargerPetitions() {
       identifiant,
       titre: r.titre.trim(),
       titreNorm: normaliser(r.titre),
-      nbVotes: Number.parseFloat(r.nb_votes) || 0,
+      // parseNombre, et non `parseFloat(...) || 0` : 23 lignes du fichier ont
+      // un nombre de signatures vide, et écrire zéro y affirmerait « aucun
+      // soutien » là où la source ne dit rien. La n° 2760 s'affichait ainsi
+      // « 0 soutiens » sur le site, en contradiction avec sa méthodologie.
+      nbVotes: parseNombre(r.nb_votes),
       statut: r.statut.trim(),
       commission: r.commission.trim(),
       decisionPubliee: r.decision_commission.trim().length > 0,
@@ -288,7 +293,11 @@ async function collecterDecisions(resultats, petitions, reunionsParCR) {
       continue;
     }
     lus += 1;
-    parReference.set(ref, extraireDecisions(html));
+    // Une décision qui ne nomme pas sa pétition n'est rattachée que si l'ordre
+    // du jour de la réunion n'en désignait qu'une seule par son numéro.
+    const nommees = reunionsParCR.get(ref)?.nommees ?? new Set();
+    const unique = nommees.size === 1 ? [...nommees][0] : null;
+    parReference.set(ref, extraireDecisions(html, unique));
   }
 
   const parIdentifiant = new Map(resultats.map((r) => [r.identifiant, r]));
@@ -326,11 +335,20 @@ async function collecterDecisions(resultats, petitions, reunionsParCR) {
 
       let reunion = entree.reunions.find((x) => x.compteRenduRef === ref);
       if (!reunion) {
-        reunion = { ...reunionsParCR.get(ref), appariement: "compte-rendu", decision: null };
+        reunion = {
+          ...reunionsParCR.get(ref).reunion,
+          appariement: "compte-rendu",
+          decision: null,
+        };
         entree.reunions.push(reunion);
         parCompteRendu += 1;
       }
-      reunion.decision = { sens: d.sens, citation: d.citation, url: urlCompteRendu(ref) };
+      reunion.decision = {
+        sens: d.sens,
+        citation: d.citation,
+        referent: d.referent,
+        url: urlCompteRendu(ref),
+      };
       decisions += 1;
     }
   }
@@ -350,6 +368,65 @@ async function collecterDecisions(resultats, petitions, reunionsParCR) {
   return { lus, absents, decisions, parCompteRendu };
 }
 
+// Ce que l'accueil met en tête. Calculé ici, à côté des données qui le
+// fondent, et relu d'un seul document `meta/reunions` : la page n'a pas à
+// charger les fiches pour compter, et aucun de ces chiffres ne peut être écrit
+// en dur — deux constats de l'accueil l'avaient été, et ont fini par mentir.
+function construireSynthese(resultats) {
+  const decidees = resultats.filter((r) => r.derniereDecision);
+  const absentesDuFichier = decidees.filter((r) => !r.decisionTexte);
+  const divergentes = decidees.filter((r) => r.decisionTexte);
+
+  // La plus signée de celles dont le fichier ne dit rien : c'est le cas qui
+  // montre l'écart le mieux, et il change tout seul quand un plus gros arrive.
+  const emblematique = absentesDuFichier
+    .filter((r) => r.nbVotes !== null)
+    .sort((a, b) => b.nbVotes - a.nbVotes)[0];
+
+  // Une réunion dont l'ordre du jour annonce une décision, mais dont le compte
+  // rendu n'est pas encore publié : la décision est prise, le texte pas encore
+  // lisible. L'attente est un fait, pas une absence de fait.
+  const attendues = resultats.filter(
+    (r) =>
+      !r.derniereDecision &&
+      r.reunions.some((x) => !x.compteRenduRef && /^[\s\-–—•]*d[ée]cision/i.test(x.intitule))
+  );
+
+  const resume = (r) => ({
+    identifiant: r.identifiant,
+    titre: r.titre,
+    nbVotes: r.nbVotes,
+    statut: r.statut,
+    sens: r.derniereDecision?.sens ?? null,
+    date: r.derniereDecision?.date ?? null,
+    decisionTexte: r.decisionTexte,
+    citation: r.derniereDecision?.citation ?? null,
+  });
+
+  return {
+    nbPetitions: resultats.length,
+    nbDecisions: decidees.length,
+    nbDecisionsAbsentesDuFichier: absentesDuFichier.length,
+    // Somme des soutiens derrière une décision que le fichier ne publie pas.
+    // Les nombres absents sont exclus, pas comptés pour zéro.
+    signaturesDecisionsAbsentes: absentesDuFichier.reduce((t, r) => t + (r.nbVotes ?? 0), 0),
+    emblematique: emblematique ? resume(emblematique) : null,
+    nbDivergences: divergentes.length,
+    divergence: divergentes.length ? resume(divergentes[0]) : null,
+    nbDecisionsAttendues: attendues.length,
+    signaturesDecisionsAttendues: attendues.reduce((t, r) => t + (r.nbVotes ?? 0), 0),
+  };
+}
+
+// Un nombre de signatures absent n'est pas un petit nombre : ces pétitions se
+// rangent en fin de liste plutôt que de passer pour les moins soutenues.
+function parSoutienDecroissant(a, b) {
+  if (a.nbVotes === null || b.nbVotes === null) {
+    return a.nbVotes === b.nbVotes ? 0 : a.nbVotes === null ? 1 : -1;
+  }
+  return b.nbVotes - a.nbVotes;
+}
+
 // Une décision publiée engage le site : elle affirme, citation à l'appui, ce
 // qu'une commission a voté. Ces contrôles cassent plutôt que de laisser passer
 // un rattachement douteux — même logique que verifier-coherence.mjs sur le CSV.
@@ -367,11 +444,24 @@ function verifierDecisions(resultats) {
       if (!["examen", "classement"].includes(x.decision.sens)) {
         echecs.push(`${ou} : sens inattendu «${x.decision.sens}».`);
       }
-      // Le garde-fou central : on n'affiche une décision que si la commission
-      // nomme la pétition dans la phrase même. Sans ce numéro, le rattachement
-      // reposerait sur le contexte, donc sur une déduction.
-      if (!new RegExp(`\\b${r.identifiant}\\b`).test(x.decision.citation ?? "")) {
+      // Le garde-fou central. Deux rattachements sont admis, et un seul autre
+      // serait une déduction : soit la phrase nomme la pétition, soit elle ne
+      // la nomme pas mais le compte rendu ne traite que d'elle — auquel cas la
+      // citation ne doit contenir aucun autre numéro de pétition.
+      if (!["cite", "unique"].includes(x.decision.referent)) {
+        echecs.push(`${ou} : mode de rattachement inattendu «${x.decision.referent}».`);
+      }
+      const citation = x.decision.citation ?? "";
+      if (x.decision.referent === "cite" && !new RegExp(`\\b${r.identifiant}\\b`).test(citation)) {
         echecs.push(`${ou} : la citation ne cite pas le numéro de la pétition.`);
+      }
+      if (x.decision.referent === "unique") {
+        const autres = [...citation.matchAll(/p[ée]titions?\s*n[°o]\s*(\d{3,5})/gi)]
+          .map((m) => m[1])
+          .filter((n) => n !== r.identifiant);
+        if (autres.length) {
+          echecs.push(`${ou} : référent réputé unique mais la citation nomme n°${autres[0]}.`);
+        }
       }
       if (!x.decision.url?.startsWith("https://www.assemblee-nationale.fr/dyn/opendata/")) {
         echecs.push(`${ou} : lien de compte rendu inattendu.`);
@@ -429,18 +519,28 @@ async function main() {
         estCommission,
       };
 
+      const apparies = apparier(item, petitions, ambigus, rejets);
+
       // Toute réunion parlant de pétitions vaut d'être lue, même si son ordre
       // du jour n'en nomme aucune précisément : le compte rendu, lui, cite les
       // numéros. La commission du 14/01/2026 annonçait « les pétitions
       // renvoyées à la commission » et son compte rendu tranche nommément sur
       // les n° 3603 et 4553.
+      //
+      // On retient aussi les pétitions que l'ordre du jour désigne par leur
+      // numéro : quand il n'y en a qu'une, une décision énoncée sans la nommer
+      // lui revient sans ambiguïté possible.
       if (estCompteRenduCommission(reunion.compteRenduRef)) {
-        if (!reunionsParCR.has(reunion.compteRenduRef)) {
-          reunionsParCR.set(reunion.compteRenduRef, reunion);
-        }
+        // La réunion et les pétitions qu'elle nomme restent deux champs
+        // distincts : `nommees` est un Set de travail, qui n'a rien à faire
+        // dans le document écrit en base.
+        const connue = reunionsParCR.get(reunion.compteRenduRef);
+        const nommees = connue?.nommees ?? new Set();
+        for (const [id, voie] of apparies) if (voie === "numero") nommees.add(id);
+        if (!connue) reunionsParCR.set(reunion.compteRenduRef, { reunion, nommees });
       }
 
-      for (const [id, voie] of apparier(item, petitions, ambigus, rejets)) {
+      for (const [id, voie] of apparies) {
         if (!parPetition.has(id)) parPetition.set(id, []);
         parPetition.get(id).push({ ...reunion, appariement: voie });
       }
@@ -474,7 +574,7 @@ async function main() {
         reunions: uniques.map((x) => ({ ...x, decision: null })),
       };
     })
-    .sort((a, b) => b.nbVotes - a.nbVotes);
+    .sort(parSoutienDecroissant);
 
   console.log(`Réunions de commission : ${reunionsCommission}`);
   console.log(`Points d'ordre du jour mentionnant une pétition : ${itemsMentionnantPetition}`);
@@ -486,7 +586,7 @@ async function main() {
     console.log("\nComptes rendus : collecte sautée (--sans-comptes-rendus).\n");
   } else {
     cr = await collecterDecisions(resultats, petitions, reunionsParCR);
-    resultats.sort((a, b) => b.nbVotes - a.nbVotes);
+    resultats.sort(parSoutienDecroissant);
   }
 
   const parVoie = { numero: 0, titre: 0, "compte-rendu": 0 };
@@ -538,7 +638,8 @@ async function main() {
   }
 
   for (const r of resultats.slice(0, 8)) {
-    console.log(`\n[${r.identifiant}] ${r.nbVotes.toLocaleString("fr-FR")} sig · ${r.titre.slice(0, 62)}`);
+    const soutiens = r.nbVotes === null ? "non renseigné" : `${r.nbVotes.toLocaleString("fr-FR")} sig`;
+    console.log(`\n[${r.identifiant}] ${soutiens} · ${r.titre.slice(0, 62)}`);
     console.log(`  statut : ${r.statut} · décision publiée : ${r.decisionPubliee ? "oui" : "NON"}`);
     for (const x of r.reunions) {
       console.log(`  → ${x.date} [${x.appariement}] CR=${x.compteRenduRef ?? "—"}`);
@@ -549,9 +650,19 @@ async function main() {
 
   verifierDecisions(resultats);
 
+  const synthese = construireSynthese(resultats);
+  console.log(
+    `\nSynthèse : ${synthese.nbDecisionsAbsentesDuFichier} décision(s) absente(s) du fichier, ` +
+      `${(synthese.signaturesDecisionsAbsentes ?? 0).toLocaleString("fr-FR")} signatures cumulées` +
+      (synthese.nbDecisionsAttendues ? `, ${synthese.nbDecisionsAttendues} attendue(s)` : "")
+  );
+
   const sortie = path.join(CORPUS_DIR, "reunions.json");
-  await writeFile(sortie, JSON.stringify({ genere: resultats.length, resultats }, null, 2));
-  console.log(`\n→ ${sortie}`);
+  await writeFile(
+    sortie,
+    JSON.stringify({ genere: resultats.length, synthese, resultats }, null, 2)
+  );
+  console.log(`→ ${sortie}`);
 
   if (push) {
     console.log("\nÉcriture dans Firestore (collection `reunions`)...");
@@ -564,11 +675,8 @@ async function main() {
     const batch = db.batch();
     for (const r of resultats) batch.set(db.collection("reunions").doc(r.identifiant), r);
     batch.set(db.collection("meta").doc("reunions"), {
-      nbPetitions: resultats.length,
+      ...synthese,
       nbSansDecision: sansDecision.length,
-      nbDecisionsCompteRendu: resultats.filter((r) => r.derniereDecision).length,
-      nbDecisionsAbsentesDuFichier: resultats.filter((r) => r.derniereDecision && !r.decisionPubliee)
-        .length,
       updatedAt: Timestamp.now(),
     });
     await batch.commit();
