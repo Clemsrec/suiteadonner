@@ -305,6 +305,48 @@
   border-bottom: 1px solid var(--rule);
   white-space: nowrap;
 }
+/* En-têtes cliquables : le tri ne réordonne que les lignes affichées, il ne
+   va rien rechercher de plus dans les données. La flèche reste discrète tant
+   que la colonne n'est pas celle qui trie. */
+.triBouton {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  text-transform: inherit;
+  cursor: pointer;
+}
+.triBouton:hover,
+.triBouton:focus-visible {
+  color: var(--ink);
+}
+.colNombre .triBouton,
+.colDate .triBouton {
+  justify-content: flex-end;
+}
+.triFleche {
+  font-size: 0.9em;
+  opacity: 0;
+}
+.triBouton:hover .triFleche,
+.triBouton:focus-visible .triFleche {
+  opacity: 0.55;
+}
+.tableau th[aria-sort="ascending"],
+.tableau th[aria-sort="descending"] {
+  color: var(--ink);
+}
+.tableau th[aria-sort="ascending"] .triFleche,
+.tableau th[aria-sort="descending"] .triFleche {
+  opacity: 1;
+}
+
 .tableau td {
   padding: 13px 18px 13px 0;
   border-bottom: 1px solid var(--rule);
@@ -850,9 +892,27 @@
    se replie en un bloc — titre, puis chiffres et date sur une ligne, puis
    l'étiquette. Les intitulés de colonnes deviennent inutiles et disparaissent. */
 @media (max-width: 760px) {
-  .tableau thead {
-    position: absolute;
-    left: -9999px;
+  /* La ligne d'en-tête ne disparaît plus : repliée en barre d'étiquettes,
+     elle reste le seul accès au tri sur un écran étroit. */
+  .tableau thead tr {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    padding: 0 0 10px;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+  .tableau thead th {
+    display: block;
+    width: auto;
+    padding: 0;
+    border-bottom: none;
+  }
+  .colNombre .triBouton,
+  .colDate .triBouton {
+    justify-content: flex-start;
+  }
+  .triFleche {
+    opacity: 0.55;
   }
   .tableau,
   .tableau tbody,

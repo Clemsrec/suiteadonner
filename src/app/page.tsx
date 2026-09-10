@@ -274,6 +274,7 @@ export default async function Home() {
           {flagship.length > 0 && (
             <TableauPetitions
               enteteDate="Déposée le"
+              complet={false}
               lignes={flagship.map((p): LignePetition => ({
                 identifiant: p.identifiant,
                 titre: p.titre,
@@ -281,7 +282,7 @@ export default async function Home() {
                 tagType: "examined",
                 nbVotes: p.nbVotes,
                 commission: p.commissionSource,
-                dateLabel: formatFrDate(p.datePublication),
+                date: p.datePublication,
               }))}
             />
           )}
@@ -394,6 +395,7 @@ export default async function Home() {
 
             <TableauPetitions
               enteteDate="Date limite"
+              complet={false}
               lignes={statutObsolete.map((p): LignePetition => ({
                 identifiant: p.identifiant,
                 titre: p.titre,
@@ -401,7 +403,7 @@ export default async function Home() {
                 tagType: "none",
                 nbVotes: p.nbVotes,
                 commission: p.commissionSource,
-                dateLabel: formatFrDate(p.dateLimiteVote),
+                date: p.dateLimiteVote,
               }))}
             />
 
@@ -444,6 +446,7 @@ export default async function Home() {
 
               <TableauPetitions
                 enteteDate="Recueil clos le"
+              complet={false}
                 lignes={sansDecision.map((p): LignePetition => ({
                   identifiant: p.identifiant,
                   titre: p.titre,
@@ -451,7 +454,7 @@ export default async function Home() {
                   tagType: "none",
                   nbVotes: p.nbVotes,
                   commission: p.commissionSource,
-                  dateLabel: formatFrDate(p.dateLimiteVote),
+                  date: p.dateLimiteVote,
                 }))}
               />
 

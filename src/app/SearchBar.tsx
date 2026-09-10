@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
 import TableauPetitions, { type LignePetition } from "./TableauPetitions";
-import { STATUT_LABELS, STATUT_TAG, formatFrDate } from "@/lib/petitions";
+import { STATUT_LABELS, STATUT_TAG } from "@/lib/petitions";
 import { algoliaConfigured, searchPetitionsIndex, type AlgoliaPetitionHit, type SearchFilter } from "@/lib/algolia";
 
 const FILTERS: { key: SearchFilter; label: string }[] = [
@@ -109,10 +109,13 @@ export default function SearchBar() {
               <>
                 <p className={styles.searchMeta}>
                   {nbHits.toLocaleString("fr-FR")} résultat{nbHits > 1 ? "s" : ""}
-                  {results.length < nbHits ? ` (${results.length} affichés)` : ""}
+                  {results.length < nbHits
+                    ? ` (${results.length} affichés — affinez la recherche pour trier la totalité)`
+                    : ""}
                 </p>
                 <TableauPetitions
                   enteteDate="Déposée le"
+                  complet={results.length >= nbHits}
                   lignes={results.map(
                     (p): LignePetition => ({
                       identifiant: p.objectID,
@@ -121,7 +124,7 @@ export default function SearchBar() {
                       tagType: STATUT_TAG[p.statutSource],
                       nbVotes: p.nbVotes,
                       commission: p.commissionSource,
-                      dateLabel: formatFrDate(p.datePublication),
+                      date: p.datePublication,
                     })
                   )}
                 />

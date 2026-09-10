@@ -63,7 +63,12 @@ export default async function DecisionsNonPubliees() {
         {petitions.length ? (
           <TableauPetitions
             enteteDate="Recueil clos le"
-            legende={`${petitions.length.toLocaleString("fr-FR")} pétitions, de la plus signée à la moins signée.`}
+            complet={petitions.length < LIMITE}
+            legende={
+              petitions.length < LIMITE
+                ? `Liste complète : ${petitions.length.toLocaleString("fr-FR")} pétitions, de la plus signée à la moins signée à l'ouverture de la page. Chaque colonne classe l'ensemble.`
+                : `Lecture plafonnée à ${LIMITE.toLocaleString("fr-FR")} pétitions : cette liste n'est qu'une part de celles concernées, elle n'est donc pas triable.`
+            }
             lignes={petitions.map(
               (p): LignePetition => ({
                 identifiant: p.identifiant,
@@ -72,7 +77,7 @@ export default async function DecisionsNonPubliees() {
                 tagType: "none",
                 nbVotes: p.nbVotes,
                 commission: p.commissionSource,
-                dateLabel: formatFrDate(p.dateLimiteVote),
+                date: p.dateLimiteVote,
               })
             )}
           />

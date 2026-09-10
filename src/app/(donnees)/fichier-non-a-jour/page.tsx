@@ -58,7 +58,12 @@ export default async function FichierNonAJour() {
         {petitions.length ? (
           <TableauPetitions
             enteteDate="Date limite"
-            legende="La date limite affichée est celle du fichier lui-même : elle est passée, et le statut n'en tient pas compte."
+            complet={petitions.length < LIMITE}
+            legende={
+              petitions.length < LIMITE
+                ? "Liste complète. La date limite affichée est celle du fichier lui-même : elle est passée, et le statut n'en tient pas compte."
+                : `Lecture plafonnée à ${LIMITE.toLocaleString("fr-FR")} pétitions : cette liste n'est qu'une part de celles concernées, elle n'est donc pas triable.`
+            }
             lignes={petitions.map(
               (p): LignePetition => ({
                 identifiant: p.identifiant,
@@ -67,7 +72,7 @@ export default async function FichierNonAJour() {
                 tagType: "none",
                 nbVotes: p.nbVotes,
                 commission: p.commissionSource,
-                dateLabel: formatFrDate(p.dateLimiteVote),
+                date: p.dateLimiteVote,
               })
             )}
           />

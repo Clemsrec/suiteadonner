@@ -69,9 +69,10 @@ export default async function PetitionsParAnnee({ params }: Params) {
           Les {petitions.length.toLocaleString("fr-FR")} pétitions déposées en {annee}
         </h1>
         <p className={styles.lede}>
-          De la plus récente à la plus ancienne, telles qu&apos;elles figurent dans le
-          fichier officiel. Chaque fiche détaille le statut, les signatures et ce que
-          le fichier dit — ou ne dit pas — de la décision de la commission.
+          À l&apos;ouverture, de la plus récente à la plus ancienne, telles
+          qu&apos;elles figurent dans le fichier officiel. Chaque fiche détaille le
+          statut, les signatures et ce que le fichier dit — ou ne dit pas — de la
+          décision de la commission.
         </p>
       </header>
 
@@ -86,7 +87,7 @@ export default async function PetitionsParAnnee({ params }: Params) {
               tagType: STATUT_TAG[p.statutSource],
               nbVotes: p.nbVotes,
               commission: p.commissionSource,
-              dateLabel: formatFrDate(p.datePublication),
+              date: p.datePublication,
             })
           )}
         />
