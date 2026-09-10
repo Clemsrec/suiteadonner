@@ -145,9 +145,10 @@ export default async function PassagesEnCommission() {
         <section className={styles.section} id="en-bloc">
           <h2>Le classement en bloc</h2>
           <p className={styles.lede}>
-            Une pétition qui n&apos;atteint pas dix mille signatures en six mois est classée
-            d&apos;office, sans examen&nbsp;: c&apos;est la règle, et la commission n&apos;a
-            aucune décision à motiver. Elle traite ensemble toutes celles de son ressort, en une
+            Une pétition qui n&apos;atteint pas, en six mois, le seuil de signatures fixé par
+            sa commission — cinq mille pour la commission des lois, dix mille pour
+            d&apos;autres — est classée d&apos;office, sans examen&nbsp;: c&apos;est la règle,
+            et la commission n&apos;a aucune décision à motiver. Elle traite ensemble toutes celles de son ressort, en une
             séance. Les comptes rendus annoncent ainsi{" "}
             {synthese.petitionsClasseesEnBloc.toLocaleString("fr-FR")} pétitions au total,
             contre {synthese.nbDecisions} pour lesquelles nous pouvons citer une décision

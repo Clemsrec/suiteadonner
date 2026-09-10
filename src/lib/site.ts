@@ -35,6 +35,11 @@ export const SORT_PETITION = {
   releveLe: "2026-07-27",
   base: "https://petitions.assemblee-nationale.fr/initiatives",
   total: 1656,
+  // Relevé au même moment que les états ci-dessous : le filtre « Archivée »
+  // répondait, ce qui montre que le mécanisme fonctionne et que les trois
+  // issues à zéro ne sont pas une panne. Valeur figée par nature — c'est un
+  // relevé manuel — mais elle vit désormais avec sa date.
+  archivees: 1454,
   etats: [
     { cle: "published", libelle: "Enregistrée", nombre: 1656 },
     { cle: "classified", libelle: "Classée par la commission", nombre: 0 },

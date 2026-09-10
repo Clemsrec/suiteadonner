@@ -35,8 +35,14 @@ export type Petition = {
 
   recueilTermine: boolean;
   motifClassement: MotifClassement;
-  /** null quand nbVotes est inconnu : on ne peut pas trancher. */
+  /** A dépassé 10 000 signatures. null quand nbVotes est inconnu. */
   seuilAtteint: boolean | null;
+  /**
+   * Le seuil que le texte de décision oppose à cette pétition, quand il
+   * l'écrit — 5 000 pour la commission des lois, 10 000 ailleurs. null si
+   * aucun texte ne l'énonce : il n'est jamais déduit de la commission.
+   */
+  seuilEnonce: number | null;
   /** Le fichier dit « ouverte » alors que la date limite est passée. */
   ecartStatutDates: boolean;
   clotureGroupee: boolean;
@@ -47,12 +53,15 @@ export type Petition = {
 };
 
 export const MOTIF_LABELS: Record<MotifClassement, string> = {
-  seuil: "Classée d'office, seuil non atteint",
+  seuil: "Classée d'office, seuil de signatures non atteint",
   constat: "Classement constaté, sans motif",
   absent: "Aucune décision publiée",
   sans_objet: "Recueil en cours",
 };
 
+// Ce seuil n'est pas celui de toutes les commissions : voir seuilEnonce et
+// le commentaire de scripts/lib/petitions-source.mjs. Il ne sert qu'au constat
+// brut « a dépassé 10 000 signatures ».
 export const SEUIL_SIGNATURES = 10000;
 
 // Libellés de repli, employés quand seul le statut brut est disponible (index

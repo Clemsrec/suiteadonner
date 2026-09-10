@@ -168,7 +168,7 @@ export default function EmpreinteCarbonePage() {
         <ul>
           <li>
             <strong>Les appels aux services de données ne sont pas comptés.</strong>{" "}
-            Les réponses de Firestore et d&apos;Algolia arrivent bien dans votre navigateur,
+            Les réponses de Algolia arrivent bien dans votre navigateur,
             mais celui-ci en masque la taille aux scripts de la page — une protection
             normale entre domaines. Nous ne les estimons pas. Sur ce point, le chiffre est
             trop bas.

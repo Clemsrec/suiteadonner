@@ -65,7 +65,7 @@ const DIMENSIONS = [
     cle: "webApiCalls",
     titre: "Les appels aux services de données",
     texte:
-      "Les données de pétitions viennent de Cloud Firestore, la recherche d'Algolia. Ces services ne transmettent pas la taille de leurs réponses à votre navigateur : nous ne pouvons pas les compter, et nous ne les estimons pas.",
+      "Les données de pétitions sont lues par le serveur dans Cloud Firestore, sans appel depuis votre navigateur ; la recherche, elle, interroge Algolia depuis votre navigateur, la recherche d'Algolia. Ces services ne transmettent pas la taille de leurs réponses à votre navigateur : nous ne pouvons pas les compter, et nous ne les estimons pas.",
   },
   {
     cle: "aiInference",

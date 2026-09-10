@@ -74,19 +74,33 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 function constats(p: Petition): string[] {
   const faits: string[] = [];
 
-  faits.push(`Motif de classement lu dans le texte de décision : ${MOTIF_LABELS[p.motifClassement].toLowerCase()}.`);
+  // Le motif n'est « lu dans le texte » que lorsqu'un texte existe. Sans lui,
+  // la ligne annonçait une lecture qui n'avait pas eu lieu — et un « motif de
+  // classement » à des pétitions encore ouvertes.
+  if (p.decisionTexte) {
+    faits.push(`Motif lu dans le texte de décision : ${MOTIF_LABELS[p.motifClassement].toLowerCase()}.`);
+  } else if (p.motifClassement === "absent") {
+    faits.push("Le champ de décision est vide : aucun motif n'est publié.");
+  }
 
-  if (p.seuilAtteint === null) {
+  // Le seuil opposé à une pétition dépend de sa commission, et n'est connu que
+  // si son texte de décision l'énonce. À défaut, on s'en tient au fait brut :
+  // le nombre de signatures comparé à 10 000.
+  // typeof et non « !== null » : les documents importés avant l'ajout de ce
+  // champ le rendent `undefined`, qui n'est pas `null`. La fiche serait entrée
+  // dans cette branche avec un seuil inexistant jusqu'au prochain import.
+  if (typeof p.seuilEnonce === "number" && p.nbVotes !== null) {
+    const atteint = p.nbVotes >= p.seuilEnonce;
     faits.push(
-      `Le nombre de signatures n'est pas renseigné dans le fichier : impossible de dire si le seuil de ${SEUIL_SIGNATURES.toLocaleString("fr-FR")} signatures est atteint.`
+      `${atteint ? "A atteint" : "N'a pas atteint"} le seuil de ${p.seuilEnonce.toLocaleString("fr-FR")} signatures que son texte de décision énonce.`
     );
-  } else if (p.seuilAtteint) {
+  } else if (p.seuilAtteint === null) {
     faits.push(
-      `A dépassé le seuil de ${SEUIL_SIGNATURES.toLocaleString("fr-FR")} signatures, en dessous duquel une pétition est classée d'office sans examen.`
+      "Le nombre de signatures n'est pas renseigné dans le fichier : impossible de le comparer à un seuil."
     );
   } else {
     faits.push(
-      `N'a pas atteint le seuil de ${SEUIL_SIGNATURES.toLocaleString("fr-FR")} signatures, en dessous duquel une pétition est classée d'office sans examen.`
+      `${p.seuilAtteint ? "A dépassé" : "N'a pas dépassé"} ${SEUIL_SIGNATURES.toLocaleString("fr-FR")} signatures. Le seuil de classement d'office varie selon la commission, et le fichier ne l'énonce pas pour cette pétition.`
     );
   }
 

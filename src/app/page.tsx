@@ -189,7 +189,8 @@ export default async function Home() {
 
             <p className={styles.constatLede}>
               L&apos;immense majorité des pétitions sont classées automatiquement faute
-              d&apos;avoir réuni 10&nbsp;000 signatures, et le fichier officiel le dit
+              d&apos;avoir réuni le nombre de signatures exigé par leur commission, et le
+              fichier officiel le dit
               clairement. Mais dès qu&apos;une pétition franchit ce seuil et qu&apos;une
               commission doit se prononcer, l&apos;emplacement prévu pour motiver la décision
               reste presque toujours vide. Tous les chiffres ci-dessous proviennent du fichier
@@ -228,8 +229,7 @@ export default async function Home() {
                   &nbsp;%
                 </div>
                 <p>
-                  des pétitions atteignent 10&nbsp;000 signatures, le seuil en dessous duquel
-                  elles sont classées automatiquement, sans examen —{" "}
+                  des pétitions dépassent 10&nbsp;000 signatures —{" "}
                   {stats.seuilAtteint.toLocaleString("fr-FR")} sur{" "}
                   {stats.total.toLocaleString("fr-FR")}.
                 </p>
@@ -240,8 +240,8 @@ export default async function Home() {
                   {stats.clotureGroupee.toLocaleString("fr-FR")}
                 </div>
                 <p>
-                  pétitions dont le recueil s&apos;est arrêté le même jour que des centaines
-                  d&apos;autres, et non à une échéance qui leur soit propre
+                  pétitions dont le recueil s&apos;est arrêté le même jour qu&apos;au moins
+                  cent autres
                   {stats.dateClotureMasse
                     ? ` — la plus grosse vague en regroupe ${stats.nbClotureMasse.toLocaleString("fr-FR")} le ${formatFrDate(stats.dateClotureMasse)}`
                     : ""}
@@ -492,17 +492,20 @@ export default async function Home() {
             {formatFrDate(SORT_PETITION.releveLe)}
           </p>
           <h2>
-            La plateforme sait dire ce qu&apos;est devenue une pétition. Elle ne l&apos;a jamais
-            fait, pas une seule fois.
+            La plateforme prévoit de dire ce qu&apos;est devenue une pétition. Le jour de notre
+            relevé, aucune des {SORT_PETITION.total.toLocaleString("fr-FR")} initiatives
+            qu&apos;elle listait n&apos;était rangée dans l&apos;une de ces trois issues.
           </h2>
 
           <p className={styles.constatLede}>
             Cette section ne repose pas sur le fichier de données, mais sur ce que montre le
             site officiel — nous l&apos;avons relevé à la main, il ne se met pas à jour tout
             seul. Le site propose un filtre «&nbsp;Sort de la pétition&nbsp;» avec trois
-            issues possibles. Les trois renvoient zéro résultat. Ce n&apos;est pas une panne du
-            filtre&nbsp;: la recherche par statut, elle, fonctionne parfaitement — «&nbsp;Archivée&nbsp;»
-            renvoie 1&nbsp;454 pétitions, très exactement le nombre inscrit dans le fichier ouvert.
+            issues possibles. Les trois renvoyaient zéro résultat lors de ce relevé. Le filtre
+            lui-même répond&nbsp;: au même moment, «&nbsp;Archivée&nbsp;» renvoyait{" "}
+            {SORT_PETITION.archivees.toLocaleString("fr-FR")} pétitions, soit le nombre que le
+            fichier ouvert portait alors ({stats ? stats.archivee.toLocaleString("fr-FR") : "—"}{" "}
+            aujourd&apos;hui).
           </p>
 
           <ul className={styles.suivi}>
@@ -526,8 +529,8 @@ export default async function Home() {
               examinée.</strong>{" "}
               Nous démontrons le contraire plus bas, ordres du jour et comptes rendus à
               l&apos;appui. Cela signifie que le suivi prévu pour l&apos;expliquer au citoyen
-              n&apos;est jamais renseigné&nbsp;: toutes les pétitions restent indéfiniment à
-              l&apos;état «&nbsp;Enregistrée&nbsp;».
+              n&apos;était renseigné pour aucune des initiatives listées ce jour-là&nbsp;:
+              toutes restaient à l&apos;état «&nbsp;Enregistrée&nbsp;».
             </p>
             <p>
               Chiffres relevés à la main le {formatFrDate(SORT_PETITION.releveLe)}. La
@@ -620,7 +623,7 @@ export default async function Home() {
               <dd>
                 Cela signifie qu&apos;une pétition a été écartée sans qu&apos;une
                 commission ait eu à se prononcer, le plus souvent parce
-                qu&apos;elle n&apos;a pas réuni 10&nbsp;000 signatures dans le
+                qu&apos;elle n&apos;a pas réuni le nombre de signatures exigé dans le
                 délai imparti. Dans ce cas, le fichier officiel indique bien ce
                 motif&nbsp;: c&apos;est la seule situation où une explication est
                 systématiquement donnée.
@@ -630,9 +633,13 @@ export default async function Home() {
             <div className={styles.entree}>
               <dt>Les clôtures groupées</dt>
               <dd>
-                Certaines dates voient des centaines de pétitions s&apos;arrêter
-                en même temps, quel que soit leur nombre de signatures. La plus
-                importante regroupe 892 pétitions au 9 juin 2024. Nous constatons
+                Certaines dates voient au moins cent pétitions s&apos;arrêter en
+                même temps, quel que soit leur nombre de signatures. La plus
+                importante en regroupe{" "}
+                {stats?.nbClotureMasse
+                  ? `${stats.nbClotureMasse.toLocaleString("fr-FR")} au ${formatFrDate(stats.dateClotureMasse)}`
+                  : "plusieurs centaines"}
+                . Nous constatons
                 ce regroupement dans les données&nbsp;; nous n&apos;affirmons pas
                 sa cause, faute d&apos;information officielle qui la documente.
               </dd>
@@ -654,12 +661,11 @@ export default async function Home() {
             <div className={styles.entree}>
               <dt>« Le fichier public n&apos;est pas à jour »</dt>
               <dd>
-                Chaque pétition a une date de fin de recueil des signatures. Nous
-                vérifions si cette date est passée. Quand elle l&apos;est alors que
-                le fichier de données ouvertes conserve le statut{" "}
-                <code>ouverte</code>, nous le signalons. C&apos;est le cas de la
-                pétition la plus signée de la plateforme, huit mois après sa date
-                limite.
+                Quand une pétition porte une date de fin de recueil et que cette
+                date est passée alors que le fichier de données ouvertes lui
+                conserve le statut <code>ouverte</code>, nous le signalons. Le
+                fichier ne renseigne pas toujours cette date&nbsp;: sans elle, nous
+                ne signalons rien.
                 <br />
                 Nous avons vérifié la page officielle de ces pétitions&nbsp;: elle
                 affiche la date limite et le statut « Acceptées », et n&apos;emploie

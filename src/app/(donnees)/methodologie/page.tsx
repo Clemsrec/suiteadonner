@@ -106,7 +106,7 @@ export default function Methodologie() {
         </p>
         <p>
           Le champ <code>statut</code>{" "}du fichier n&apos;est pas traité comme une
-          source de vérité&nbsp;: près de 900 pétitions y sont marquées
+          source de vérité&nbsp;: plusieurs centaines de pétitions y sont marquées
           «&nbsp;classée&nbsp;» alors que leur propre texte de décision indique un
           classement d&apos;office faute de signatures. Le motif d&apos;un classement
           est donc toujours lu dans le texte de décision et dans les dates, jamais
@@ -163,9 +163,14 @@ export default function Methodologie() {
             n&apos;intervient pas.
           </li>
           <li>
-            <strong>Classée d&apos;office (seuil non atteint)</strong>{" "}— le texte de
-            décision invoque lui-même le seuil de 10&nbsp;000 signatures. C&apos;est
-            la seule situation où le fichier explique systématiquement le classement.
+            <strong>Classée d&apos;office (seuil de signatures non atteint)</strong>{" "}—
+            le texte de décision énonce lui-même un classement d&apos;office faute de
+            signatures. <strong>Le seuil n&apos;est pas le même partout</strong>&nbsp;:
+            le bureau de la commission des lois retient cinq mille signatures en six
+            mois, celui des affaires sociales dix mille. Sur les 1 560 textes du
+            fichier relevés le 10 septembre 2026, 811 énoncent cinq mille et 688 dix
+            mille. Nous affichons le seuil que le texte de la pétition écrit, et aucun
+            quand il n&apos;en écrit pas — il ne se déduit pas de la commission.
           </li>
           <li>
             <strong>Classement constaté, sans motif</strong> — un texte de décision
@@ -200,7 +205,9 @@ export default function Methodologie() {
             classement ou l&apos;examen de la pétition en la nommant par son numéro,
             dans le compte rendu publié de sa réunion. La phrase est reproduite telle
             quelle, jamais reformulée, et le lien vers le compte rendu intégral
-            l&apos;accompagne. Sans numéro cité, rien n&apos;est affiché —{" "}
+            l&apos;accompagne. Sans numéro cité, rien n&apos;est affiché — à la seule
+            exception du référent unique décrit plus haut, signalé comme tel sous la
+            citation —{" "}
             <Link href="/passages-en-commission">voir ces décisions</Link>.
           </li>
           <li>
@@ -220,8 +227,8 @@ export default function Methodologie() {
           </li>
           <li>
             <strong>Classement d&apos;office en bloc</strong>{" "}— une pétition restée
-            six mois sous les 10&nbsp;000 signatures est classée d&apos;office, sans
-            examen&nbsp;: c&apos;est la règle, et rien n&apos;a à être motivé. Une
+            six mois sous le seuil fixé par sa commission est classée d&apos;office,
+            sans examen&nbsp;: c&apos;est la règle, et rien n&apos;a à être motivé. Une
             commission le fait pour toutes celles de son ressort à la fois. Nous
             relevons la date, l&apos;effectif annoncé et la phrase qui l&apos;énonce —
             jamais la liste, que le compte rendu ne donne pas. Ce n&apos;est donc pas
@@ -237,7 +244,10 @@ export default function Methodologie() {
         <p>
           L&apos;Assemblée republie le fichier chaque lundi matin. Nous le récupérons
           ensuite, recalculons toutes les catégories dérivées et mettons le site à
-          jour. La date du dernier import figure sur chaque fiche et chaque liste.
+          jour. La date du dernier import figure sur les fiches et sur les listes tirées
+          du fichier. Les passages en commission suivent un autre pipeline, dont la date
+          n&apos;est pas encore affichée&nbsp;: leurs chiffres peuvent donc être en léger
+          décalage avec ceux des autres pages.
         </p>
         <p>
           L&apos;agenda des réunions et les comptes rendus suivent leur propre

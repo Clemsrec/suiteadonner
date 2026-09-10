@@ -107,23 +107,18 @@ export default function PolitiqueCookies() {
 
       <h2>6. Services tiers appelés par le site</h2>
       <p>
-        Deux services extérieurs sont sollicités depuis votre navigateur pour afficher les
-        données, indépendamment de votre choix. Aucun des deux ne dépose de cookie dans le
-        cadre de cet usage :
+        Les données de pétitions affichées sur les pages sont lues dans{" "}
+        <strong>Cloud Firestore</strong> par notre serveur, au moment où il fabrique la page.
+        Votre navigateur ne contacte donc jamais Firestore, et votre adresse IP ne lui est pas
+        transmise.
       </p>
-      <ul>
-        <li>
-          <strong>Cloud Firestore</strong> (Google) — lecture des données de pétitions affichées
-          sur la page
-        </li>
-        <li>
-          <strong>Algolia</strong> — exécution de vos requêtes dans le champ de recherche
-        </li>
-      </ul>
       <p>
-        Ces appels transmettent nécessairement votre adresse IP aux serveurs concernés, comme
-        toute requête réseau. S&apos;y ajoutent, uniquement après consentement, les appels
-        vers Google Analytics décrits plus haut. Le détail figure dans la{" "}
+        Un seul service extérieur est sollicité depuis votre navigateur, indépendamment de
+        votre choix&nbsp;: <strong>Algolia</strong>, qui exécute vos requêtes lorsque vous
+        utilisez le champ de recherche. Cet appel ne dépose aucun cookie, mais il transmet
+        nécessairement votre adresse IP au service, comme toute requête réseau. S&apos;y
+        ajoutent, uniquement après consentement, les appels vers Google Analytics décrits plus
+        haut. Le détail figure dans la{" "}
         <Link href="/politique-de-confidentialite">politique de confidentialité</Link>.
       </p>
 

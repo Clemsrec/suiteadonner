@@ -99,9 +99,11 @@ export default async function PetitionsParAnnee({ params }: Params) {
       </section>
 
       <p className={styles.source}>
-        Les libellés de statut sont lus dans le texte de décision et dans les dates,
-        jamais déduits du seul champ «&nbsp;statut&nbsp;» du fichier — qui se contredit
-        pour près de 900 pétitions. Voir la <Link href="/methodologie">méthodologie</Link>.
+        Le motif d&apos;un classement est lu dans le texte de décision et dans les dates.
+        Les libellés de statut, eux, reprennent le champ «&nbsp;statut&nbsp;» du fichier
+        lorsqu&apos;aucun texte ne permet de faire mieux — un champ qui se contredit pour
+        plusieurs centaines de pétitions. Voir la{" "}
+        <Link href="/methodologie">méthodologie</Link>.
         {petitions[0]?.calculeLe ? (
           <>
             {" "}

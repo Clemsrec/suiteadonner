@@ -27,10 +27,32 @@ export const CSV_URL =
 export const DATASET_URL =
   "https://www.data.gouv.fr/datasets/petitions-de-lassemblee-nationale";
 
-// Seuil de signatures en dessous duquel une pétition est classée d'office.
-// Valeur lue sur la plateforme officielle, cohérente avec les textes de
-// décision du fichier.
+// LE SEUIL N'EST PAS UNIQUE.
+//
+// Les textes de décision du fichier énoncent eux-mêmes le seuil appliqué, et
+// il varie d'une commission à l'autre : le bureau de la commission des lois
+// classe d'office « toute pétition n'ayant pas recueilli au moins cinq mille
+// signatures dans un délai de six mois », quand la commission des affaires
+// sociales retient « plus de dix mille ». Relevé le 10/09/2026 sur les 1 560
+// textes du fichier : 811 énoncent 5 000, 688 énoncent 10 000.
+//
+// Le site a longtemps présenté 10 000 comme le seuil, ce qui rangeait à tort
+// douze pétitions de la commission des lois — entre 5 000 et 10 000 signatures
+// — parmi celles n'ayant pas atteint « le » seuil. `SEUIL_SIGNATURES` ne sert
+// donc plus qu'à un constat brut et vrai pour toutes : avoir dépassé 10 000
+// signatures. Le seuil réellement opposé à une pétition se lit dans son texte
+// de décision, via `seuilEnonce`, et n'est connu que s'il y est écrit.
 export const SEUIL_SIGNATURES = 10000;
+
+// Seuil que le texte de décision énonce lui-même, en toutes lettres. null
+// quand aucun texte ne l'écrit : on ne le déduit pas de la commission, un
+// bureau pouvant changer sa règle d'une législature à l'autre.
+export function seuilEnonce(decisionTexte) {
+  const t = (decisionTexte ?? "").toLowerCase();
+  if (t.includes("cinq mille")) return 5000;
+  if (t.includes("dix mille")) return 10000;
+  return null;
+}
 
 // Une date de clôture partagée par au moins ce nombre de pétitions n'est pas
 // une échéance individuelle. On constate le regroupement ; on n'en infère
@@ -132,6 +154,9 @@ export function mapLigne(row, aujourdhui) {
     // on ne peut pas dire qu'une pétition n'a pas atteint un seuil si on
     // ignore combien elle a recueilli.
     seuilAtteint: nbVotes === null ? null : nbVotes >= SEUIL_SIGNATURES,
+    // Le seuil que le texte de décision oppose à CETTE pétition, quand il
+    // l'écrit — 5 000 pour la commission des lois, 10 000 ailleurs.
+    seuilEnonce: seuilEnonce(decisionTexte),
     // R5 — écart entre ce que dit le statut et ce que disent les dates.
     // Signalé, jamais corrigé.
     ecartStatutDates: statutSource === "ouverte" && recueilTermine,
