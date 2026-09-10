@@ -38,8 +38,8 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
         <span className={styles.pfChiffre}>
           {synthese.signaturesDecisionsAbsentes.toLocaleString("fr-FR")}
         </span>{" "}
-        signatures portent une pétition dont la commission a voté le sort — sans que
-        le fichier public en dise un mot.
+        signatures portent une pétition sur laquelle une commission s&apos;est prononcée
+        — sans que le fichier public en dise un mot.
       </h2>
 
       <p className={styles.pfLede}>
@@ -48,6 +48,12 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
         champ prévu pour la motiver dans le jeu de données ouvert est resté vide. Nous
         reproduisons la phrase officielle et donnons le lien vers le texte intégral —{" "}
         <Link href="/passages-en-commission">voir les décisions et leurs sources</Link>.
+      </p>
+      <p className={styles.pfPerimetre}>
+        Ces chiffres portent sur les deux législatures dont l&apos;Assemblée publie les
+        réunions, comptes rendus et rapports. Les pétitions déposées avant 2022 comptent
+        dans nos autres chiffres, mais aucune décision de commission ne peut leur être
+        rattachée — <Link href="/methodologie">notre périmètre et ses limites</Link>.
       </p>
 
       <div className={styles.pfCartes}>
@@ -106,19 +112,18 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
 
         {synthese.petitionsClasseesEnBloc > 0 && (
           <article className={styles.pfCarte}>
-            <p className={styles.pfCarteTitre}>Classées d&apos;office, en bloc</p>
+            <p className={styles.pfCarteTitre}>Classement d&apos;office, en bloc</p>
             <p className={styles.pfCarteChiffre}>
               {synthese.petitionsClasseesEnBloc.toLocaleString("fr-FR")}
             </p>
             <p className={styles.pfCarteTexte}>
-              pétitions restées six mois sous les 10&nbsp;000 signatures, classées en{" "}
+              pétitions visées par un classement d&apos;office en{" "}
               {synthese.nbClassementsEnBloc === 1
-                ? "une seule séance."
-                : `${synthese.nbClassementsEnBloc} séances.`}{" "}
-              C&apos;est la règle&nbsp;: sous ce seuil, le classement est automatique et aucune
-              commission n&apos;a à s&apos;en expliquer. Nous le relevons parce que le compte
-              rendu en donne le nombre et jamais la liste — elle a été projetée en séance, pas
-              publiée, et un signataire n&apos;y retrouve donc pas sa pétition —{" "}
+                ? "une seule séance"
+                : `${synthese.nbClassementsEnBloc} séances`}
+              , d&apos;après les effectifs que les comptes rendus annoncent. Selon les séances,
+              le compte rendu constate le classement ou le voit proposé par un rapporteur&nbsp;:
+              chaque séance indique lequel des deux. Aucune de ces pétitions n&apos;est nommée —{" "}
               <Link href="/passages-en-commission#en-bloc">voir ces séances</Link>.
             </p>
           </article>
@@ -126,7 +131,7 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
 
         {divergence && (
           <article className={styles.pfCarte}>
-            <p className={styles.pfCarteTitre}>Deux sources officielles, deux versions</p>
+            <p className={styles.pfCarteTitre}>Deux textes officiels, à comparer</p>
             <p className={styles.pfCarteTexte}>
               Pour{" "}
               <Link href={`/petition/${divergence.identifiant}`}>{divergence.titre}</Link>
@@ -138,24 +143,26 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
               {divergence.citation}&nbsp;»
             </p>
             <p className={styles.pfCarteTexte}>
-              Les deux émanent de l&apos;Assemblée nationale. Nous les publions côte à côte et
-              n&apos;en départageons aucun.
+              Les deux émanent de l&apos;Assemblée nationale et portent sur la même pétition.
+              Nous les publions côte à côte sans les comparer ni en départager aucun&nbsp;: à
+              vous de lire.
             </p>
           </article>
         )}
 
         {attendues > 0 && (
           <article className={styles.pfCarte}>
-            <p className={styles.pfCarteTitre}>Décisions prises, textes pas encore publiés</p>
+            <p className={styles.pfCarteTitre}>Décision inscrite, compte rendu introuvable</p>
             <p className={styles.pfCarteChiffre}>{attendues.toLocaleString("fr-FR")}</p>
             <p className={styles.pfCarteTexte}>
               {attendues === 1
-                ? "réunion a été convoquée pour décider du sort d’une pétition, sans que le compte rendu soit encore en ligne"
-                : "réunions ont été convoquées pour décider du sort d’une pétition, sans que leur compte rendu soit encore en ligne"}
+                ? "pétition dont une réunion de commission annonçait la décision à son ordre du jour, sans qu’aucun compte rendu ne soit référencé pour cette réunion"
+                : "pétitions dont une réunion de commission annonçait la décision à son ordre du jour, sans qu’aucun compte rendu ne soit référencé pour ces réunions"}
               {synthese.signaturesDecisionsAttendues > 0
                 ? ` — ${synthese.signaturesDecisionsAttendues.toLocaleString("fr-FR")} signatures en attente d’une réponse lisible.`
                 : "."}{" "}
-              {attendues === 1 ? "Nous la publierons" : "Nous les publierons"} dès leur parution.
+              Nous ignorons si la réunion s&apos;est tenue et si une décision a été prise&nbsp;:
+              nous constatons qu&apos;aucun texte n&apos;est disponible.
             </p>
           </article>
         )}

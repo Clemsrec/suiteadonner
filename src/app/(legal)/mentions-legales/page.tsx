@@ -66,8 +66,10 @@ export default function MentionsLegales() {
         </li>
       </ul>
       <p>
-        Le site n&apos;utilise ni service d&apos;authentification, ni stockage de fichiers, ni
-        outil de mesure d&apos;audience.
+        Le site n&apos;utilise ni service d&apos;authentification, ni stockage de fichiers. Une
+        mesure d&apos;audience Google Analytics existe, mais elle n&apos;est chargée
+        qu&apos;après un consentement explicite&nbsp;:{" "}
+        <Link href="/politique-cookies">voir la politique de cookies</Link>.
       </p>
 
       <h2>4. Objet du site</h2>

@@ -53,7 +53,7 @@ export default function PolitiqueCookies() {
       </p>
       <ul>
         <li>
-          <code>_ga</code> — identifiant anonyme de navigateur, conservé 13 mois
+          <code>_ga</code> — identifiant attribué à votre navigateur, sans autre donnée d’identification, conservé 13 mois
         </li>
         <li>
           <code>_ga_*</code> — état de la session de consultation, conservé 13 mois

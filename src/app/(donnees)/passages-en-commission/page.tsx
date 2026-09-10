@@ -17,7 +17,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: `Ce que les commissions ont fait des pétitions — ${SITE_NAME}`,
   description:
-    "Les pétitions que les commissions de l'Assemblée nationale ont examinées en les désignant elles-mêmes, et la décision qu'elles ont votée — reprise mot pour mot du compte rendu officiel, là où le fichier public laisse le champ vide.",
+    "Les pétitions dont une commission de l'Assemblée nationale s'est saisie en les désignant elle-même, et la décision qu'elle a énoncée dans son compte rendu — reprise mot pour mot, le plus souvent là où le fichier public laisse le champ vide.",
   alternates: { canonical: "/passages-en-commission" },
 };
 
@@ -52,10 +52,10 @@ export default async function PassagesEnCommission() {
         <h1>Ce que les commissions ont fait</h1>
         <p className={styles.lede}>
           Ces rapprochements ne sont pas des déductions de notre part&nbsp;: la
-          commission a désigné ces pétitions elle-même, par leur numéro ou par
-          leur titre exact, à son ordre du jour ou dans le compte rendu de sa
-          réunion. Chaque étape indique laquelle des trois, et donne accès au
-          texte officiel intégral.
+          commission a désigné ces pétitions elle-même, par leur numéro ou par leur
+          titre, à son ordre du jour ou dans le compte rendu de sa réunion. Chaque
+          étape indique laquelle des trois, et donne accès au texte officiel dont
+          elle est tirée.
         </p>
         <p className={styles.lede}>
           Nous écartons volontairement tout rapprochement incertain&nbsp;: lorsque
@@ -77,8 +77,8 @@ export default async function PassagesEnCommission() {
                 officiel.{" "}
               </>
             )}
-            Le travail a eu lieu&nbsp;; le signataire n&apos;en saura rien par le
-            fichier qu&apos;on lui donne à lire.
+            Une commission s&apos;en est saisie&nbsp;; le signataire n&apos;en saura rien par
+            le fichier qu&apos;on lui donne à lire.
           </p>
         )}
         {divergentes.length > 0 && (
@@ -87,9 +87,9 @@ export default async function PassagesEnCommission() {
             {divergentes.length === 1
               ? "l’une d’elles"
               : `${divergentes.length} d’entre elles`}
-            , le fichier public publie bien un texte de décision — mais il ne dit pas la même
-            chose que le compte rendu de la commission. Les deux sont reproduits côte à côte,
-            sans que nous départagions.
+            , le fichier public publie un texte de décision et le compte rendu de la commission
+            en publie un autre. Les deux sont reproduits côte à côte, tels quels&nbsp;: nous ne
+            les comparons pas et n&apos;en départageons aucun.
           </p>
         )}
       </header>
@@ -125,13 +125,13 @@ export default async function PassagesEnCommission() {
 
               {p.decisionTexte && p.derniereDecision && (
                 <div className={styles.encadre}>
-                  <strong>Les deux sources officielles ne disent pas la même chose.</strong>{" "}
+                  <strong>Deux textes officiels portent sur cette pétition.</strong>{" "}
                   Le fichier public écrit&nbsp;: «&nbsp;{p.decisionTexte}&nbsp;»
                   {pointFinal(p.decisionTexte)} Le compte rendu de la réunion du{" "}
                   {formatFrDate(p.derniereDecision.date)} écrit&nbsp;: «&nbsp;
                   {p.derniereDecision.citation}&nbsp;»
-                  {pointFinal(p.derniereDecision.citation)} Nous reproduisons les deux textes et
-                  n&apos;en départageons aucun.
+                  {pointFinal(p.derniereDecision.citation)} Nous les reproduisons sans les
+                  comparer ni en départager aucun&nbsp;: à vous de lire.
                 </div>
               )}
             </div>
@@ -147,10 +147,11 @@ export default async function PassagesEnCommission() {
           <p className={styles.lede}>
             Une pétition qui n&apos;atteint pas dix mille signatures en six mois est classée
             d&apos;office, sans examen&nbsp;: c&apos;est la règle, et la commission n&apos;a
-            aucune décision à motiver. Elle le fait pour toutes celles de son ressort à la fois,
-            en une séance et d&apos;un même vote —{" "}
-            {synthese.petitionsClasseesEnBloc.toLocaleString("fr-FR")} pétitions à ce jour,
-            contre {avecDecisionLue.length} dont nous pouvons citer la décision individuelle.
+            aucune décision à motiver. Elle traite ensemble toutes celles de son ressort, en une
+            séance. Les comptes rendus annoncent ainsi{" "}
+            {synthese.petitionsClasseesEnBloc.toLocaleString("fr-FR")} pétitions au total,
+            contre {synthese.nbDecisions} pour lesquelles nous pouvons citer une décision
+            individuelle.
           </p>
           <p className={styles.lede}>
             Nous ne relevons donc pas un manquement, mais une limite de ce que le document
@@ -166,7 +167,17 @@ export default async function PassagesEnCommission() {
               <li key={c.compteRenduRef}>
                 <span className={cartes.friseDate}>{formatFrDate(c.date)}</span>
                 <span className={cartes.friseActe}>
-                  {c.nombre.toLocaleString("fr-FR")} pétitions classées d&apos;office
+                  {c.nombre.toLocaleString("fr-FR")} pétitions —{" "}
+                  {c.nature === "accompli"
+                    ? "classement d’office constaté"
+                    : "classement d’office proposé par le rapporteur"}
+                </span>
+                <span className={cartes.preuve}>
+                  {c.nature === "accompli"
+                    ? "Le compte rendu énonce le classement comme accompli."
+                    : c.assentiment
+                      ? "Le compte rendu note « (Assentiment.) » après cette proposition, sans rapporter de vote nominal."
+                      : "Le compte rendu ne rapporte ni assentiment ni vote après cette proposition."}
                 </span>
                 <blockquote className={cartes.friseDecision}>
                   {c.citation}

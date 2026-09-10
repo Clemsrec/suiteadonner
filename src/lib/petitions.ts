@@ -451,6 +451,14 @@ export type ClassementEnBloc = {
   date: string;
   nombre: number;
   citation: string;
+  /**
+   * « accompli » : le compte rendu constate le classement. « proposition » :
+   * un rapporteur le propose — deux séances sur trois sont dans ce cas, et les
+   * présenter comme acquises ferait dire au site plus que le document.
+   */
+  nature: "accompli" | "proposition";
+  /** Le paragraphe mentionne « (Assentiment.) » — fait du document, pas conclusion. */
+  assentiment: boolean;
   compteRenduRef: string;
   url: string;
 };
@@ -472,6 +480,7 @@ export type SyntheseCommission = {
   signaturesDecisionsAttendues: number;
   classementsEnBloc: ClassementEnBloc[];
   nbClassementsEnBloc: number;
+  /** Effectif cumulé annoncé en séance, propositions comprises. */
   petitionsClasseesEnBloc: number;
   attenteRapport: {
     identifiant: string;

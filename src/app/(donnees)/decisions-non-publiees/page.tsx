@@ -10,7 +10,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: `Pétitions classées sans décision publiée — ${SITE_NAME}`,
   description:
-    "La liste complète des pétitions examinées par une commission de l'Assemblée nationale puis classées sans qu'aucune motivation ne soit inscrite dans le champ officiel prévu à cet effet.",
+    "La liste complète des pétitions que le fichier de l'Assemblée nationale donne pour classées sans qu'aucune motivation ne soit inscrite dans le champ officiel prévu à cet effet.",
   alternates: { canonical: "/decisions-non-publiees" },
 };
 
@@ -41,7 +41,7 @@ export default async function DecisionsNonPubliees() {
         </p>
         <h1>Classées sans décision publiée</h1>
         <p className={styles.lede}>
-          Ces pétitions ont été examinées par une commission, puis classées. Le jeu
+          Ces pétitions sont classées et le jeu
           de données officiel prévoit un champ pour motiver cette décision&nbsp;: il
           est resté entièrement vide. Nous constatons une absence, nous n&apos;en
           déduisons rien — nous ignorons si une décision a été prise sans être rendue

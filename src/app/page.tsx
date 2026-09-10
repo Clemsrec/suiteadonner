@@ -433,7 +433,7 @@ export default async function Home() {
           </div>
 
           <p className={styles.blockLede}>
-            Ces pétitions ont été examinées par une commission, puis classées.
+            Ces pétitions sont classées.
             Le jeu de données officiel prévoit un champ pour motiver cette
             décision&nbsp;: il est resté vide.
           </p>

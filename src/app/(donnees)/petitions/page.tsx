@@ -72,9 +72,10 @@ export default async function IndexPetitions() {
         <h2>Par constat</h2>
         <ul>
           <li>
-            <Link href="/decisions-non-publiees">Classées sans décision publiée</Link>{" "}— examinées
-            par une commission puis classées, sans qu&apos;aucune motivation ne soit
-            inscrite dans le champ officiel prévu à cet effet.
+            <Link href="/decisions-non-publiees">Classées sans décision publiée</Link>{" "}— le
+            fichier les donne pour classées, sans qu&apos;aucune motivation ne soit inscrite
+            dans le champ officiel prévu à cet effet. Nous ignorons si une commission les a
+            examinées.
           </li>
           <li>
             <Link href="/passages-en-commission">Passées en commission</Link> — les pétitions que

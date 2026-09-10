@@ -244,10 +244,10 @@ export default async function FichePetition({ params }: Params) {
               </blockquote>
               {p.decisionTexte ? (
                 <p className={styles.encadre}>
-                  <strong>Les deux sources officielles ne disent pas la même chose.</strong>{" "}
+                  <strong>Deux textes officiels portent sur cette pétition.</strong>{" "}
                   Le fichier réutilisable et le compte rendu de la commission émanent tous deux
-                  de l&apos;Assemblée nationale. Nous reproduisons les deux textes, chacun daté
-                  et sourcé, et n&apos;en départageons aucun.
+                  de l&apos;Assemblée nationale. Nous les reproduisons, chacun daté et sourcé,
+                  sans les comparer ni en départager aucun.
                 </p>
               ) : (
                 <p className={styles.encadre}>
@@ -267,7 +267,8 @@ export default async function FichePetition({ params }: Params) {
                 {formatDelaiMois(moisDepuis(decisionLue.date))}.
               </strong>{" "}
               La commission s&apos;est prononcée pour l&apos;examen de cette pétition, et un
-              examen se conclut par un rapport. Aucun n&apos;a été déposé à ce jour. Nous
+              examen se conclut par un rapport. Nous n&apos;en avons trouvé aucun dans les
+              corpus que nous lisons. Nous
               comptons le temps écoulé depuis ce vote&nbsp;; nous n&apos;en tirons aucune
               conclusion, et nous ignorons quel délai s&apos;applique.
             </p>
@@ -345,8 +346,8 @@ export default async function FichePetition({ params }: Params) {
             <h2>Ce que la commission a fait</h2>
             <p>
               Ces étapes ne sont pas des déductions de notre part&nbsp;: la commission a
-              désigné cette pétition elle-même, par son numéro ou par son titre exact, à
-              son ordre du jour ou dans le compte rendu de sa réunion. Chaque étape
+              désigné cette pétition elle-même, par son numéro ou par son titre, à son
+              ordre du jour ou dans le compte rendu de sa réunion. Chaque étape
               indique laquelle des trois, avec le texte officiel intégral.
             </p>
             <FriseReunions reunions={passages.reunions} />

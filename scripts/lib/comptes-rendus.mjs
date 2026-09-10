@@ -231,6 +231,20 @@ const CLASSEMENT_BLOC =
 // ailleurs : la compter ici la ferait figurer deux fois.
 const RAPPEL = /avait\s+déjà|dernier,|précédemment|de la même façon/i;
 
+// Toutes ces phrases ne disent pas la même chose. « La commission a procédé au
+// classement d'office de quinze pétitions » constate un acte accompli ; « je
+// vous propose de classer d'office ces 212 pétitions » est une proposition de
+// rapporteur, à la première personne. Les compter ensemble sous « classées »
+// ferait dire au site ce que le compte rendu ne dit pas — le même piège que
+// « décide du classement OU de l'examen » pour les décisions individuelles.
+//
+// L'assentiment, quand le compte rendu le mentionne dans le même paragraphe,
+// est relevé tel quel : c'est un fait du document, pas notre conclusion.
+// Pas de \b après « procédé » : en JavaScript, cette frontière ne reconnaît que
+// [A-Za-z0-9_], et « é » n'en fait pas partie — le motif ne matchait jamais.
+const ACCOMPLI = /(?:^|\s)(?:a|ont)\s+(?:procédé|décidé)(?=\s|$)|^La [Cc]ommission\s+(?:classe|procède)(?=\s|$)/;
+const ASSENTIMENT = /\(\s*assentiment\s*\.?\s*\)/i;
+
 export function extraireClassementsEnBloc(html) {
   const trouves = [];
   for (const paragraphe of parasItaliques(html)) {
@@ -240,7 +254,12 @@ export function extraireClassementsEnBloc(html) {
       if (!CLASSEMENT_BLOC.test(cle) || RAPPEL.test(cle)) continue;
       const nombre = nombreAvantPetitions(cle);
       if (!nombre) continue;
-      trouves.push({ nombre, citation: texte });
+      trouves.push({
+        nombre,
+        citation: texte,
+        nature: ACCOMPLI.test(cle) ? "accompli" : "proposition",
+        assentiment: ASSENTIMENT.test(paragraphe),
+      });
     }
   }
   // Une même séance peut énoncer la proposition puis son adoption : on ne

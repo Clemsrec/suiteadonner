@@ -19,7 +19,8 @@ import {
 // déduisons. On dit laquelle a servi pour que le lecteur puisse vérifier.
 const PROVENANCE: Record<ReunionCommission["appariement"], string> = {
   numero: "La commission cite le numéro de la pétition",
-  titre: "La commission cite le titre exact de la pétition",
+  titre:
+    "L’ordre du jour reprend le titre de la pétition — rapprochement écarté si plusieurs pétitions le partagent",
   "compte-rendu": "Le compte rendu de la réunion cite le numéro de la pétition",
 };
 
@@ -41,7 +42,7 @@ export function FriseReunions({ reunions }: { reunions: ReunionCommission[] }) {
                 <span className={styles.friseDecisionSource}>
                   Compte rendu de la réunion, reproduit sans modification.
                   {r.decision.referent === "unique" &&
-                    " La commission ne répète pas le numéro ici : ce compte rendu ne traite que de cette pétition, que son ordre du jour désigne par son numéro."}
+                    " La commission ne répète pas le numéro dans cette phrase. Son ordre du jour ne désignait que cette pétition, par son numéro, et aucune autre n’est citée dans ce compte rendu."}
                 </span>
               </blockquote>
             )}

@@ -1088,3 +1088,12 @@
   font-family: var(--font-mono);
   font-size: 0.9em;
 }
+/* Le périmètre des chiffres, à l'endroit où on les lit — le renvoyer à la
+   seule page méthodologie laissait les totaux se lire comme exhaustifs. */
+.pfPerimetre {
+  margin: 12px 0 0;
+  max-width: var(--largeur-texte);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--ink-faint);
+}
