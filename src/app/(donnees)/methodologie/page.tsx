@@ -233,8 +233,11 @@ export default function Methodologie() {
             six mois sous le seuil fixé par sa commission est classée d&apos;office,
             sans examen&nbsp;: c&apos;est la règle, et rien n&apos;a à être motivé. Une
             commission le fait pour toutes celles de son ressort à la fois. Nous
-            relevons la date, l&apos;effectif annoncé et la phrase qui l&apos;énonce —
-            jamais la liste, que le compte rendu ne donne pas. Ce n&apos;est donc pas
+            relevons la date, l&apos;effectif annoncé et la phrase qui l&apos;énonce. Nous
+            ne dressons pas la liste des pétitions concernées&nbsp;: le compte rendu la donne
+            rarement — un seul des trente-quatre que nous avons lus la joint en tableau — et
+            l&apos;établir nous-mêmes par recoupement serait un rapprochement de notre fait,
+            pas une désignation de la commission. Ce n&apos;est donc pas
             un manquement que nous constatons, mais ce que le document ne permet pas de
             savoir. Un rappel d&apos;une séance antérieure n&apos;est pas recompté —{" "}
             <Link href="/passages-en-commission#en-bloc">voir ces séances</Link>.

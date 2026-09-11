@@ -30,8 +30,9 @@ ces réunions produisent, et des rapports déposés au terme d'un examen.
   fixé par sa commission est classée d'office, sans examen : c'est la règle, et
   rien n'a à être motivé. Une commission traite ensemble toutes celles de son
   ressort. Le site relève la date, l'effectif annoncé, la phrase qui l'énonce et
-  sa nature — classement constaté, ou seulement proposé par un rapporteur ;
-  jamais la liste, que le compte rendu ne donne pas.
+  sa nature — classement constaté, ou seulement proposé par un rapporteur. La
+  liste des pétitions concernées n'est jointe que très rarement au compte rendu ;
+  le site ne la reconstitue pas par recoupement.
 - **Le seuil varie selon la commission.** Les textes de décision l'énoncent
   eux-mêmes : cinq mille signatures en six mois pour la commission des lois, dix
   mille pour les affaires sociales. Sur 1 560 textes, 811 énoncent cinq mille et

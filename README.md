@@ -36,10 +36,13 @@ publie pas — voir la règle 4.
   renvoient.
 - **Classement d'office en bloc** — une commission traite en une séance toutes
   les pétitions de son ressort restées six mois sous le seuil qu'elle a fixé,
-  sans en nommer aucune. Le site relève la date, l'effectif annoncé, la phrase
-  qui l'énonce et sa nature — classement constaté, ou proposé par un rapporteur.
-  Le compte rendu ne publie pas la liste : un signataire n'y retrouve donc pas
-  sa pétition.
+  sans en nommer aucune dans sa décision. Le site relève la date, l'effectif
+  annoncé, la phrase qui l'énonce et sa nature — classement constaté, ou proposé
+  par un rapporteur. Le compte rendu joint rarement la liste des pétitions
+  concernées : un seul des trente-quatre lus le fait, en tableau (objet, date de
+  dépôt, nombre de signatures). Le site ne reconstitue pas cette liste par
+  recoupement — ce serait un rapprochement de son fait, pas une désignation de
+  la commission.
 
 **Le seuil n'est pas le même pour toutes les commissions.** Les textes de
 décision l'énoncent eux-mêmes, en renvoyant le plus souvent à une décision du

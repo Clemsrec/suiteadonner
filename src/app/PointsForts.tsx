@@ -123,7 +123,8 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
                 : `${synthese.nbClassementsEnBloc} séances`}
               , d&apos;après les effectifs que les comptes rendus annoncent. Selon les séances,
               le compte rendu constate le classement ou le voit proposé par un rapporteur&nbsp;:
-              chaque séance indique lequel des deux. Aucune de ces pétitions n&apos;est nommée —{" "}
+              chaque séance indique lequel des deux. Il donne rarement la liste des pétitions
+              concernées —{" "}
               <Link href="/passages-en-commission#en-bloc">voir ces séances</Link>.
             </p>
           </article>

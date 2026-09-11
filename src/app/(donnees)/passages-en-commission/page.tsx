@@ -156,11 +156,15 @@ export default async function PassagesEnCommission() {
           </p>
           <p className={styles.lede}>
             Nous ne relevons donc pas un manquement, mais une limite de ce que le document
-            public permet de savoir&nbsp;: le compte rendu annonce un effectif, jamais la liste
-            des pétitions concernées. Un signataire dont la pétition est restée sous le seuil ne
-            peut pas y vérifier qu&apos;elle a bien été classée ce jour-là, ni lequel de ces
-            votes la concernait. Nous relevons la séance, son effectif et son compte
-            rendu&nbsp;; le reste, le document ne le contient pas.
+            public permet de savoir&nbsp;: le compte rendu annonce un effectif, et le plus
+            souvent rien de plus. Sur les trente-quatre comptes rendus que nous avons lus, un
+            seul joint la liste des pétitions classées — celui de la commission des affaires
+            économiques du 14 février 2024, sous forme de tableau donnant l&apos;objet, la date
+            de dépôt et le nombre de signatures de vingt-trois pétitions. Partout ailleurs, un
+            signataire dont la pétition est restée sous le seuil ne peut pas vérifier
+            qu&apos;elle a été classée ce jour-là. Nous relevons la séance, son effectif et son
+            compte rendu&nbsp;; quand la liste existe, elle est dans le texte officiel dont nous
+            donnons le lien.
           </p>
 
           <ol className={cartes.frise}>
