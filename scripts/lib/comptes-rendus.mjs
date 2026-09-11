@@ -23,9 +23,13 @@
 // Commission décide du classement OU de l'examen ». Ni l'une ni l'autre n'est
 // une décision.
 //
-// 1. Filtre typographique. Les comptes rendus composent le récit procédural en
-//    italique et les interventions en romain. Ne retenir que les paragraphes
-//    italiques écarte toutes les positions de groupe.
+// 1. Filtre typographique. Les comptes rendus composent en italique tout ce
+//    qui n'est pas une prise de parole nominative : le récit procédural, mais
+//    aussi le résumé d'une présentation par un rapporteur — la n° 3014 en donne
+//    l'exemple, où l'avis de la rapporteure sur le Conseil constitutionnel est
+//    en italique. Ce filtre écarte donc les interventions attribuées à un
+//    orateur, pas tout ce qui relève de l'opinion : c'est le motif ancré du
+//    point 2 qui fait le tri final.
 // 2. Motif ancré et numéroté. La phrase doit commencer par « La commission »
 //    (ou « La pétition n° X est donc classée ») et porter le numéro dans la
 //    phrase même.
@@ -145,6 +149,22 @@ const FORMES = [
     "classement",
   ],
   [new RegExp(`^La pétition ${N} est donc classée`), "classement"],
+];
+
+// Une même phrase peut trancher sur plusieurs pétitions, chacune nommée par son
+// numéro : « La commission adopte successivement les propositions de classement
+// des pétitions nos 1319 et 1373. » Le lien reste certain pour chacune — c'est
+// la commission qui les énumère. Sans cette forme, quatre décisions de la 16e
+// législature restaient invisibles alors que leur numéro était écrit.
+//
+// Le pluriel « pétitions » est exigé : « les amendements » relève d'un tout
+// autre objet, et « la pétition » au singulier est déjà couvert plus haut.
+const FORMES_PLURIELLES = [
+  [
+    new RegExp(`^La [Cc]ommission adopte successivement les propositions de classement des pétitions`),
+    "classement",
+  ],
+  [new RegExp(`^La [Cc]ommission adopte les propositions de classement des pétitions`), "classement"],
 ];
 
 // Les mêmes décisions, énoncées sans répéter le numéro : « La commission classe
@@ -334,6 +354,18 @@ export function extraireDecisions(html, petitionUnique = null) {
         if (!m) continue;
         decisions.push({ numero: m[1], sens, citation, referent: "cite" });
         trouve = true;
+        break;
+      }
+      if (trouve) continue;
+
+      // Formes plurielles : la phrase nomme plusieurs pétitions, on les prend
+      // toutes. Les numéros sont lus dans la phrase elle-même, jamais alentour.
+      for (const [motif, sens] of FORMES_PLURIELLES) {
+        if (!motif.test(cle)) continue;
+        for (const m of cle.matchAll(/(\d{3,5})/g)) {
+          decisions.push({ numero: m[1], sens, citation, referent: "cite" });
+          trouve = true;
+        }
         break;
       }
       if (trouve || !referentUnique) continue;
