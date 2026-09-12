@@ -3,6 +3,8 @@ import Link from "next/link";
 import styles from "../legal.module.css";
 import ChoixConsentement from "./ChoixConsentement";
 import { LEGAL, SITE_NAME } from "@/lib/site";
+import { RELEVE_APPELS, TIERS } from "@/lib/tiers";
+import { formatFrDate } from "@/lib/petitions";
 
 export const metadata: Metadata = {
   title: "Politique de cookies — Suite à donner",
@@ -120,6 +122,47 @@ export default function PolitiqueCookies() {
         ajoutent, uniquement après consentement, les appels vers Google Analytics décrits plus
         haut. Le détail figure dans la{" "}
         <Link href="/politique-de-confidentialite">politique de confidentialité</Link>.
+      </p>
+
+      <h3>La liste complète, et ce qui la tient à jour</h3>
+      <p>
+        Le navigateur n&apos;a le droit de contacter que les adresses ci-dessous&nbsp;: la
+        règle de sécurité du site (sa <em>Content-Security-Policy</em>) bloque toutes les
+        autres, sans exception et sans message. Un contrôle compare cette règle à la liste
+        que vous lisez et refuse de publier le site si elles divergent. Ajouter un service
+        sans l&apos;écrire ici est donc impossible&nbsp;: l&apos;engagement de déclarer
+        tout nouveau traitement, pris dans la{" "}
+        <Link href="/politique-de-confidentialite">politique de confidentialité</Link>, ne
+        repose pas sur notre seule bonne volonté.
+      </p>
+      <ul>
+        {TIERS.map((t) => (
+          <li key={t.nom}>
+            <strong>{t.nom}</strong> — {t.role}.{" "}
+            {t.depuisLeNavigateur
+              ? t.consentement === "requis"
+                ? "Appelé depuis votre navigateur, après consentement seulement."
+                : "Appelé depuis votre navigateur."
+              : "Jamais appelé depuis votre navigateur."}{" "}
+            <span className={styles.discret}>{t.domaines.join(" · ")}</span>
+            {t.note && (
+              <>
+                <br />
+                {t.note}
+              </>
+            )}
+          </li>
+        ))}
+      </ul>
+      <p>
+        <strong>Autorisé ne veut pas dire appelé.</strong> Cette règle dit ce qui est permis,
+        jamais ce qui se produit. Le {formatFrDate(RELEVE_APPELS.releveLe)}, sur{" "}
+        {RELEVE_APPELS.page}, sans donner le consentement, nous avons enregistré chaque appel
+        réseau sortant de la page&nbsp;: une seule adresse extérieure a été atteinte,{" "}
+        <code>{RELEVE_APPELS.observes.join(", ")}</code>, et seulement après{" "}
+        {RELEVE_APPELS.declencheur}. Vous pouvez refaire ce relevé&nbsp;: outils de
+        développement (<code>F12</code>), onglet <em>Réseau</em>, filtre sur les domaines
+        autres que le nôtre.
       </p>
 
       <p>

@@ -56,6 +56,7 @@ npm run verifier         # contrôles de cohérence sur le CSV canonique
 npm run build            # le site doit compiler
 npm run verifier:textes  # affirmations absolues affichées (nécessite le build)
 npm run verifier:errata  # chaque erratum retrouvé dans l'historique du dépôt
+npm run verifier:tiers   # services tiers déclarés == domaines autorisés par la CSP
 ```
 
 `verifier:textes` lit le HTML produit, pas le code : une phrase coupée par des
@@ -86,6 +87,15 @@ erratum porte une `empreinte`, un fragment de la phrase fautive tel qu'il
 figurait dans le code, et le contrôle le retrouve dans un commit passé. Une
 erreur qu'on ne retrouve pas dans l'historique est une erreur inventée — c'est
 ainsi que quatre entrées qui paraphrasaient au lieu de citer ont été trouvées.
+
+`verifier:tiers` fait de même pour les services tiers : la CSP de
+[next.config.ts](next.config.ts) fait autorité sur ce qu'un navigateur a le droit
+d'appeler, [src/lib/tiers.ts](src/lib/tiers.ts) sur ce que les pages légales
+déclarent. Un domaine autorisé sans être déclaré, c'est un service dont le
+visiteur n'est pas informé ; un domaine déclaré sans être autorisé, c'est une
+page qui décrit un site qui n'existe plus. Le contrôle casse dans les deux sens,
+et l'engagement « tout nouveau traitement sera déclaré » cesse d'être une
+promesse.
 
 - **Petites PR.** Une PR = un sujet. Pour un changement structurant (nouvelle
   page, nouveau champ dérivé, nouvelle source de données), ouvrez d'abord une

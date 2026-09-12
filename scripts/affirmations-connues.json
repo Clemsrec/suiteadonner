@@ -59,6 +59,16 @@
       }
     },
     {
+      "texte": "2026 Page empreinte carbone Le site affirmait Pourquoi c'était faux Nous n'avons jamais établi ce que l'hébergeur publie ou non.",
+      "page": "corrections.html",
+      "fonde": "nous",
+      "note": "Page des corrections : decrit une erreur que ce site a affichee et ce qu'il dit desormais. Les absolus y portent sur notre propre comportement, passe ou present. Le contenu vit dans src/lib/errata.ts.",
+      "preuve": {
+        "fichier": "src/lib/errata.ts",
+        "contient": "export const ERRATA"
+      }
+    },
+    {
       "texte": "2026 Politique de cookies, page empreinte carbone Le site affirmait Pourquoi c'était faux Les données de pétitions sont lues par le serveur, jamais par le navigateur du visiteur.",
       "page": "corrections.html",
       "fonde": "nous",
@@ -201,6 +211,16 @@
       }
     },
     {
+      "texte": "Ce qu'il dit désormais La page dit que nous ne disposons d'aucun relevé de nos serveurs et que nous n'en avons trouvé aucun publié par site hébergé.",
+      "page": "corrections.html",
+      "fonde": "nous",
+      "note": "Page des corrections : decrit une erreur que ce site a affichee et ce qu'il dit desormais. Les absolus y portent sur notre propre comportement, passe ou present. Le contenu vit dans src/lib/errata.ts.",
+      "preuve": {
+        "fichier": "src/lib/errata.ts",
+        "contient": "export const ERRATA"
+      }
+    },
+    {
       "texte": "Ce qu'il dit désormais Le site dit que cette liste est jointe rarement, et non jamais.",
       "page": "corrections.html",
       "fonde": "nous",
@@ -286,6 +306,16 @@
       "note": "Relevé manuel daté du 27/07/2026 sur la plateforme, bornée à ce jour et à ces initiatives ; liens de vérification fournis sur la page."
     },
     {
+      "texte": "Ces adresses restent autorisées par la CSP alors qu'aucun appel n'en part : le relevé ci-dessous le constate.",
+      "page": "politique-cookies.html",
+      "fonde": "nous",
+      "note": "Constat du releve du 12/09/2026, pas une regle : la CSP les autorise toujours, et le commentaire de next.config.ts dit pourquoi elles y restent pour l'instant.",
+      "preuve": {
+        "fichier": "src/lib/tiers.ts",
+        "contient": "observes: [\"B8GIER7BSB-dsn.algolia.net\"]"
+      }
+    },
+    {
       "texte": "Cet appel ne dépose aucun cookie, mais il transmet nécessairement votre adresse IP au service, comme toute requête réseau.",
       "page": "politique-cookies.html",
       "fonde": "nous",
@@ -303,6 +333,16 @@
       "preuve": {
         "fichier": "firestore.rules",
         "contient": "allow write: if false"
+      }
+    },
+    {
+      "texte": "Cette règle dit ce qui est permis, jamais ce qui se produit.",
+      "page": "politique-cookies.html",
+      "fonde": "nous",
+      "note": "Distingue explicitement l'autorisation du fait. C'est la raison d'etre du releve d'appels, qui constate a une date ce qui a ete reellement observe.",
+      "preuve": {
+        "fichier": "src/lib/tiers.ts",
+        "contient": "AUTORISÉ N'EST PAS APPELÉ"
       }
     },
     {
@@ -355,6 +395,16 @@
       }
     },
     {
+      "texte": "Enfin, les motivations réelles d'un vote — ce que chacun pense, ce qui s'est décidé ailleurs — ne s'écrivent pas dans les documents que nous lisons : nous rapportons ce qu'un vote a écrit, jamais ce qu'il a voulu.",
+      "page": "methodologie.html",
+      "fonde": "nous",
+      "note": "Borne aux documents que nous lisons, et non a tous les documents. Le site ne publie que des phrases extraites telles quelles du compte rendu : la fonction qui les isole conserve le texte citable a cote de la cle de recherche, pour ne jamais publier une phrase retouchee.",
+      "preuve": {
+        "fichier": "scripts/lib/comptes-rendus.mjs",
+        "contient": "return { texte, cle:"
+      }
+    },
+    {
       "texte": "Enregistrée 1 656 pétitions Classée par la commission 0 Examinée en commission 0 Débattue en séance publique 0 Ce que cela veut dire, et ce que cela ne veut pas dire Cela ne signifie pas qu'aucune pétition n'a jamais été examinée.",
       "page": "index.html",
       "fonde": "non-affirmation",
@@ -401,10 +451,30 @@
       }
     },
     {
+      "texte": "https://*.googletagmanager.com · https://*.google-analytics.com · https://*.analytics.google.com Le script n'est pas chargé tant que le consentement n'a pas été donné : sans lui, aucune de ces adresses n'est contactée.",
+      "page": "politique-cookies.html",
+      "fonde": "nous",
+      "note": "Le composant ne rend le script qu'apres consentement explicite : sans lui, rien n'est monte, donc aucune de ces adresses n'est jointe.",
+      "preuve": {
+        "fichier": "src/app/MesureAudience.tsx",
+        "contient": "if (choix === \"accepte\") return <GoogleAnalytics"
+      }
+    },
+    {
       "texte": "Il est constitué à partir de données publiques et n'est ni affilié à l'Assemblée nationale, ni à aucune institution publique , ni à aucun parti politique ou organisation militante.",
       "page": "mentions-legales.html",
       "fonde": "editeur",
       "note": "Declaration de l'editeur sur lui-meme. Aucun code ne peut l'etablir ; elle engage la signature des mentions legales, qui nomment le responsable de publication."
+    },
+    {
+      "texte": "Il ne dépose aucun cookie, et l'index ne conserve ni les requêtes ni les clics : c'est écrit dans le code qui l'appelle, pas seulement dans un réglage de compte.",
+      "page": "politique-cookies.html",
+      "fonde": "nous",
+      "note": "La promesse tient a deux options passees au client de recherche. Retirer analytics: false de src/lib/algolia.ts casse ce controle et nomme la phrase devenue fausse.",
+      "preuve": {
+        "fichier": "src/lib/algolia.ts",
+        "contient": "analytics: false"
+      }
     },
     {
       "texte": "Il nomme aussi les deux limites qui restent : les classements d'office en bloc, dont la liste n'est presque jamais jointe, et les motivations d'un vote.",
@@ -414,6 +484,16 @@
       "preuve": {
         "fichier": "src/lib/errata.ts",
         "contient": "export const ERRATA"
+      }
+    },
+    {
+      "texte": "Jamais appelé depuis votre navigateur.",
+      "page": "politique-cookies.html",
+      "fonde": "nous",
+      "note": "Rendu depuis le champ depuisLeNavigateur de la declaration des tiers, et constate par le releve d'appels du 12/09/2026 : instrumentation de fetch, XMLHttpRequest.open et sendBeacon sur le site en production, aucune requete vers ces adresses.",
+      "preuve": {
+        "fichier": "src/lib/tiers.ts",
+        "contient": "export const RELEVE_APPELS"
       }
     },
     {
@@ -444,6 +524,16 @@
       "preuve": {
         "fichier": "src/lib/errata.ts",
         "contient": "export const ERRATA"
+      }
+    },
+    {
+      "texte": "La liste complète, et ce qui la tient à jour Le navigateur n'a le droit de contacter que les adresses ci-dessous : la règle de sécurité du site (sa Content-Security-Policy ) bloque toutes les autres, sans exception et sans message.",
+      "page": "politique-cookies.html",
+      "fonde": "nous",
+      "note": "Porte sur la CSP de next.config.ts, que le navigateur applique. Le controle verifier:tiers compare cette CSP a la liste affichee et casse dans les deux sens ; la liste ne peut donc pas etre incomplete sans arreter la publication.",
+      "preuve": {
+        "fichier": "next.config.ts",
+        "contient": "const CSP = ["
       }
     },
     {
@@ -628,7 +718,7 @@
       "texte": "Modifications Toute évolution du site introduisant un nouveau traitement — mesure d'audience, formulaire, service tiers — donnera lieu à une mise à jour de cette page et, si la réglementation l'impose, au recueil préalable de votre consentement.",
       "page": "politique-de-confidentialite.html",
       "fonde": "editeur",
-      "note": "Engagement d'avenir : rien dans le code ne peut le prouver aujourd'hui. Le controle des preuves d'absence (aucun <form hors recherche) le rend au moins opposable pour les formulaires."
+      "note": "Engagement d'avenir : aucun code ne peut prouver aujourd'hui ce qui sera fait demain. Une part est neanmoins devenue opposable — verifier:tiers casse la publication si un service tiers joignable depuis le navigateur n'est pas declare, ou l'inverse. Restent hors de sa portee les appels du serveur et l'exactitude des descriptions, ce que la page dit elle-meme."
     },
     {
       "texte": "Nous affichons le seuil que le texte de la pétition écrit, et aucun quand il n'en écrit pas : il ne se déduit pas de la commission, un bureau pouvant changer sa règle.",
@@ -823,6 +913,16 @@
       }
     },
     {
+      "texte": "Segment g CO 2 e / Go Part Centre de données 33,1 22 % Réseau de transport 35,6 24 % Votre appareil 79,5 54 % Ce coefficient est une convention de place, pas une mesure de notre infrastructure : nous ne disposons d'aucun relevé de consommation de nos serveurs, et nous n'en avons trouvé aucun que notre hébergeur publierait par site hébergé.",
+      "page": "empreinte-carbone.html",
+      "fonde": "nous",
+      "note": "Deux absences, toutes deux sur nous : nous ne mesurons pas nos serveurs, et notre recherche d'un releve par site hebergé n'a rien donne. La phrase ne dit plus que l'hebergeur n'en publie pas — nous n'avons pas les moyens de l'etablir. Le coefficient affiche est une convention citee, pas une mesure.",
+      "preuve": {
+        "fichier": "src/app/(donnees)/empreinte-carbone/page.tsx",
+        "contient": "const SONDE = estimateWeb("
+      }
+    },
+    {
       "texte": "Si vous refusez, ou si vous ignorez la bannière, rien n'est déposé et aucune donnée n'est transmise à Google.",
       "page": "politique-cookies.html",
       "fonde": "nous",
@@ -975,36 +1075,6 @@
       }
     },
     {
-      "texte": "Votre navigateur ne contacte donc jamais Firestore, et votre adresse IP ne lui est pas transmise.",
-      "page": "politique-cookies.html",
-      "fonde": "nous",
-      "note": "Toutes les lectures Firestore sont faites par des Server Components ; aucun composant client n'importe les fonctions de lecture (voir src/lib/petitions-format.ts).",
-      "preuve": {
-        "fichier": "src/lib/petitions-format.ts",
-        "contient": "export function formatSignatures"
-      }
-    },
-    {
-      "texte": "Segment g CO 2 e / Go Part Centre de données 33,1 22 % Réseau de transport 35,6 24 % Votre appareil 79,5 54 % Ce coefficient est une convention de place, pas une mesure de notre infrastructure : nous ne disposons d'aucun relevé de consommation de nos serveurs, et nous n'en avons trouvé aucun que notre hébergeur publierait par site hébergé.",
-      "page": "empreinte-carbone.html",
-      "fonde": "nous",
-      "note": "Deux absences, toutes deux sur nous : nous ne mesurons pas nos serveurs, et notre recherche d'un releve par site hebergé n'a rien donne. La phrase ne dit plus que l'hebergeur n'en publie pas — nous n'avons pas les moyens de l'etablir. Le coefficient affiche est une convention citee, pas une mesure.",
-      "preuve": {
-        "fichier": "src/app/(donnees)/empreinte-carbone/page.tsx",
-        "contient": "const SONDE = estimateWeb("
-      }
-    },
-    {
-      "texte": "Enfin, les motivations réelles d'un vote — ce que chacun pense, ce qui s'est décidé ailleurs — ne s'écrivent pas dans les documents que nous lisons : nous rapportons ce qu'un vote a écrit, jamais ce qu'il a voulu.",
-      "page": "methodologie.html",
-      "fonde": "nous",
-      "note": "Borne aux documents que nous lisons, et non a tous les documents. Le site ne publie que des phrases extraites telles quelles du compte rendu : la fonction qui les isole conserve le texte citable a cote de la cle de recherche, pour ne jamais publier une phrase retouchee.",
-      "preuve": {
-        "fichier": "scripts/lib/comptes-rendus.mjs",
-        "contient": "return { texte, cle:"
-      }
-    },
-    {
       "texte": "Une vérification qu'un lecteur ne peut pas rejouer n'est pas une vérification, et la formule « ces pétitions » laissait entendre qu'elles avaient toutes été relevées.",
       "page": "corrections.html",
       "fonde": "nous",
@@ -1015,23 +1085,13 @@
       }
     },
     {
-      "texte": "2026 Page empreinte carbone Le site affirmait Pourquoi c'était faux Nous n'avons jamais établi ce que l'hébergeur publie ou non.",
-      "page": "corrections.html",
+      "texte": "Votre navigateur ne contacte donc jamais Firestore, et votre adresse IP ne lui est pas transmise.",
+      "page": "politique-cookies.html",
       "fonde": "nous",
-      "note": "Page des corrections : decrit une erreur que ce site a affichee et ce qu'il dit desormais. Les absolus y portent sur notre propre comportement, passe ou present. Le contenu vit dans src/lib/errata.ts.",
+      "note": "Toutes les lectures Firestore sont faites par des Server Components ; aucun composant client n'importe les fonctions de lecture (voir src/lib/petitions-format.ts).",
       "preuve": {
-        "fichier": "src/lib/errata.ts",
-        "contient": "export const ERRATA"
-      }
-    },
-    {
-      "texte": "Ce qu'il dit désormais La page dit que nous ne disposons d'aucun relevé de nos serveurs et que nous n'en avons trouvé aucun publié par site hébergé.",
-      "page": "corrections.html",
-      "fonde": "nous",
-      "note": "Page des corrections : decrit une erreur que ce site a affichee et ce qu'il dit desormais. Les absolus y portent sur notre propre comportement, passe ou present. Le contenu vit dans src/lib/errata.ts.",
-      "preuve": {
-        "fichier": "src/lib/errata.ts",
-        "contient": "export const ERRATA"
+        "fichier": "src/lib/petitions-format.ts",
+        "contient": "export function formatSignatures"
       }
     }
   ]

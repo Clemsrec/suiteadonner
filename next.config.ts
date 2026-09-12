@@ -4,16 +4,29 @@ import type { NextConfig } from "next";
 // surface d'attaque se limite donc à l'injection de contenu et au
 // détournement d'affichage — c'est ce que verrouille la CSP.
 //
-// Domaines tiers réellement appelés depuis le navigateur :
-//   *.googleapis.com / *.firebaseio.com  → lecture Firestore (SDK client)
-//   *.algolia.net / *.algolianet.com     → recherche plein texte
+// Domaines tiers que le navigateur a le droit d'appeler :
+//   *.algolia.net / *.algolianet.com     → recherche plein texte. Le seul
+//       appel tiers observé sans condition (relevé du 12/09/2026, voir
+//       RELEVE_APPELS dans src/lib/tiers.ts) ; le second domaine sert de
+//       secours quand le premier ne répond pas.
 //   *.googletagmanager.com / *.google-analytics.com / *.analytics.google.com
 //     → mesure d'audience GA4, chargée uniquement après consentement
 //       (src/app/MesureAudience.tsx) ; domaines tirés de la doc CSP officielle
 //       de gtag.js. Autorisés ici en permanence, sollicités seulement si le
 //       visiteur accepte.
-// Toute nouvelle intégration côté client devra être ajoutée ici, sinon elle
-// sera silencieusement bloquée par le navigateur.
+//   *.googleapis.com / *.firebaseio.com  → Firestore. AUTORISÉS SANS ÊTRE
+//       APPELÉS : les pétitions sont lues par le serveur, et le relevé du
+//       12/09/2026 n'a vu aucune requête partir du navigateur vers ces
+//       adresses, bien que le SDK figure dans le bundle. Ces deux lignes
+//       peuvent donc être retirées ; elles sont conservées le temps de
+//       vérifier qu'aucune page n'en dépend, et la politique de cookies dit
+//       au visiteur qu'elles sont permises sans servir.
+//
+// Cette liste fait autorité : `npm run verifier:tiers` la compare à
+// src/lib/tiers.ts, que lisent les pages légales, et casse dès que l'une des
+// deux dit ce que l'autre ne dit pas. Un domaine ajouté ici sans y être déclaré
+// arrête la publication ; un domaine retiré d'ici mais toujours déclaré aussi.
+// Toute nouvelle intégration côté client doit donc passer par les deux.
 // React s'appuie sur eval() en développement pour reconstruire les piles
 // d'appels et alimenter les outils de debug ; il ne l'utilise jamais en
 // production. Sans cette exception, la page ne rend plus du tout en `next dev`.

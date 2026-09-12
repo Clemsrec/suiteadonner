@@ -199,3 +199,13 @@
   margin: 4px 0 0;
   line-height: 1.6;
 }
+
+/* Les adresses techniques sous chaque service tiers. Elles doivent être
+   lisibles pour qui veut les recopier dans les outils de développement, sans
+   pour autant concurrencer le nom du service. */
+.discret {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  overflow-wrap: anywhere;
+}

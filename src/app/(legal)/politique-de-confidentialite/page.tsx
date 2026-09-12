@@ -229,6 +229,20 @@ export default function PolitiqueConfidentialite() {
         réglementation l&apos;impose, au recueil préalable de votre consentement. Voir également
         la <Link href="/politique-cookies">politique de cookies</Link>.
       </p>
+      <p>
+        Cet engagement ne repose pas que sur notre parole. Un contrôle compare la liste des
+        services déclarés à la règle de sécurité qui autorise, ou non, votre navigateur à
+        les joindre&nbsp;; il refuse de publier le site dès que les deux divergent. Un
+        service tiers ajouté sans être déclaré ici, ou déclaré sans être joignable, arrête
+        la publication. La liste et le relevé des appels réellement observés figurent dans
+        la <Link href="/politique-cookies">politique de cookies</Link>.
+      </p>
+      <p>
+        Deux réserves, pour que la portée soit exacte. Ce contrôle couvre ce que votre
+        navigateur appelle, non ce que notre serveur appelle en fabriquant les pages. Et il
+        garantit que la liste est complète, non que sa description est juste&nbsp;: seule
+        une relecture humaine peut le dire.
+      </p>
     </>
   );
 }
