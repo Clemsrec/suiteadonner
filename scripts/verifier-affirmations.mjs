@@ -33,9 +33,12 @@
 // relisant ce HTML que les erreurs ci-dessus ont été trouvées, jamais en
 // relisant le code.
 //
-// Il vérifie aussi les PREUVES. Une entrée peut porter un champ `preuve`
-// { fichier, contient } : le contrôle ouvre ce fichier et y cherche cette
-// chaîne. Sans quoi une justification reste une parole — « analytics est
+// Il vérifie aussi les PREUVES. Une entrée peut porter un champ `preuve` :
+//   { fichier, contient } — le contrôle ouvre ce fichier et y cherche la chaîne ;
+//   { dossier, absent }   — il parcourt ce dossier et casse si la chaîne y
+//                           apparaît. C'est ainsi qu'une promesse d'absence se
+//                           vérifie : « le site ne comporte aucun formulaire »
+//                           tient tant qu'aucune balise <form n'est écrite. Sans quoi une justification reste une parole — « analytics est
 // désactivé dans src/lib/algolia.ts » resterait affiché après la suppression
 // de ce réglage, et la politique de confidentialité mentirait en silence.
 //
@@ -111,6 +114,33 @@ function phrases(texte) {
     .filter((p) => p.split(/\s+/).length >= 5 && ABSOLUS.test(p));
 }
 
+// Cherche une chaîne dans un dossier de code, et retourne le premier fichier
+// qui la porte. Sert aux promesses d'absence : « aucun formulaire », « aucune
+// image de contenu » — des engagements que seule leur non-réalisation atteste.
+// `sauf` liste les fichiers exclus. Une exclusion est une exception assumée :
+// elle doit être nommée ici ET justifiée dans la note de l'affirmation, sans
+// quoi elle sert à faire taire le contrôle plutôt qu'à le préciser.
+async function chercherDans(racine, aiguille, sauf = []) {
+  if (!existsSync(racine)) return null;
+  for (const entree of await readdir(racine, { withFileTypes: true })) {
+    const complet = path.join(racine, entree.name);
+    if (sauf.some((s) => complet.endsWith(s))) continue;
+    if (entree.isDirectory()) {
+      const trouve = await chercherDans(complet, aiguille, sauf);
+      if (trouve) return trouve;
+    } else if (/\.(tsx?|jsx?|css)$/.test(entree.name)) {
+      // Les commentaires sont retirés avant la recherche : un commentaire qui
+      // explique pourquoi on n'emploie PAS une balise — « symbole inline plutôt
+      // qu'un <img> » — ne doit pas compter comme son emploi.
+      const source = (await readFile(complet, "utf8"))
+        .replace(/\/\*[\s\S]*?\*\//g, " ")
+        .replace(/^\s*\/\/[^\n]*$/gm, " ");
+      if (source.includes(aiguille)) return complet;
+    }
+  }
+  return null;
+}
+
 // --- Contrôle -------------------------------------------------------------
 
 async function main() {
@@ -135,16 +165,35 @@ async function main() {
   // Les preuves d'abord : une justification qui ne tient plus est plus grave
   // qu'une phrase non déclarée, puisqu'elle a l'apparence d'une vérification.
   const preuvesRompues = [];
-  const avecPreuve = connues.affirmations.filter((a) => a.preuve?.fichier && a.preuve?.contient);
+  const avecPreuve = connues.affirmations.filter(
+    (a) => (a.preuve?.fichier && a.preuve?.contient) || (a.preuve?.dossier && a.preuve?.absent)
+  );
   for (const a of avecPreuve) {
-    const chemin = path.resolve(a.preuve.fichier);
-    if (!existsSync(chemin)) {
-      preuvesRompues.push({ a, motif: `fichier introuvable : ${a.preuve.fichier}` });
+    if (a.preuve.contient) {
+      const chemin = path.resolve(a.preuve.fichier);
+      if (!existsSync(chemin)) {
+        preuvesRompues.push({ a, motif: `fichier introuvable : ${a.preuve.fichier}` });
+        continue;
+      }
+      const source = await readFile(chemin, "utf8");
+      if (!source.includes(a.preuve.contient)) {
+        preuvesRompues.push({ a, motif: `« ${a.preuve.contient} » absent de ${a.preuve.fichier}` });
+      }
       continue;
     }
-    const source = await readFile(chemin, "utf8");
-    if (!source.includes(a.preuve.contient)) {
-      preuvesRompues.push({ a, motif: `« ${a.preuve.contient} » absent de ${a.preuve.fichier}` });
+
+    // Promesse d'absence : on parcourt le dossier et on casse si la chaîne
+    // interdite y est écrite quelque part.
+    const trouve = await chercherDans(
+      path.resolve(a.preuve.dossier),
+      a.preuve.absent,
+      a.preuve.sauf ?? []
+    );
+    if (trouve) {
+      preuvesRompues.push({
+        a,
+        motif: `« ${a.preuve.absent} » est apparu dans ${path.relative(process.cwd(), trouve)}`,
+      });
     }
   }
 

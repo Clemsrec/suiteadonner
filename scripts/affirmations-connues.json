@@ -4,7 +4,11 @@
       "texte": "» Nous les reproduisons sans les comparer ni en départager aucun : à vous de lire.",
       "page": "passages-en-commission.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "src/lib/petitions-format.ts",
+        "contient": "deuxTextesOfficiels"
+      }
     },
     {
       "texte": "1 703 889 signatures cumulées pour les 269 pétitions de cette liste, sans qu'aucune motivation ne soit publiée.",
@@ -66,19 +70,35 @@
       "texte": "Aucune cause inférée Nous constatons ce que le jeu de données contient, nous n'interprétons pas.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "export function motifClassement"
+      }
     },
     {
       "texte": "Aucune décision publiée — le sort de la pétition est scellé (recueil terminé ou statut décidé) et le champ de décision est resté entièrement vide — voir ces pétitions .",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "motifClassement = absent : recueil terminé ou statut décidé, et decisionTexte vide."
+      "note": "motifClassement = absent : recueil terminé ou statut décidé, et decisionTexte vide.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "STATUTS_DECIDES"
+      }
     },
     {
       "texte": "Aucune image de contenu, aucune vidéo, aucune bannière.",
       "page": "empreinte-carbone.html",
       "fonde": "nous",
-      "note": "Aucune balise img de contenu dans src/ ; le logo est un SVG inline."
+      "note": "Aucune image n'est chargée par le visiteur sur les pages. Exception nommée : opengraph-image.tsx et twitter-image.tsx génèrent la vignette servie aux réseaux sociaux lors du partage d'un lien, jamais requise par une page.",
+      "preuve": {
+        "dossier": "src/app",
+        "absent": "<img",
+        "sauf": [
+          "opengraph-image.tsx",
+          "twitter-image.tsx"
+        ]
+      }
     },
     {
       "texte": "Aucune police d'écriture n'est téléchargée — le site utilise celles déjà présentes dans votre système.",
@@ -110,13 +130,21 @@
       "texte": "C'est pourquoi nous lisons le motif dans le texte, et jamais dans le statut.",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "export function motifClassement"
+      }
     },
     {
       "texte": "C'est pourquoi nous n'écrivons jamais « classée après examen » : rien dans les données ne prouve qu'un examen a eu lieu.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "export function motifClassement"
+      }
     },
     {
       "texte": "Ce délai est calculé au moment où la page est rendue, jamais figé en base — un compteur arrêté vieillirait sans que rien ne le signale.",
@@ -142,7 +170,14 @@
       "texte": "Ce que le site ne fait pas Aucune création de compte, aucune authentification Aucun formulaire de contact, d'inscription ou de commentaire Aucun cookie ni traceur sans votre consentement explicite et révocable Aucun pixel publicitaire, aucun réseau publicitaire Aucun profilage, aucune décision automatisée vous concernant Aucune revente ni transmission commerciale de données 3.",
       "page": "politique-de-confidentialite.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Aucun formulaire de contact, d'inscription ou de commentaire. Exception nommée : SearchBar.tsx porte le champ de recherche, seul formulaire du site ; sa requête part vers Algolia sans être conservée (analytics: false).",
+      "preuve": {
+        "dossier": "src/app",
+        "absent": "<form",
+        "sauf": [
+          "SearchBar.tsx"
+        ]
+      }
     },
     {
       "texte": "Ce que les données établissent, c'est que ce fichier n'en porte aucune trace, et que le citoyen qui s'y fie ne peut donc pas l'y lire .",
@@ -154,7 +189,11 @@
       "texte": "Ce que nous ne calculons jamais Quand le fichier ne dit rien, nous n'inventons pas.",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "if (!brut) return null;"
+      }
     },
     {
       "texte": "Ce sont des formules types : aucune ne cite le numéro ni le titre de la pétition qu'elle concerne — nous les avons toutes relues pour le vérifier.",
@@ -211,10 +250,17 @@
       "note": "Calculé : réunion dont l'ordre du jour annonce une décision, sans compteRenduRef."
     },
     {
-      "texte": "Données personnelles et cookies Le site ne requiert aucune inscription, ne comporte aucun formulaire et ne dépose aucun cookie sans votre consentement — le seul traceur, une mesure d'audience, est soumis à une bannière d'acceptation.",
+      "texte": "Données personnelles et cookies Le site ne requiert aucune inscription.",
       "page": "mentions-legales.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Aucune inscription : le site n'a ni compte ni authentification. Le champ de recherche est nommé comme seul formulaire, ce qu'il était faux de taire.",
+      "preuve": {
+        "dossier": "src/app",
+        "absent": "<form",
+        "sauf": [
+          "SearchBar.tsx"
+        ]
+      }
     },
     {
       "texte": "Elle est calculée par votre navigateur, pour votre navigateur : aucun chiffre n'est transmis à l'éditeur ni à personne d'autre, et rien n'est écrit dans votre appareil — ni cookie, ni stockage local.",
@@ -252,13 +298,21 @@
       "texte": "Examen voté, aucun rapport trouvé — la commission s'est prononcée pour l'examen d'une pétition, et nous n'avons trouvé aucun rapport.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "« trouvé » borne l'affirmation à nos corpus ; le décompte ne retient que les pétitions dont le recueil est clos (attenteRapport, fetch-reunions.mjs)."
+      "note": "« trouvé » borne l'affirmation à nos corpus ; le décompte ne retient que les pétitions dont le recueil est clos (attenteRapport, fetch-reunions.mjs).",
+      "preuve": {
+        "fichier": "src/lib/petitions-format.ts",
+        "contient": "examenSansRapport"
+      }
     },
     {
       "texte": "Examen voté, aucun rapport trouvé 5 mois que la commission a voté l'examen de la pétition .",
       "page": "index.html",
       "fonde": "nous",
-      "note": "« trouvé » borne l'affirmation à nos corpus ; le décompte ne retient que les pétitions dont le recueil est clos (attenteRapport, fetch-reunions.mjs)."
+      "note": "« trouvé » borne l'affirmation à nos corpus ; le décompte ne retient que les pétitions dont le recueil est clos (attenteRapport, fetch-reunions.mjs).",
+      "preuve": {
+        "fichier": "src/lib/petitions-format.ts",
+        "contient": "examenSansRapport"
+      }
     },
     {
       "texte": "Finalité : statistiques de fréquentation du site — volumes de visites, pages lues, provenance Base légale : votre consentement (article 6.1.a du RGPD), librement retirable à tout moment depuis la politique de cookies Sous-traitant : Google Ireland Limited (Google Analytics) Conservation : cookies limités à 13 mois dans votre navigateur ; données de mesure conservées au plus 14 mois dans Google Analytics Sans consentement, rien de tout cela n'existe : le script n'est même pas chargé, et aucune requête ne part vers Google Analytics.",
@@ -276,7 +330,11 @@
       "texte": "L'écart est signalé, jamais corrigé — voir ces pétitions .",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "ecartStatutDates est un champ dérivé ; aucune écriture ne modifie la source."
+      "note": "ecartStatutDates est un champ dérivé ; aucune écriture ne modifie la source.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "ecartStatutDates"
+      }
     },
     {
       "texte": "L'onglet Réseau montre par ailleurs qu'aucune requête ne part vers les domaines de Google Analytics.",
@@ -302,7 +360,11 @@
       "texte": "La plateforme officielle nous sert à comparer et à mettre en contexte, jamais à établir un chiffre.",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "export const CSV_URL"
+      }
     },
     {
       "texte": "La plateforme petitions.assemblee-nationale.fr sert de contexte et de comparaison, jamais de référence.",
@@ -330,13 +392,21 @@
       "texte": "Le document ne porte aucun champ reliant au numéro de pétition : c'est son intitulé officiel qui la nomme, et sans ce numéro nous ne rattachons rien — voir les suites en commission .",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/lib/rapports.mjs",
+        "contient": "NUMERO_PETITION"
+      }
     },
     {
       "texte": "Le fichier ne renseigne pas toujours cette date : sans elle, nous ne signalons rien.",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "export function parseDate"
+      }
     },
     {
       "texte": "Le fichier public lui donne toujours le statut ouverte et ne mentionne aucune décision.",
@@ -380,25 +450,41 @@
       "texte": "Les deux sont reproduits côte à côte, tels quels : nous ne les comparons pas et n'en départageons aucun.",
       "page": "passages-en-commission.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "src/lib/petitions-format.ts",
+        "contient": "deuxTextesOfficiels"
+      }
     },
     {
       "texte": "Les libellés décrivent des faits vérifiables (« Aucune décision publiée »), jamais des intentions.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "MOTIF_LABELS et STATUT_LABELS nomment des champs, jamais des intentions."
+      "note": "MOTIF_LABELS et STATUT_LABELS nomment des champs, jamais des intentions.",
+      "preuve": {
+        "fichier": "src/lib/petitions-format.ts",
+        "contient": "export const MOTIF_LABELS"
+      }
     },
     {
       "texte": "Les pages sont servies depuis un cache et identiques pour tous les visiteurs : aucun cookie technique n'est nécessaire.",
       "page": "politique-cookies.html",
       "fonde": "nous",
-      "note": "Toutes les routes sont en ISR (revalidate), aucune personnalisation par visiteur."
+      "note": "Toutes les routes sont en ISR (revalidate), aucune personnalisation par visiteur.",
+      "preuve": {
+        "fichier": "src/app/page.tsx",
+        "contient": "export const revalidate"
+      }
     },
     {
       "texte": "Les pétitions de cette période figurent donc dans nos chiffres tirés du fichier, mais aucune décision de commission ne peut leur être rattachée — leur absence de nos relevés ne signifie pas qu'il ne s'est rien passé.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/fetch-reunions.mjs",
+        "contient": "LEGISLATURES"
+      }
     },
     {
       "texte": "Les pétitions de la législature 2017-2022 comptent dans nos autres chiffres, mais l'Assemblée ne publie pas ces corpus pour elle : aucune décision de commission ne peut leur être rattachée — notre périmètre et ses limites .",
@@ -462,31 +548,51 @@
       "texte": "Nous constatons une absence, nous n'en déduisons rien — nous ignorons si une décision a été prise sans être rendue publique, ou si aucune ne l'a été.",
       "page": "decisions-non-publiees.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "MOTIFS.ABSENT"
+      }
     },
     {
       "texte": "Nous constatons une absence, nous n'en déduisons rien : nous ignorons si une décision a été prise sans être rendue publique, ou si aucune ne l'a été.",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "MOTIFS.ABSENT"
+      }
     },
     {
       "texte": "Nous écartons volontairement tout rapprochement incertain : lorsque plusieurs pétitions portent le même titre et qu'aucun numéro n'est cité, nous préférons une lacune à une attribution douteuse.",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/fetch-reunions.mjs",
+        "contient": "function titresAmbigus"
+      }
     },
     {
       "texte": "Nous ignorons si la réunion s'est tenue et si une décision a été prise : nous constatons qu'aucun texte n'est disponible.",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/fetch-reunions.mjs",
+        "contient": "compteRenduRef"
+      }
     },
     {
       "texte": "Nous le récupérons ensuite, recalculons toutes les catégories dérivées et mettons le site à jour.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "export function calculerStats"
+      }
     },
     {
       "texte": "Nous le signalons parce que ce fichier est la source de tous les travaux qui s'appuient dessus, dont le nôtre.",
@@ -504,13 +610,21 @@
       "texte": "Nous n'avons trouvé aucun rapport la concernant dans les corpus que nous lisons.",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Porte sur notre recherche, pas sur l'existence d'un rapport : bornée par « dans les corpus que nous lisons ». Le champ rapport de meta/reunions l'établit."
+      "note": "Porte sur notre recherche, pas sur l'existence d'un rapport : bornée par « dans les corpus que nous lisons ». Le champ rapport de meta/reunions l'établit.",
+      "preuve": {
+        "fichier": "scripts/lib/rapports.mjs",
+        "contient": "export function lireRapport"
+      }
     },
     {
       "texte": "Nous n'écrivons donc jamais « classée après examen », car rien dans les données ne prouve qu'un examen a eu lieu.",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "export function motifClassement"
+      }
     },
     {
       "texte": "Par année de dépôt 2026 1 007 pétition s 2025 1 473 pétition s 2024 326 pétition s 2023 597 pétition s 2022 323 pétition s 2021 197 pétition s 2020 179 pétition s Par constat Classées sans décision publiée — le fichier les donne pour classées, sans qu'aucune motivation ne soit inscrite dans le champ officiel prévu à cet effet.",
@@ -522,19 +636,31 @@
       "texte": "Par défaut — avant votre réponse, ou après un refus — le site fonctionne sans aucun traceur.",
       "page": "politique-cookies.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "src/app/MesureAudience.tsx",
+        "contient": "if (choix === undefined) return null;"
+      }
     },
     {
       "texte": "Pour aucune d'entre elles, le fichier public ne mentionne la moindre décision.",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Calculé sur les pétitions affichées (decisionPubliee), plus écrit en dur."
+      "note": "Calculé sur les pétitions affichées (decisionPubliee), plus écrit en dur.",
+      "preuve": {
+        "fichier": "src/app/page.tsx",
+        "contient": "commissionSansDecision"
+      }
     },
     {
       "texte": "Quand des centaines de pétitions voient leur recueil s'arrêter le même jour, nous constatons le regroupement sans lui attribuer de cause : aucune information officielle ne la documente.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "SEUIL_CLOTURE_GROUPEE"
+      }
     },
     {
       "texte": "Rechercher une pétition Chercher Toutes Classées Archivées En cours Le constat d'ensemble Quand le fichier ne rattache pas un classement au nombre de signatures, il n'écrit le plus souvent aucune motivation : 269 fois sur 271 .",
@@ -569,6 +695,16 @@
       }
     },
     {
+      "texte": "Son seul formulaire est le champ de recherche, dont la requête part vers Algolia sans être conservée, et il ne dépose aucun cookie sans votre consentement — le seul traceur, une mesure d'audience, est soumis à une bannière d'acceptation.",
+      "page": "mentions-legales.html",
+      "fonde": "nous",
+      "note": "Le champ de recherche est le seul formulaire ; sa requête part sans être conservée.",
+      "preuve": {
+        "fichier": "src/lib/algolia.ts",
+        "contient": "analytics: false"
+      }
+    },
+    {
       "texte": "Sont particulièrement bienvenus les regards de spécialistes du droit parlementaire, de journalistes et de chercheurs, ainsi que toute aide technique sur la récupération et le recoupement des données.",
       "page": "index.html",
       "fonde": "nous",
@@ -596,13 +732,21 @@
       "texte": "Surtout, une commission classe des centaines de pétitions d'office en une séance sans en nommer aucune : nous relevons alors la séance et son effectif, mais aucun signataire ne peut savoir si la sienne en faisait partie — le compte rendu ne contient pas la liste.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/lib/comptes-rendus.mjs",
+        "contient": "extraireClassementsEnBloc"
+      }
     },
     {
       "texte": "Tous les chiffres ci-dessous proviennent du fichier officiel et peuvent être recomptés.",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Tous issus de meta/stats, calculé par calculerStats() sur le CSV canonique."
+      "note": "Tous issus de meta/stats, calculé par calculerStats() sur le CSV canonique.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "export function calculerStats"
+      }
     },
     {
       "texte": "Toute erreur constatée peut être signalée à clement@nucom.fr ; elle sera corrigée ou documentée.",
@@ -626,7 +770,11 @@
       "texte": "Toutes les pétitions — l'index complet, année par année ; chaque pétition y a sa fiche détaillée.",
       "page": "plan-du-site.html",
       "fonde": "nous",
-      "note": "Décrit le contenu de notre index."
+      "note": "Décrit le contenu de notre index.",
+      "preuve": {
+        "fichier": "src/lib/petitions.ts",
+        "contient": "getSitemapMeta"
+      }
     },
     {
       "texte": "Un nombre de signatures manquant s'affiche « non renseigné » et jamais « 0 » — écrire zéro reviendrait à affirmer « aucun soutien » là où le fichier ne dit rien.",
@@ -664,7 +812,11 @@
       "texte": "Une seule source canonique Tous les chiffres proviennent du fichier officiel des pétitions de l'Assemblée nationale publié sur data.gouv.fr, complété par l' agenda officiel des réunions de l'Assemblée et par les comptes rendus que ces réunions produisent, pour les passages en commission.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "CSV_URL est l'unique source de chiffres ; les autres corpus n'alimentent que les passages en commission."
+      "note": "CSV_URL est l'unique source de chiffres ; les autres corpus n'alimentent que les passages en commission.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "export const CSV_URL"
+      }
     },
     {
       "texte": "Votre navigateur ne contacte donc jamais Firestore, et votre adresse IP ne lui est pas transmise.",

@@ -147,7 +147,8 @@ export default function MentionsLegales() {
 
       <h2>7. Données personnelles et cookies</h2>
       <p>
-        Le site ne requiert aucune inscription, ne comporte aucun formulaire et{" "}
+        Le site ne requiert aucune inscription. Son seul formulaire est le champ de
+        recherche, dont la requête part vers Algolia sans être conservée, et il{" "}
         <strong>ne dépose aucun cookie sans votre consentement</strong>{" "}
         — le seul traceur, une mesure d&apos;audience, est soumis à une bannière
         d&apos;acceptation. Le détail des traitements figure dans la{" "}
