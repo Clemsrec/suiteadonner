@@ -189,13 +189,12 @@ export default async function Home() {
             </h2>
 
             <p className={styles.constatLede}>
-              L&apos;immense majorité des pétitions sont classées automatiquement faute
+              La plupart des pétitions dont le fichier motive le classement le sont faute
               d&apos;avoir réuni le nombre de signatures exigé par leur commission, et le
-              fichier officiel le dit
-              clairement. Mais dès qu&apos;une pétition franchit ce seuil et qu&apos;une
-              commission doit se prononcer, l&apos;emplacement prévu pour motiver la décision
-              reste presque toujours vide. Tous les chiffres ci-dessous proviennent du fichier
-              officiel et peuvent être recomptés.
+              fichier le dit clairement. Pour les autres, l&apos;emplacement prévu pour motiver
+              la décision reste vide dans la très grande majorité des cas — le rapport exact
+              est donné ci-dessus. Tous les chiffres ci-dessous proviennent du fichier officiel
+              et peuvent être recomptés.
             </p>
 
             <div className={styles.faits}>
@@ -206,9 +205,9 @@ export default async function Home() {
                 <p>
                   formulations différentes pour l&apos;ensemble des{" "}
                   {stats.textesDecision.toLocaleString("fr-FR")}{" "}
-                  décisions rédigées. Ce sont des formules types, qui ne varient que par la date
-                  et le nom de la commission&nbsp;: aucune n&apos;est écrite pour la pétition
-                  qu&apos;elle concerne.
+                  décisions rédigées. Ce sont des formules types&nbsp;: aucune ne cite le numéro
+                  ni le titre de la pétition qu&apos;elle concerne — nous les avons toutes
+                  relues pour le vérifier.
                 </p>
               </div>
 
@@ -259,17 +258,20 @@ export default async function Home() {
                 fichier ne garde aucune trace. Quand cette trace existe ailleurs — un compte
                 rendu de réunion qui nomme la pétition —{" "}
                 <Link href="/passages-en-commission">nous la publions</Link>. Ce que les données
-                établissent, c&apos;est qu&apos;
+                établissent, c&apos;est que{" "}
                 <strong>
-                  un citoyen qui s&apos;en tient au fichier officiel n&apos;a aucun moyen de le
-                  savoir
+                  ce fichier n&apos;en porte aucune trace, et que le citoyen qui s&apos;y fie ne
+                  peut donc pas l&apos;y lire
                 </strong>
                 .
               </p>
               <p>
-                Ils ne désignent personne non plus. Le droit de pétition tel qu&apos;il est
-                organisé n&apos;oblige à aucune réponse individualisée. Ce sont des règles, pas
-                des négligences — et ce sont elles que ces chiffres décrivent.
+                Ils ne désignent personne non plus. Le classement d&apos;office faute de
+                signatures est une règle que chaque commission se donne&nbsp;: les textes de
+                décision du fichier l&apos;écrivent eux-mêmes, en renvoyant le plus souvent à
+                une décision du bureau de la commission saisie. Nous ignorons si une réponse
+                individualisée est due au signataire&nbsp;; ce que ces chiffres décrivent,
+                c&apos;est ce que ces règles laissent voir.
               </p>
             </div>
           </section>
@@ -637,12 +639,11 @@ export default async function Home() {
             <div className={styles.entree}>
               <dt>Ce que veut dire « classée d&apos;office »</dt>
               <dd>
-                Cela signifie qu&apos;une pétition a été écartée sans qu&apos;une
-                commission ait eu à se prononcer, le plus souvent parce
-                qu&apos;elle n&apos;a pas réuni le nombre de signatures exigé dans le
-                délai imparti. Dans ce cas, le fichier officiel indique bien ce
-                motif&nbsp;: c&apos;est la seule situation où une explication est
-                systématiquement donnée.
+                Cela signifie que le texte de décision invoque lui-même un classement
+                d&apos;office faute de signatures. C&apos;est le seul motif pour lequel le
+                fichier emploie une formule explicite&nbsp;: les autres classements y sont
+                enregistrés sans qu&apos;aucune raison soit écrite, ce qui est précisément ce
+                qui les range dans les autres catégories.
               </dd>
             </div>
 

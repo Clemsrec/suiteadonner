@@ -148,8 +148,9 @@ export default async function PassagesEnCommission() {
             Une pétition qui n&apos;atteint pas, en six mois, le seuil de signatures fixé par
             sa commission — cinq mille pour la commission des lois, dix mille pour
             d&apos;autres — est classée d&apos;office, sans examen&nbsp;: c&apos;est la règle,
-            et la commission n&apos;a aucune décision à motiver. Elle traite ensemble toutes celles de son ressort, en une
-            séance. Les comptes rendus annoncent ainsi{" "}
+            et la commission n&apos;a aucune décision à motiver. Elle en traite plusieurs
+            dizaines en une même séance — plus de deux cents le 1er juillet 2026. Les comptes
+            rendus annoncent ainsi{" "}
             {synthese.petitionsClasseesEnBloc.toLocaleString("fr-FR")} pétitions au total,
             contre {synthese.nbDecisions} pour lesquelles nous pouvons citer une décision
             individuelle.

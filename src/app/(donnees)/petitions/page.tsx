@@ -39,8 +39,8 @@ export default async function IndexPetitions() {
             ? `${stats.total.toLocaleString("fr-FR")} pétitions déposées sur la plateforme de l'Assemblée nationale, suivies depuis le fichier officiel de data.gouv.fr.`
             : "Les pétitions déposées sur la plateforme de l'Assemblée nationale, suivies depuis le fichier officiel de data.gouv.fr."}{" "}
           Chaque fiche rassemble ce que le fichier permet d&apos;établir&nbsp;: statut,
-          signatures, décision de la commission — ou son absence, qui est le cas le
-          plus fréquent une fois le seuil des 10&nbsp;000 signatures franchi.
+          signatures, décision de la commission — ou son absence, fréquente dès lors que le
+          classement n&apos;est pas motivé par le nombre de signatures.
         </p>
       </header>
 
@@ -78,14 +78,14 @@ export default async function IndexPetitions() {
             examinées.
           </li>
           <li>
-            <Link href="/passages-en-commission">Passées en commission</Link> — les pétitions que
-            les commissions ont inscrites à leur ordre du jour, en les désignant par
-            leur numéro ou leur titre exact.
+            <Link href="/passages-en-commission">Passées en commission</Link> — les pétitions
+            dont une commission s&apos;est saisie en les désignant elle-même, par leur numéro ou
+            par leur titre.
           </li>
           <li>
             <Link href="/fichier-non-a-jour">Fichier non à jour</Link>{" "}— la date limite de
-            signature est passée, mais le fichier ouvert affiche toujours «&nbsp;en
-            cours de signature&nbsp;».
+            signature est passée, mais le fichier ouvert conserve à ces pétitions le statut{" "}
+            <code>ouverte</code>.
           </li>
         </ul>
       </section>

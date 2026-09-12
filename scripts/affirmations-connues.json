@@ -3,212 +3,206 @@
     {
       "texte": "» Nous les reproduisons sans les comparer ni en départager aucun : à vous de lire.",
       "page": "passages-en-commission.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "1 703 889 signatures cumulées pour les 269 pétitions de cette liste, sans qu'aucune motivation ne soit publiée.",
       "page": "decisions-non-publiees.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Somme de meta/stats ; la page dit que c'est un minimum, les nombres absents comptant pour zéro."
     },
     {
       "texte": "1 703 889 signatures cumulées, aucune motivation publiée Pétition Soutiens Ce qu'en dit le fichier Recueil clos le Commission des lois constitutionnelles, de la législation et de l'administration générale de la République 732 086 Décision non publiée 22 juil.",
       "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "non-affirmation",
+      "note": "Fragment de navigation, d'en-tête de tableau ou de liste, concaténé par l'extraction : ce n'est pas une phrase que le site affirme."
     },
     {
       "texte": "2023 Décision sur son classement Le compte rendu de la réunion cite le numéro de la pétition Texte officiel Décision, en application de l’article 148 alinéa 3 du Règlement, sur les pétitions renvoyées à la commission (Mme Caroline Yadan, rapporteure) ; Compte rendu de la réunion : CRCANR5L16S2024PO59051N004 Lire le compte rendu → Tous les passages en commission → Le fichier public n'est pas à jour La date limite de recueil des signatures de ces pétitions est passée, parfois depuis des mois.",
       "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "non-affirmation",
+      "note": "Fragment de navigation, d'en-tête de tableau ou de liste, concaténé par l'extraction : ce n'est pas une phrase que le site affirme."
     },
     {
       "texte": "2025 Toutes les pétitions, année par année → Ce que la commission a fait Ces rapprochements ne sont pas des déductions de notre part : la commission a désigné ces pétitions elle-même, par leur numéro ou par leur titre exact, à son ordre du jour ou dans le compte rendu de sa réunion.",
       "page": "index.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "non-affirmation",
+      "note": "Fragment de navigation, d'en-tête de tableau ou de liste, concaténé par l'extraction : ce n'est pas une phrase que le site affirme."
     },
     {
       "texte": "2026 Toutes les pétitions classées sans décision publiée → Comparaison avec l'interface officielle · relevé du 27 juil.",
       "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "non-affirmation",
+      "note": "Fragment de navigation, d'en-tête de tableau ou de liste, concaténé par l'extraction : ce n'est pas une phrase que le site affirme."
     },
     {
       "texte": "Aucun identifiant de session, aucun cookie et aucune donnée de compte n'est associé à cette requête.",
       "page": "politique-de-confidentialite.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "src/lib/algolia.ts : la requête ne transmet ni userToken ni cookie ; analytics et clickAnalytics sont à false."
     },
     {
       "texte": "Aucun traceur n'est chargé tant que vous ne l'avez pas accepté — voir la politique de cookies .",
       "page": "empreinte-carbone.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "MesureAudience.tsx : GoogleAnalytics n'est monté que si le choix vaut « accepte »."
     },
     {
       "texte": "Aucun transfert hors Union européenne n'est opéré de ce fait.",
       "page": "politique-de-confidentialite.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "source",
+      "note": "Cluster Algolia c67-eu, serveurs répondant depuis l'Allemagne — vérifié le 10/09/2026 par résolution de B8GIER7BSB-dsn.algolia.net."
     },
     {
       "texte": "Aucune cause inférée Nous constatons ce que le jeu de données contient, nous n'interprétons pas.",
       "page": "methodologie.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Aucune décision publiée — le sort de la pétition est scellé (recueil terminé ou statut décidé) et le champ de décision est resté entièrement vide — voir ces pétitions .",
       "page": "methodologie.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "motifClassement = absent : recueil terminé ou statut décidé, et decisionTexte vide."
     },
     {
       "texte": "Aucune image de contenu, aucune vidéo, aucune bannière.",
       "page": "empreinte-carbone.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Aucune balise img de contenu dans src/ ; le logo est un SVG inline."
     },
     {
       "texte": "Aucune police d'écriture n'est téléchargée — le site utilise celles déjà présentes dans votre système.",
       "page": "empreinte-carbone.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Aucune valeur inventée Un champ absent reste absent.",
       "page": "methodologie.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "parseNombre et parseDate renvoient null ; formatSignatures affiche « non renseigné »."
+    },
+    {
+      "texte": "C'est le seul motif pour lequel le fichier emploie une formule explicite : les autres classements y sont enregistrés sans qu'aucune raison soit écrite, ce qui est précisément ce qui les range dans les autres catégories.",
+      "page": "index.html",
+      "fonde": "source",
+      "note": "Les 23 formulations du fichier : seules celles invoquant un classement d'office énoncent un motif ; les autres enregistrent le classement sans raison écrite."
     },
     {
       "texte": "C'est pourquoi nous lisons le motif dans le texte, et jamais dans le statut.",
       "page": "index.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "C'est pourquoi nous n'écrivons jamais « classée après examen » : rien dans les données ne prouve qu'un examen a eu lieu.",
       "page": "methodologie.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Ce délai est calculé au moment où la page est rendue, jamais figé en base — un compteur arrêté vieillirait sans que rien ne le signale.",
       "page": "methodologie.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "moisDepuis() est appelé au rendu ; seule la date est stockée."
     },
     {
       "texte": "Ce dernier ne conserve aucune requête.",
       "page": "politique-de-confidentialite.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Aucun stockage de requête côté site ; analytics désactivée dans src/lib/algolia.ts."
     },
     {
       "texte": "Ce que le site ne fait pas Aucune création de compte, aucune authentification Aucun formulaire de contact, d'inscription ou de commentaire Aucun cookie ni traceur sans votre consentement explicite et révocable Aucun pixel publicitaire, aucun réseau publicitaire Aucun profilage, aucune décision automatisée vous concernant Aucune revente ni transmission commerciale de données 3.",
       "page": "politique-de-confidentialite.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
-      "texte": "Ce que les données établissent, c'est qu' un citoyen qui s'en tient au fichier officiel n'a aucun moyen de le savoir .",
+      "texte": "Ce que les données établissent, c'est que ce fichier n'en porte aucune trace, et que le citoyen qui s'y fie ne peut donc pas l'y lire .",
       "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Porte sur le fichier que nous lisons, pas sur l'existence d'une trace ailleurs — la phrase précédente dit que nous publions celle-ci quand elle existe."
     },
     {
       "texte": "Ce que nous ne calculons jamais Quand le fichier ne dit rien, nous n'inventons pas.",
       "page": "index.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
-      "texte": "Ce sont des formules types, qui ne varient que par la date et le nom de la commission : aucune n'est écrite pour la pétition qu'elle concerne.",
+      "texte": "Ce sont des formules types : aucune ne cite le numéro ni le titre de la pétition qu'elle concerne — nous les avons toutes relues pour le vérifier.",
       "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "source",
+      "note": "Vérifié le 12/09/2026 sur les 23 formulations distinctes des 1 560 textes de décision : aucune ne contient « pétition n° N » ni un titre de pétition du fichier."
     },
     {
       "texte": "Ce stockage est strictement nécessaire à la mémorisation de votre choix ; c'est la seule chose que le site écrit dans votre navigateur sans consentement, et il est exempté à ce titre.",
       "page": "politique-cookies.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Cela signifie que le suivi prévu pour l'expliquer au citoyen n'était renseigné pour aucune des initiatives listées ce jour-là : toutes restaient à l'état « Enregistrée ».",
       "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "source",
+      "note": "Relevé manuel daté du 27/07/2026 sur la plateforme, bornée à ce jour et à ces initiatives ; liens de vérification fournis sur la page."
     },
     {
       "texte": "Cet appel ne dépose aucun cookie, mais il transmet nécessairement votre adresse IP au service, comme toute requête réseau.",
       "page": "politique-cookies.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Requête Algolia simple, sans cookie ; l'IP est transmise comme pour toute requête réseau."
     },
     {
       "texte": "Cette base ne contient aucune donnée relative aux visiteurs : elle ne stocke que des données publiques issues de l'open data.",
       "page": "politique-de-confidentialite.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "firestore.rules : seules les collections petitions, meta et reunions existent, toutes en lecture publique."
     },
     {
       "texte": "clement@nucom.fr Suite à donner — projet indépendant, non affilié à l'Assemblée nationale Toutes les pétitions Méthodologie clement@nucom.fr Mentions légales Confidentialité Cookies Empreinte carbone Plan du site",
       "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
-    },
-    {
-      "texte": "Dans ce cas, le fichier officiel indique bien ce motif : c'est la seule situation où une explication est systématiquement donnée.",
-      "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "non-affirmation",
+      "note": "Fragment de navigation, d'en-tête de tableau ou de liste, concaténé par l'extraction : ce n'est pas une phrase que le site affirme."
     },
     {
       "texte": "Décision inscrite, compte rendu introuvable 1 pétition dont une réunion de commission annonçait la décision à son ordre du jour, sans qu’aucun compte rendu ne soit référencé pour cette réunion — 732 086 signatures en attente d’une réponse lisible.",
       "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Calculé : réunion dont l'ordre du jour annonce une décision, sans compteRenduRef."
     },
     {
       "texte": "Données personnelles et cookies Le site ne requiert aucune inscription, ne comporte aucun formulaire et ne dépose aucun cookie sans votre consentement — le seul traceur, une mesure d'audience, est soumis à une bannière d'acceptation.",
       "page": "mentions-legales.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Elle est calculée par votre navigateur, pour votre navigateur : aucun chiffre n'est transmis à l'éditeur ni à personne d'autre, et rien n'est écrit dans votre appareil — ni cookie, ni stockage local.",
       "page": "empreinte-carbone.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
-    },
-    {
-      "texte": "Elle traite ensemble toutes celles de son ressort, en une séance.",
-      "page": "passages-en-commission.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "src/app/useEmpreinte.ts et carbone-cost : aucun fetch sortant, aucun accès au stockage."
     },
     {
       "texte": "En pratique, si vous n'avez pas accepté la mesure d'audience, l'absence de compte et de cookie fait qu'aucune donnée de navigation ne peut vous être rattachée : l'éditeur n'est pas en mesure de vous identifier à partir des seuls journaux techniques.",
       "page": "politique-de-confidentialite.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Sans consentement, aucun script tiers n'est chargé : MesureAudience.tsx rend null."
     },
     {
       "texte": "Enfin, les motivations réelles d'un vote — ce que chacun pense, ce qui s'est décidé ailleurs — ne figurent dans aucun document : nous rapportons ce qui a été écrit, pas ce qui a été voulu.",
       "page": "methodologie.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Enregistrée 1 656 pétitions Classée par la commission 0 Examinée en commission 0 Débattue en séance publique 0 Ce que cela veut dire, et ce que cela ne veut pas dire Cela ne signifie pas qu'aucune pétition n'a jamais été examinée.",
       "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "non-affirmation",
+      "note": "Fragment de navigation ou de tableau concaténé par l'extraction, pas une phrase affirmée."
     },
     {
       "texte": "Examen voté, aucun rapport trouvé — la commission s'est prononcée pour l'examen d'une pétition, et nous n'avons trouvé aucun rapport.",
@@ -223,232 +217,208 @@
       "note": "« trouvé » borne l'affirmation à nos corpus ; le décompte ne retient que les pétitions dont le recueil est clos (attenteRapport, fetch-reunions.mjs)."
     },
     {
-      "texte": "Examen voté, aucun rapport trouvé 5 mois que la commission a voté l'examen de la pétition Un examen se conclut par un rapport ; nous n'en avons trouvé aucun.",
-      "page": "index.html",
-      "fonde": "nous",
-      "note": "« trouvé » borne l'affirmation à nos corpus ; le décompte ne retient que les pétitions dont le recueil est clos (attenteRapport, fetch-reunions.mjs)."
-    },
-    {
-      "texte": "Fichier non à jour — la date limite de signature est passée, mais le fichier ouvert affiche toujours « en cours de signature ».",
-      "page": "petitions.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
-    },
-    {
       "texte": "Finalité : statistiques de fréquentation du site — volumes de visites, pages lues, provenance Base légale : votre consentement (article 6.1.a du RGPD), librement retirable à tout moment depuis la politique de cookies Sous-traitant : Google Ireland Limited (Google Analytics) Conservation : cookies limités à 13 mois dans votre navigateur ; données de mesure conservées au plus 14 mois dans Google Analytics Sans consentement, rien de tout cela n'existe : le script n'est même pas chargé, et aucune requête ne part vers Google Analytics.",
       "page": "politique-de-confidentialite.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Fiche de traitement de l'éditeur."
     },
     {
       "texte": "Il est constitué à partir de données publiques et n'est ni affilié à l'Assemblée nationale, ni à aucune institution publique , ni à aucun parti politique ou organisation militante.",
       "page": "mentions-legales.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Fait sur l'éditeur lui-même."
     },
     {
       "texte": "L'écart est signalé, jamais corrigé — voir ces pétitions .",
       "page": "methodologie.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "ecartStatutDates est un champ dérivé ; aucune écriture ne modifie la source."
     },
     {
       "texte": "L'onglet Réseau montre par ailleurs qu'aucune requête ne part vers les domaines de Google Analytics.",
       "page": "politique-cookies.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Vérifiable par le visiteur lui-même ; garanti par MesureAudience.tsx."
     },
     {
       "texte": "La phrase est reproduite telle quelle, jamais reformulée, et le lien vers le compte rendu intégral l'accompagne.",
       "page": "methodologie.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "comptes-rendus.mjs sépare `texte` (cité) de `cle` (reconnaissance des motifs)."
     },
     {
       "texte": "La plateforme officielle nous sert à comparer et à mettre en contexte, jamais à établir un chiffre.",
       "page": "index.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "La plateforme petitions.assemblee-nationale.fr sert de contexte et de comparaison, jamais de référence.",
       "page": "methodologie.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Aucun script du dépôt ne lit la plateforme ; le CSV de data.gouv.fr est la seule source lue."
     },
     {
       "texte": "La présente rubrique ne restreint en aucune manière ces droits.",
       "page": "mentions-legales.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Mention juridique de l'éditeur."
     },
     {
       "texte": "Le classement en bloc Une pétition qui n'atteint pas, en six mois, le seuil de signatures fixé par sa commission — cinq mille pour la commission des lois, dix mille pour d'autres — est classée d'office, sans examen : c'est la règle, et la commission n'a aucune décision à motiver.",
       "page": "passages-en-commission.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "source",
+      "note": "Les textes de décision du fichier l'énoncent eux-mêmes, en renvoyant à une décision du bureau de la commission saisie (1 275 textes sur 1 560)."
     },
     {
       "texte": "Le document ne porte aucun champ reliant au numéro de pétition : c'est son intitulé officiel qui la nomme, et sans ce numéro nous ne rattachons rien — voir les suites en commission .",
       "page": "methodologie.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
-    },
-    {
-      "texte": "Le droit de pétition tel qu'il est organisé n'oblige à aucune réponse individualisée.",
-      "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Le fichier ne renseigne pas toujours cette date : sans elle, nous ne signalons rien.",
       "page": "index.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Le fichier public lui donne toujours le statut ouverte et ne mentionne aucune décision.",
       "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Lit le champ statut de la pétition affichée."
     },
     {
       "texte": "Le jour de notre relevé, aucune des 1 656 initiatives qu'elle listait n'était rangée dans l'une de ces trois issues.",
       "page": "index.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Le motif d'un classement est donc toujours lu dans le texte de décision et dans les dates, jamais déduit du statut.",
       "page": "methodologie.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "motifClassement() lit decisionTexte et les dates ; le statut n'y intervient pas."
     },
     {
       "texte": "Le seul traceur : la mesure d'audience Si, et seulement si, vous acceptez, le script Google Analytics 4 (société Google) est chargé et dépose les cookies suivants : _ga — identifiant attribué à votre navigateur, sans autre donnée d’identification, conservé 13 mois _ga_* — état de la session de consultation, conservé 13 mois Ces cookies permettent de compter les visites et les pages vues.",
       "page": "politique-cookies.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Seul GA est chargé, et seulement après consentement ; aucun autre script tiers dans le bundle."
     },
     {
       "texte": "Le vérifier vous-même Ces affirmations sont vérifiables en quelques secondes et ne demandent aucune confiance envers l'éditeur.",
       "page": "politique-cookies.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Invite à vérifier ; les moyens sont décrits juste après."
     },
     {
       "texte": "Les deux sont reproduits côte à côte, tels quels : nous ne les comparons pas et n'en départageons aucun.",
       "page": "passages-en-commission.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Les libellés décrivent des faits vérifiables (« Aucune décision publiée »), jamais des intentions.",
       "page": "methodologie.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "MOTIF_LABELS et STATUT_LABELS nomment des champs, jamais des intentions."
     },
     {
       "texte": "Les pages sont servies depuis un cache et identiques pour tous les visiteurs : aucun cookie technique n'est nécessaire.",
       "page": "politique-cookies.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Toutes les routes sont en ISR (revalidate), aucune personnalisation par visiteur."
     },
     {
       "texte": "Les pétitions de cette période figurent donc dans nos chiffres tirés du fichier, mais aucune décision de commission ne peut leur être rattachée — leur absence de nos relevés ne signifie pas qu'il ne s'est rien passé.",
       "page": "methodologie.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Les pétitions déposées avant 2022 comptent dans nos autres chiffres, mais aucune décision de commission ne peut leur être rattachée — notre périmètre et ses limites .",
       "page": "index.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Les rapprochements entre une pétition et les débats parlementaires sont des recoupements thématiques établis par mots-clés , jamais des liens officiels confirmés : il n'existe aucun identifiant commun entre ces deux ensembles de données.",
       "page": "mentions-legales.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "croiser-petitions-debats.mjs n'écrit que dans .corpus/ ; aucune page ne le lit."
     },
     {
       "texte": "Les trois zéros ci-dessus, eux, ne prêtent à aucune ambiguïté.",
       "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
-    },
-    {
-      "texte": "Mais dès qu'une pétition franchit ce seuil et qu'une commission doit se prononcer, l'emplacement prévu pour motiver la décision reste presque toujours vide.",
-      "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Porte sur le relevé daté affiché juste au-dessus."
     },
     {
       "texte": "Modifications Toute évolution du site introduisant un nouveau traitement — mesure d'audience, formulaire, service tiers — donnera lieu à une mise à jour de cette page et, si la réglementation l'impose, au recueil préalable de votre consentement.",
       "page": "politique-de-confidentialite.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Engagement de l'éditeur."
     },
     {
       "texte": "Nous affichons le seuil que le texte de la pétition écrit, et aucun quand il n'en écrit pas : il ne se déduit pas de la commission, un bureau pouvant changer sa règle.",
       "page": "methodologie.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Nous avons vérifié la page officielle de ces pétitions : elle affiche la date limite et le statut « Acceptées », et n'emploie jamais la formule « en cours de signature ».",
       "page": "index.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Nous comptons le temps écoulé depuis le vote et n'en tirons aucune conclusion : nous ne savons pas quel délai s'applique, ni si un rapport viendra.",
       "page": "methodologie.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Nous constatons une absence, nous n'en déduisons rien — nous ignorons si une décision a été prise sans être rendue publique, ou si aucune ne l'a été.",
       "page": "decisions-non-publiees.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Nous constatons une absence, nous n'en déduisons rien : nous ignorons si une décision a été prise sans être rendue publique, ou si aucune ne l'a été.",
       "page": "index.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Nous écartons volontairement tout rapprochement incertain : lorsque plusieurs pétitions portent le même titre et qu'aucun numéro n'est cité, nous préférons une lacune à une attribution douteuse.",
       "page": "index.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Nous ignorons si la réunion s'est tenue et si une décision a été prise : nous constatons qu'aucun texte n'est disponible.",
       "page": "index.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Nous le récupérons ensuite, recalculons toutes les catégories dérivées et mettons le site à jour.",
       "page": "methodologie.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Nous le signalons parce que ce fichier est la source de tous les travaux qui s'appuient dessus, dont le nôtre.",
       "page": "index.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Nous les publions côte à côte sans les comparer ni en départager aucun : à vous de lire.",
       "page": "index.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Nous n'avons trouvé aucun rapport la concernant dans les corpus que nous lisons.",
@@ -459,158 +429,152 @@
     {
       "texte": "Nous n'écrivons donc jamais « classée après examen », car rien dans les données ne prouve qu'un examen a eu lieu.",
       "page": "index.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
-    },
-    {
-      "texte": "Nous ne disposons d'aucun relevé de consommation de nos serveurs : personne, sur le web, n'en dispose vraiment.",
-      "page": "empreinte-carbone.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Par année de dépôt 2026 1 007 pétition s 2025 1 473 pétition s 2024 326 pétition s 2023 597 pétition s 2022 323 pétition s 2021 197 pétition s 2020 179 pétition s Par constat Classées sans décision publiée — le fichier les donne pour classées, sans qu'aucune motivation ne soit inscrite dans le champ officiel prévu à cet effet.",
       "page": "petitions.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "non-affirmation",
+      "note": "Fragment de navigation, d'en-tête de tableau ou de liste, concaténé par l'extraction : ce n'est pas une phrase que le site affirme."
     },
     {
       "texte": "Par défaut — avant votre réponse, ou après un refus — le site fonctionne sans aucun traceur.",
       "page": "politique-cookies.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Pour aucune d'entre elles, le fichier public ne mentionne la moindre décision.",
       "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Calculé sur les pétitions affichées (decisionPubliee), plus écrit en dur."
     },
     {
       "texte": "Quand des centaines de pétitions voient leur recueil s'arrêter le même jour, nous constatons le regroupement sans lui attribuer de cause : aucune information officielle ne la documente.",
       "page": "methodologie.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Rechercher une pétition Chercher Toutes Classées Archivées En cours Le constat d'ensemble Quand le fichier ne rattache pas un classement au nombre de signatures, il n'écrit le plus souvent aucune motivation : 269 fois sur 271 .",
       "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "non-affirmation",
+      "note": "Fragment de navigation, d'en-tête de tableau ou de liste, concaténé par l'extraction : ce n'est pas une phrase que le site affirme."
     },
     {
       "texte": "Sans numéro cité, rien n'est affiché — à la seule exception du référent unique décrit plus haut, signalé comme tel sous la citation — voir ces décisions .",
       "page": "methodologie.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "comptes-rendus.mjs : FORMES exige le numéro ; FORMES_SANS_NUMERO n'agit que si le référent est unique."
+    },
+    {
+      "texte": "Segment g CO 2 e / Go Part Centre de données 33,1 22 % Réseau de transport 35,6 24 % Votre appareil 79,5 54 % Ce coefficient est une convention de place, pas une mesure de notre infrastructure : nous ne disposons d'aucun relevé de consommation de nos serveurs, et notre hébergeur n'en publie pas.",
+      "page": "empreinte-carbone.html",
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Si vous refusez, ou si vous ignorez la bannière, rien n'est déposé et aucune donnée n'est transmise à Google.",
       "page": "politique-cookies.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "MesureAudience.tsx : « refuse » et l'absence de choix rendent null, sans charger GA."
     },
     {
       "texte": "Sont particulièrement bienvenus les regards de spécialistes du droit parlementaire, de journalistes et de chercheurs, ainsi que toute aide technique sur la récupération et le recoupement des données.",
       "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Appel à contribution, pas un constat."
     },
     {
       "texte": "Suite à donner ← Retour au site Dernière mise à jour : 27 juillet 2026 Ce site ne dépose aucun cookie sans votre consentement.",
       "page": "politique-cookies.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "non-affirmation",
+      "note": "Fragment de navigation ou de tableau concaténé par l'extraction, pas une phrase affirmée."
     },
     {
       "texte": "Suite à donner Les pétitions En commission Sans décision Fichier non à jour Méthode Toutes les rubriques L'observatoire Accueil — le constat d'ensemble, les chiffres à jour et la recherche parmi toutes les pétitions.",
       "page": "plan-du-site.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "non-affirmation",
+      "note": "Fragment de navigation, d'en-tête de tableau ou de liste, concaténé par l'extraction : ce n'est pas une phrase que le site affirme."
     },
     {
       "texte": "Suite à donner Observatoire des pétitions citoyennes Le constat Rechercher Le suivi En commission Fichier non à jour Sans décision Méthode Toutes les pétitions Assemblée nationale — données ouvertes Chaque semaine, nous suivons les pétitions déposées à l'Assemblée nationale, de leur dépôt à leur sort final.",
       "page": "index.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "non-affirmation",
+      "note": "Fragment de navigation ou de tableau concaténé par l'extraction, pas une phrase affirmée."
     },
     {
       "texte": "Surtout, une commission classe des centaines de pétitions d'office en une séance sans en nommer aucune : nous relevons alors la séance et son effectif, mais aucun signataire ne peut savoir si la sienne en faisait partie — le compte rendu ne contient pas la liste.",
       "page": "methodologie.html",
-      "fonde": "nous-a-confirmer",
-      "note": "Semble décrire notre propre comportement : confirmer que le code le garantit."
+      "fonde": "nous",
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Tous les chiffres ci-dessous proviennent du fichier officiel et peuvent être recomptés.",
       "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Tous issus de meta/stats, calculé par calculerStats() sur le CSV canonique."
     },
     {
       "texte": "Toute erreur constatée peut être signalée à clement@nucom.fr ; elle sera corrigée ou documentée.",
       "page": "mentions-legales.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "non-affirmation",
+      "note": "Fragment de navigation, d'en-tête de tableau ou de liste, concaténé par l'extraction : ce n'est pas une phrase que le site affirme."
     },
     {
       "texte": "Toute erreur peut être signalée — elle sera corrigée et signalée publiquement.",
       "page": "methodologie.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Engagement de l'éditeur, pas un constat sur des données."
     },
     {
       "texte": "Toute question : clement@nucom.fr .",
       "page": "politique-cookies.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "non-affirmation",
+      "note": "Fragment de navigation, d'en-tête de tableau ou de liste, concaténé par l'extraction : ce n'est pas une phrase que le site affirme."
     },
     {
       "texte": "Toutes les pétitions — l'index complet, année par année ; chaque pétition y a sa fiche détaillée.",
       "page": "plan-du-site.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Décrit le contenu de notre index."
     },
     {
       "texte": "Un nombre de signatures manquant s'affiche « non renseigné » et jamais « 0 » — écrire zéro reviendrait à affirmer « aucun soutien » là où le fichier ne dit rien.",
       "page": "methodologie.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "formatSignatures(null) renvoie « non renseigné » ; verifier-coherence contrôle la règle."
     },
     {
       "texte": "Un recoupement n'est pas un lien officiel Il n'existe aucun identifiant commun entre une pétition et un débat parlementaire.",
       "page": "methodologie.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "source",
+      "note": "Constat de structure : le CSV des pétitions et les corpus de débats DILA ne partagent aucun champ d'identifiant, ce qui fonde la règle 4 du CONTRIBUTING."
     },
     {
       "texte": "Une commission a pu auditionner, échanger, tenir compte d'une pétition dans un travail législatif dont le fichier ne garde aucune trace.",
       "page": "index.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
-    },
-    {
-      "texte": "Une commission le fait pour toutes celles de son ressort à la fois.",
-      "page": "methodologie.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Formulé au conditionnel : décrit ce que les données ne permettent pas d'exclure."
     },
     {
       "texte": "Une seule exception, et elle ne demande aucune déduction : lorsque l'ordre du jour de la réunion ne désigne qu'une pétition, par son numéro, et que le compte rendu n'en cite aucune autre, la décision qui ne la nomme pas ne peut désigner qu'elle.",
       "page": "methodologie.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "extraireDecisions() vérifie qu'aucun autre numéro n'est cité dans le document."
     },
     {
       "texte": "Une seule source canonique Tous les chiffres proviennent du fichier officiel des pétitions de l'Assemblée nationale publié sur data.gouv.fr, complété par l' agenda officiel des réunions de l'Assemblée et par les comptes rendus que ces réunions produisent, pour les passages en commission.",
       "page": "methodologie.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "CSV_URL est l'unique source de chiffres ; les autres corpus n'alimentent que les passages en commission."
     },
     {
       "texte": "Votre navigateur ne contacte donc jamais Firestore, et votre adresse IP ne lui est pas transmise.",
       "page": "politique-cookies.html",
-      "fonde": "heritee",
-      "note": "Porte sur l'Assemblée ou la procédure : borner la portée, ou citer la source."
+      "fonde": "nous",
+      "note": "Toutes les lectures Firestore sont faites par des Server Components ; aucun composant client n'importe les fonctions de lecture (voir src/lib/petitions-format.ts)."
     }
   ]
 }

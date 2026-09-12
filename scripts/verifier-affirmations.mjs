@@ -40,7 +40,9 @@
 //
 // Usage :
 //   npm run build && node scripts/verifier-affirmations.mjs
-//   node scripts/verifier-affirmations.mjs --ajouter   # inscrit les nouvelles
+//   node scripts/verifier-affirmations.mjs --ajouter    # inscrit les nouvelles
+//   node scripts/verifier-affirmations.mjs --nettoyer   # retire celles dont la
+//                                                       # phrase n'existe plus
 //
 // Sortie : code 1 si une affirmation non déclarée est affichée.
 
@@ -51,6 +53,7 @@ import path from "node:path";
 const RENDU = path.resolve(".next/server/app");
 const REFERENCE = path.resolve("scripts/affirmations-connues.json");
 const ajouter = process.argv.includes("--ajouter");
+const nettoyer = process.argv.includes("--nettoyer");
 
 // Les marqueurs d'une affirmation universelle. Ce sont ceux qui figuraient dans
 // chacune des erreurs de la revue — la liste vient des faits, pas d'une
@@ -142,6 +145,15 @@ async function main() {
   if (disparues.length) {
     console.log(`\n${disparues.length} déclaration(s) sans phrase correspondante (texte réécrit ?) :`);
     for (const a of disparues.slice(0, 5)) console.log(`  – ${a.texte.slice(0, 90)}`);
+  }
+
+  // Une phrase corrigée laisse sa déclaration derrière elle. Sans purge, la
+  // dette se compte en fantômes et cesse d'être lisible.
+  if (nettoyer && disparues.length) {
+    connues.affirmations = connues.affirmations.filter((a) => trouvees.has(a.texte));
+    await writeFile(REFERENCE, `${JSON.stringify(connues, null, 2)}\n`);
+    console.log(`\n→ ${disparues.length} déclaration(s) retirée(s) : leur phrase n'est plus affichée.`);
+    return;
   }
 
   if (ajouter && nouvelles.length) {

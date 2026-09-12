@@ -235,7 +235,9 @@ export default function Methodologie() {
             <strong>Classement d&apos;office en bloc</strong>{" "}— une pétition restée
             six mois sous le seuil fixé par sa commission est classée d&apos;office,
             sans examen&nbsp;: c&apos;est la règle, et rien n&apos;a à être motivé. Une
-            commission le fait pour toutes celles de son ressort à la fois. Nous
+            commission en traite ainsi plusieurs dizaines en une séance — plus de deux
+            cents lors de celle du 1er juillet 2026 —, et c&apos;est cet effectif que son
+            compte rendu annonce. Nous
             relevons la date, l&apos;effectif annoncé et la phrase qui l&apos;énonce. Nous
             ne dressons pas la liste des pétitions concernées&nbsp;: le compte rendu la donne
             rarement — un seul des trente-quatre que nous avons lus la joint en tableau — et
