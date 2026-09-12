@@ -278,15 +278,28 @@ export default async function FichePetition({ params }: Params) {
 
           {decisionLue?.sens === "examen" && !rapport && (
             <p className={styles.encadre}>
-              <strong>
-                Examen voté, rapport attendu depuis{" "}
-                {formatDelaiMois(moisDepuis(decisionLue.date))}.
-              </strong>{" "}
-              La commission s&apos;est prononcée pour l&apos;examen de cette pétition, et un
-              examen se conclut par un rapport. Nous n&apos;en avons trouvé aucun dans les
-              corpus que nous lisons. Nous
-              comptons le temps écoulé depuis ce vote&nbsp;; nous n&apos;en tirons aucune
-              conclusion, et nous ignorons quel délai s&apos;applique.
+              {p.recueilTermine ? (
+                <>
+                  <strong>
+                    Examen voté, aucun rapport trouvé depuis{" "}
+                    {formatDelaiMois(moisDepuis(decisionLue.date))}.
+                  </strong>{" "}
+                  La commission s&apos;est prononcée pour l&apos;examen de cette pétition, et un
+                  examen se conclut par un rapport. Nous n&apos;en avons trouvé aucun dans les
+                  corpus que nous lisons. Nous comptons le temps écoulé depuis ce vote&nbsp;;
+                  nous n&apos;en tirons aucune conclusion, et nous ignorons quel délai
+                  s&apos;applique.
+                </>
+              ) : (
+                <>
+                  <strong>Examen voté, recueil toujours en cours.</strong>{" "}
+                  La commission s&apos;est prononcée pour l&apos;examen de cette pétition le{" "}
+                  {formatFrDate(decisionLue.date)}, alors que le fichier lui donne une date
+                  limite de signature au {formatFrDate(p.dateLimiteVote)}. Nous n&apos;avons
+                  trouvé aucun rapport à ce jour, et nous ne comptons aucun délai&nbsp;: une
+                  pétition encore ouverte à la signature n&apos;est pas une pétition en attente.
+                </>
+              )}
             </p>
           )}
 

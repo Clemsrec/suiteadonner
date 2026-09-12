@@ -39,7 +39,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { parse } from "csv-parse/sync";
-import { parseNombre } from "./lib/petitions-source.mjs";
+import { parseDate, parseNombre } from "./lib/petitions-source.mjs";
 import {
   CRAWL_DELAY_MS,
   estCompteRenduCommission,
@@ -254,6 +254,9 @@ async function chargerPetitions() {
       // Conservé mot pour mot : quand un compte rendu donne une décision, la
       // fiche affiche les deux textes en regard et laisse le lecteur juger.
       decisionTexte: r.decision_commission.trim() || null,
+      // Une pétition dont le recueil court encore n'attend pas un rapport de
+      // la même façon qu'une pétition close : voir attenteRapport.
+      dateLimiteVote: parseDate(r.date_limite_vote),
       url: r.url.trim(),
     });
   }
@@ -463,6 +466,7 @@ async function collecterRapports(resultats, petitions) {
         commission: p.commission,
         decisionPubliee: p.decisionPubliee,
         decisionTexte: p.decisionTexte,
+        dateLimiteVote: p.dateLimiteVote,
         url: p.url,
         nbReunions: 0,
         premiereReunion: null,
@@ -485,6 +489,9 @@ async function collecterRapports(resultats, petitions) {
 // fondent, et relu d'un seul document `meta/reunions` : la page n'a pas à
 // charger les fiches pour compter, et aucun de ces chiffres ne peut être écrit
 // en dur — deux constats de l'accueil l'avaient été, et ont fini par mentir.
+// La date du jour, isolée pour que la règle de clôture se lise d'un coup.
+const aujourdhui = () => new Date().toISOString().slice(0, 10);
+
 function construireSynthese(resultats, classementsEnBloc = []) {
   const decidees = resultats.filter((r) => r.derniereDecision);
   const avecRapport = resultats.filter((r) => r.rapport);
@@ -493,14 +500,21 @@ function construireSynthese(resultats, classementsEnBloc = []) {
   // cet examen se conclut par un rapport. Entre les deux, rien n'a de date
   // limite : ces pétitions sont donc en attente, et c'est le seul délai que le
   // site puisse mesurer sur une obligation que l'Assemblée s'est donnée.
+  //
+  // Le recueil doit être clos pour que ce décompte ait un sens. La n° 3070 a vu
+  // son examen voté le 08/04/2026 mais reste ouverte à la signature jusqu'au
+  // 19/06/2029 : afficher « rapport attendu depuis cinq mois » y suggérait un
+  // retard que rien n'établit, sur une pétition encore en cours de recueil.
+  const clos = (r) => Boolean(r.dateLimiteVote && r.dateLimiteVote < aujourdhui());
   const attenteRapport = resultats
-    .filter((r) => r.derniereDecision?.sens === "examen" && !r.rapport)
+    .filter((r) => r.derniereDecision?.sens === "examen" && !r.rapport && clos(r))
     .map((r) => ({
       identifiant: r.identifiant,
       titre: r.titre,
       nbVotes: r.nbVotes,
       statut: r.statut,
       dateExamen: r.derniereDecision.date,
+      dateLimiteVote: r.dateLimiteVote,
       citation: r.derniereDecision.citation,
       url: r.derniereDecision.url,
     }))
@@ -719,6 +733,7 @@ async function main() {
         commission: p.commission,
         decisionPubliee: p.decisionPubliee,
         decisionTexte: p.decisionTexte,
+        dateLimiteVote: p.dateLimiteVote,
         url: p.url,
         nbReunions: uniques.length,
         premiereReunion: uniques[0].date,

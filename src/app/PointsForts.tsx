@@ -94,15 +94,17 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
 
         {attente && (
           <article className={styles.pfCarte}>
-            <p className={styles.pfCarteTitre}>Examen voté, rapport attendu</p>
+            <p className={styles.pfCarteTitre}>Examen voté, aucun rapport trouvé</p>
             <p className={styles.pfCarteChiffre}>
               {formatDelaiMois(moisDepuis(attente.dateExamen))}
             </p>
             <p className={styles.pfCarteTexte}>
               que la commission a voté l&apos;examen de la pétition{" "}
               <Link href={`/petition/${attente.identifiant}`}>{attente.titre}</Link>
-              {pointFinal(attente.titre)} Un examen se conclut par un rapport&nbsp;; aucun
-              n&apos;a encore été déposé.{" "}
+              {pointFinal(attente.titre)} Un examen se conclut par un rapport&nbsp;; nous
+              n&apos;en avons trouvé aucun. Le décompte ne porte que sur les pétitions dont le
+              recueil est clos&nbsp;: une pétition encore ouverte à la signature n&apos;attend
+              rien.{" "}
               {synthese.nbAttenteRapport > 1
                 ? `${synthese.nbAttenteRapport} pétitions sont dans ce cas.`
                 : ""}

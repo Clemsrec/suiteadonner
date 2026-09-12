@@ -253,6 +253,8 @@ export type PassageEnCommission = {
   decisionPubliee: boolean;
   /** Le champ « décision de la commission » du fichier public, mot pour mot. */
   decisionTexte: string | null;
+  /** Date limite de signature, pour distinguer un recueil clos d'un recueil en cours. */
+  dateLimiteVote: string | null;
   url: string;
   nbReunions: number;
   premiereReunion: string;
@@ -341,6 +343,7 @@ export type SyntheseCommission = {
     statut: string;
     /** Date à laquelle la commission a voté l'examen. */
     dateExamen: string;
+    dateLimiteVote: string | null;
     citation: string;
     url: string;
   }[];

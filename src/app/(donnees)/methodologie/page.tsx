@@ -214,9 +214,12 @@ export default function Methodologie() {
             <Link href="/passages-en-commission">voir ces décisions</Link>.
           </li>
           <li>
-            <strong>Examen voté, rapport attendu</strong>{" "}— la commission
-            s&apos;est prononcée pour l&apos;examen d&apos;une pétition, et aucun
-            rapport n&apos;a encore été déposé. Nous comptons le temps écoulé depuis
+            <strong>Examen voté, aucun rapport trouvé</strong>{" "}— la commission
+            s&apos;est prononcée pour l&apos;examen d&apos;une pétition, et nous
+            n&apos;avons trouvé aucun rapport. Le délai n&apos;est compté que si le
+            recueil des signatures est clos&nbsp;: une pétition encore ouverte
+            n&apos;attend rien, et afficher un compteur y suggérerait un retard que
+            rien n&apos;établit. Nous comptons le temps écoulé depuis
             le vote et n&apos;en tirons aucune conclusion&nbsp;: nous ne savons pas quel
             délai s&apos;applique, ni si un rapport viendra. Ce délai est calculé au moment où la page est rendue, jamais
             figé en base — un compteur arrêté vieillirait sans que rien ne le signale.
