@@ -35,6 +35,36 @@
       "note": "Fragment de navigation, d'en-tête de tableau ou de liste, concaténé par l'extraction : ce n'est pas une phrase que le site affirme."
     },
     {
+      "texte": "2026 Page des passages en commission Le site affirmait Pourquoi c'était faux Écrire zéro affirme « aucun soutien » là où la source ne dit rien — ce que la méthodologie du site interdit explicitement.",
+      "page": "corrections.html",
+      "fonde": "nous",
+      "note": "Page des corrections : décrit une erreur que ce site a affichée et ce qu'il dit désormais. Les absolus y portent sur notre propre comportement, passé ou présent. Le contenu vit dans src/lib/errata.ts.",
+      "preuve": {
+        "fichier": "src/lib/errata.ts",
+        "contient": "export const ERRATA"
+      }
+    },
+    {
+      "texte": "2026 Page des passages en commission, fiches Le site affirmait Pourquoi c'était faux Le site n'a jamais comparé les deux textes : la phrase se déclenchait dès qu'un compte rendu et le fichier en portaient chacun un, qu'ils divergent ou non.",
+      "page": "corrections.html",
+      "fonde": "nous",
+      "note": "Page des corrections : décrit une erreur que ce site a affichée et ce qu'il dit désormais. Les absolus y portent sur notre propre comportement, passé ou présent. Le contenu vit dans src/lib/errata.ts.",
+      "preuve": {
+        "fichier": "src/lib/errata.ts",
+        "contient": "export const ERRATA"
+      }
+    },
+    {
+      "texte": "2026 Politique de cookies, page empreinte carbone Le site affirmait Pourquoi c'était faux Les données de pétitions sont lues par le serveur, jamais par le navigateur du visiteur.",
+      "page": "corrections.html",
+      "fonde": "nous",
+      "note": "Page des corrections : décrit une erreur que ce site a affichée et ce qu'il dit désormais. Les absolus y portent sur notre propre comportement, passé ou présent. Le contenu vit dans src/lib/errata.ts.",
+      "preuve": {
+        "fichier": "src/lib/errata.ts",
+        "contient": "export const ERRATA"
+      }
+    },
+    {
       "texte": "2026 Toutes les pétitions classées sans décision publiée → Comparaison avec l'interface officielle · relevé du 27 juil.",
       "page": "index.html",
       "fonde": "non-affirmation",
@@ -164,6 +194,36 @@
       "preuve": {
         "fichier": "src/lib/algolia.ts",
         "contient": "clickAnalytics: false"
+      }
+    },
+    {
+      "texte": "Ce qu'il dit désormais Le site dit que cette liste est jointe rarement, et non jamais.",
+      "page": "corrections.html",
+      "fonde": "nous",
+      "note": "Page des corrections : décrit une erreur que ce site a affichée et ce qu'il dit désormais. Les absolus y portent sur notre propre comportement, passé ou présent. Le contenu vit dans src/lib/errata.ts.",
+      "preuve": {
+        "fichier": "src/lib/errata.ts",
+        "contient": "export const ERRATA"
+      }
+    },
+    {
+      "texte": "Ce qu'il dit désormais Le site lit le seuil dans le texte de décision de chaque pétition, et ne le déduit jamais de sa commission.",
+      "page": "corrections.html",
+      "fonde": "nous",
+      "note": "Page des corrections : décrit une erreur que ce site a affichée et ce qu'il dit désormais. Les absolus y portent sur notre propre comportement, passé ou présent. Le contenu vit dans src/lib/errata.ts.",
+      "preuve": {
+        "fichier": "src/lib/errata.ts",
+        "contient": "export const ERRATA"
+      }
+    },
+    {
+      "texte": "Ce qu'il dit désormais Les mentions légales nomment ce formulaire : la recherche est le seul du site, et sa requête part sans être conservée.",
+      "page": "corrections.html",
+      "fonde": "nous",
+      "note": "Page des corrections : décrit une erreur que ce site a affichée et ce qu'il dit désormais. Les absolus y portent sur notre propre comportement, passé ou présent. Le contenu vit dans src/lib/errata.ts.",
+      "preuve": {
+        "fichier": "src/lib/errata.ts",
+        "contient": "export const ERRATA"
       }
     },
     {
@@ -344,6 +404,16 @@
       "preuve": {
         "fichier": "src/app/MesureAudience.tsx",
         "contient": "couperMesure"
+      }
+    },
+    {
+      "texte": "La correction commence toujours par déterminer si l'écart vient du jeu de données officiel ou de notre lecture — les deux arrivent, et la distinction figure dans la correction publiée.",
+      "page": "corrections.html",
+      "fonde": "nous",
+      "note": "Page des corrections : décrit une erreur que ce site a affichée et ce qu'il dit désormais. Les absolus y portent sur notre propre comportement, passé ou présent. Le contenu vit dans src/lib/errata.ts.",
+      "preuve": {
+        "fichier": "src/lib/errata.ts",
+        "contient": "export const ERRATA"
       }
     },
     {
@@ -653,6 +723,46 @@
       }
     },
     {
+      "texte": "Pour les autres, la fiche dit que l'examen a été voté, que le recueil court toujours, et qu'aucun rapport n'a été trouvé.",
+      "page": "corrections.html",
+      "fonde": "nous",
+      "note": "Page des corrections : décrit une erreur que ce site a affichée et ce qu'il dit désormais. Les absolus y portent sur notre propre comportement, passé ou présent. Le contenu vit dans src/lib/errata.ts.",
+      "preuve": {
+        "fichier": "src/lib/errata.ts",
+        "contient": "export const ERRATA"
+      }
+    },
+    {
+      "texte": "Pour que cela ne revienne pas : L'état d'une pétition est qualifié dans une seule fonction, qui voit tous ses champs à la fois.",
+      "page": "corrections.html",
+      "fonde": "nous",
+      "note": "Page des corrections : décrit une erreur que ce site a affichée et ce qu'il dit désormais. Les absolus y portent sur notre propre comportement, passé ou présent. Le contenu vit dans src/lib/errata.ts.",
+      "preuve": {
+        "fichier": "src/lib/errata.ts",
+        "contient": "export const ERRATA"
+      }
+    },
+    {
+      "texte": "Pour que cela ne revienne pas : Un contrôle vérifie qu'aucune balise de formulaire n'apparaît ailleurs que dans le champ de recherche.",
+      "page": "corrections.html",
+      "fonde": "nous",
+      "note": "Page des corrections : décrit une erreur que ce site a affichée et ce qu'il dit désormais. Les absolus y portent sur notre propre comportement, passé ou présent. Le contenu vit dans src/lib/errata.ts.",
+      "preuve": {
+        "fichier": "src/lib/errata.ts",
+        "contient": "export const ERRATA"
+      }
+    },
+    {
+      "texte": "Quand aucun texte ne l'énonce, il s'en tient au nombre de signatures.",
+      "page": "corrections.html",
+      "fonde": "nous",
+      "note": "Page des corrections : décrit une erreur que ce site a affichée et ce qu'il dit désormais. Les absolus y portent sur notre propre comportement, passé ou présent. Le contenu vit dans src/lib/errata.ts.",
+      "preuve": {
+        "fichier": "src/lib/errata.ts",
+        "contient": "export const ERRATA"
+      }
+    },
+    {
       "texte": "Quand des centaines de pétitions voient leur recueil s'arrêter le même jour, nous constatons le regroupement sans lui attribuer de cause : aucune information officielle ne la documente.",
       "page": "methodologie.html",
       "fonde": "nous",
@@ -755,10 +865,14 @@
       "note": "Fragment de navigation, d'en-tête de tableau ou de liste, concaténé par l'extraction : ce n'est pas une phrase que le site affirme."
     },
     {
-      "texte": "Toute erreur peut être signalée — elle sera corrigée et signalée publiquement.",
+      "texte": "Toute erreur peut être signalée — elle sera corrigée, et inscrite avec la phrase fautive sur la page des corrections publiées .",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "Engagement de l'éditeur, pas un constat sur des données."
+      "note": "La promesse est désormais tenue par une page publique : /corrections liste chaque erreur affichée avec la phrase fautive, la raison et ce qui la remplace. Elle est alimentée par src/lib/errata.ts, et liée depuis cette phrase.",
+      "preuve": {
+        "fichier": "src/app/(donnees)/corrections/page.tsx",
+        "contient": "ERRATA.map"
+      }
     },
     {
       "texte": "Toute question : clement@nucom.fr .",

@@ -299,8 +299,9 @@ export default function Methodologie() {
           téléchargement du CSV canonique, normalisation, classification, lecture de
           l&apos;agenda et des comptes rendus de commission, et contrôles de
           cohérence. Les motifs exacts qui reconnaissent une décision dans un compte
-          rendu y figurent, commentés. Toute erreur peut être signalée — elle sera corrigée et
-          signalée publiquement. Les données republiées ici restent sous{" "}
+          rendu y figurent, commentés. Toute erreur peut être signalée — elle sera corrigée, et
+          inscrite avec la phrase fautive sur la page{" "}
+          <Link href="/corrections">des corrections publiées</Link>. Les données republiées ici restent sous{" "}
           <strong>Licence Ouverte 2.0 (Etalab)</strong>, librement réutilisables avec
           mention de la source.
         </p>

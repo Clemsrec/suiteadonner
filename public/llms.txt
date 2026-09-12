@@ -91,3 +91,6 @@ ces réunions produisent, et des rapports déposés au terme d'un examen.
   https://suiteadonner.nucom.fr/fichier-non-a-jour
 - Méthodologie (sources, règles, limites) :
   https://suiteadonner.nucom.fr/methodologie
+- Corrections publiées — ce que le site a affiché de faux, la phrase fautive,
+  la raison et ce qu'il dit désormais :
+  https://suiteadonner.nucom.fr/corrections

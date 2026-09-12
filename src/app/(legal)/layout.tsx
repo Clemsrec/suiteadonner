@@ -49,6 +49,7 @@ export default function LegalLayout({ children }: Readonly<{ children: React.Rea
           </span>
           <EmpreinteCarbone />
           <nav className={styles.footerNav}>
+            <Link href="/corrections">Corrections</Link>
             <Link href="/mentions-legales">Mentions légales</Link>
             <Link href="/politique-de-confidentialite">Confidentialité</Link>
             <Link href="/politique-cookies">Cookies</Link>

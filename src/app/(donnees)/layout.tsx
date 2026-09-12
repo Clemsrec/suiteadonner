@@ -56,6 +56,7 @@ export default function DonneesLayout({ children }: Readonly<{ children: React.R
             <Link href="/">Accueil</Link>
             <Link href="/petitions">Les pétitions</Link>
             <Link href="/methodologie">Méthodologie</Link>
+            <Link href="/corrections">Corrections</Link>
             <a href={`mailto:${LEGAL.email}`}>{LEGAL.email}</a>
             <Link href="/mentions-legales">Mentions légales</Link>
             <Link href="/politique-de-confidentialite">Confidentialité</Link>

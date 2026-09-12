@@ -44,6 +44,10 @@ export default async function PlanDuSite() {
             <Link href="/methodologie">Méthodologie</Link>{" "}— la source canonique, les
             règles de lecture et ce que nous nous interdisons d&apos;affirmer.
           </li>
+          <li>
+            <Link href="/corrections">Corrections</Link>{" "}— ce que ce site a affiché de
+            faux, pourquoi, et ce qu&apos;il dit désormais.
+          </li>
         </ul>
       </section>
 

@@ -25,10 +25,11 @@ publie pas — voir la règle 4.
   compte rendu publié de sa réunion. La phrase est reproduite intégralement, avec
   le lien vers le texte officiel — y compris quand le champ
   `decision_commission` du fichier reste vide, ou dit autre chose.
-- **Examen voté, rapport attendu** — la commission s'est prononcée pour
-  l'examen d'une pétition et aucun rapport n'a suivi. Le site compte le temps
-  écoulé depuis le vote, sans en tirer de conclusion : il ne sait pas quel délai
-  s'applique.
+- **Examen voté, aucun rapport trouvé** — la commission s'est prononcée pour
+  l'examen d'une pétition et nous n'avons trouvé aucun rapport. Le délai n'est
+  compté que si le recueil est clos : une pétition encore ouverte à la signature
+  n'attend rien, et y afficher un compteur suggérerait un retard que rien
+  n'établit.
 - **Rapport de commission** — la suite écrite d'un examen : un rapport déposé,
   numéroté et signé. Aucun champ ne le relie à la pétition ; son intitulé
   officiel la nomme par son numéro, et c'est ce lien-là qui est retenu. Ni le
@@ -43,6 +44,8 @@ publie pas — voir la règle 4.
   dépôt, nombre de signatures). Le site ne reconstitue pas cette liste par
   recoupement — ce serait un rapprochement de son fait, pas une désignation de
   la commission.
+- **Recoupement thématique** — rapprochement entre une pétition close et les
+  interventions prononcées en séance dans les douze mois suivants.
 
 **Le seuil n'est pas le même pour toutes les commissions.** Les textes de
 décision l'énoncent eux-mêmes, en renvoyant le plus souvent à une décision du
@@ -50,8 +53,6 @@ bureau de la commission saisie : cinq mille signatures en six mois pour la
 commission des lois, dix mille pour les affaires sociales. Sur 1 560 textes,
 811 énoncent cinq mille et 688 dix mille. Le site lit le seuil dans le texte de
 la pétition et ne le déduit jamais de sa commission.
-- **Recoupement thématique** — rapprochement entre une pétition close et les
-  interventions prononcées en séance dans les douze mois suivants.
 
 **Périmètre.** Le fichier des pétitions couvre trois législatures. Les réunions,
 comptes rendus et rapports ne sont lus que pour les législatures 17 et 16 :
@@ -59,6 +60,12 @@ l'Assemblée ne publie pas ces corpus, à cette adresse, pour 2017-2022. Les
 totaux de commission portent donc sur ce périmètre, et le site le déclare —
 lire un sous-ensemble sans le dire produisait « un seul rapport publié » là où
 il y en a trois.
+
+**Corrections.** Les erreurs que le site a affichées sont publiées sur
+[/corrections](https://suiteadonner.nucom.fr/corrections), avec la phrase
+fautive, la raison et ce qui la remplace. Le contenu vit dans
+[src/lib/errata.ts](src/lib/errata.ts) : une correction visible par un visiteur
+s'y inscrit, les bugs internes n'y ont pas leur place.
 
 ## Méthodologie
 
