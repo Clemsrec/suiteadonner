@@ -23,7 +23,7 @@ import {
   type Petition,
   type Stats,
 } from "@/lib/petitions";
-import { LEGAL, SORT_PETITION, lienSortPetition } from "@/lib/site";
+import { LEGAL, RELEVE_PLATEFORME, SORT_PETITION, lienSortPetition } from "@/lib/site";
 
 // Les données source ne changent qu'une fois par semaine (republication du
 // lundi côté data.gouv.fr) : rendre la page à chaque visite faisait 20 lectures
@@ -684,13 +684,28 @@ export default async function Home() {
                 fichier ne renseigne pas toujours cette date&nbsp;: sans elle, nous
                 ne signalons rien.
                 <br />
-                Nous avons vérifié la page officielle de ces pétitions&nbsp;: elle
-                affiche la date limite et le statut « Acceptées », et n&apos;emploie
-                jamais la formule « en cours de signature ». <strong>Le défaut
-                porte donc sur le fichier réutilisable, pas sur ce que voit un
-                citoyen.</strong>{" "}
-                Nous le signalons parce que ce fichier est la
-                source de tous les travaux qui s&apos;appuient dessus, dont le nôtre.
+                Le {formatFrDate(RELEVE_PLATEFORME.releveLe)}, nous avons ouvert
+                {RELEVE_PLATEFORME.pages.length > 1
+                  ? " les pages officielles des pétitions "
+                  : " la page officielle de la pétition "}
+                {RELEVE_PLATEFORME.pages.map((p, i) => (
+                  <span key={p.identifiant}>
+                    {i > 0 && (i === RELEVE_PLATEFORME.pages.length - 1 ? " et " : ", ")}
+                    <a href={p.url} target="_blank" rel="noopener noreferrer">
+                      n<sup>o</sup>&nbsp;{p.identifiant}
+                    </a>
+                  </span>
+                ))}
+                {RELEVE_PLATEFORME.pages.length > 1 ? " : chacune affiche" : " : elle affiche"}{" "}
+                sa date limite de recueil et le statut «&nbsp;
+                {RELEVE_PLATEFORME.pages[0].statutAffiche}&nbsp;», et la formule
+                «&nbsp;{RELEVE_PLATEFORME.formuleAbsente}&nbsp;» n&apos;y figurait pas.{" "}
+                <strong>
+                  Le défaut porte donc sur le fichier réutilisable, pas sur ce que
+                  voit un citoyen.
+                </strong>{" "}
+                Nous le signalons parce que ce fichier est la source des travaux qui
+                s&apos;appuient dessus, dont le nôtre.
               </dd>
             </div>
 

@@ -14,7 +14,11 @@
       "texte": "1 703 889 signatures cumulées pour les 269 pétitions de cette liste, sans qu'aucune motivation ne soit publiée.",
       "page": "decisions-non-publiees.html",
       "fonde": "nous",
-      "note": "Somme de meta/stats ; la page dit que c'est un minimum, les nombres absents comptant pour zéro."
+      "note": "Le critere de la liste est ecrit une fois : statut « classee » et champ de decision vide. C'est ce que compte signaturesClasseesSansTexte, dans l'agregation partagee entre l'import et les controles. La phrase ne dit rien de plus que ce filtre.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "signaturesClasseesSansTexte"
+      }
     },
     {
       "texte": "1 703 889 signatures cumulées, aucune motivation publiée Pétition Soutiens Ce qu'en dit le fichier Recueil clos le Commission des lois constitutionnelles, de la législation et de l'administration générale de la République 732 086 Décision non publiée 22 juil.",
@@ -243,7 +247,11 @@
       "texte": "Ce que les données établissent, c'est que ce fichier n'en porte aucune trace, et que le citoyen qui s'y fie ne peut donc pas l'y lire .",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Porte sur le fichier que nous lisons, pas sur l'existence d'une trace ailleurs — la phrase précédente dit que nous publions celle-ci quand elle existe."
+      "note": "Le critere de la liste est ecrit une fois : statut « classee » et champ de decision vide. C'est ce que compte signaturesClasseesSansTexte, dans l'agregation partagee entre l'import et les controles. La phrase ne dit rien de plus que ce filtre. L'absence porte sur le fichier lu, jamais sur l'existence d'une trace ailleurs.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "classeesHorsSeuilSansTexte"
+      }
     },
     {
       "texte": "Ce que nous ne calculons jamais Quand le fichier ne dit rien, nous n'inventons pas.",
@@ -307,7 +315,11 @@
       "texte": "Décision inscrite, compte rendu introuvable 1 pétition dont une réunion de commission annonçait la décision à son ordre du jour, sans qu’aucun compte rendu ne soit référencé pour cette réunion — 732 086 signatures en attente d’une réponse lisible.",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Calculé : réunion dont l'ordre du jour annonce une décision, sans compteRenduRef."
+      "note": "Calcule : reunion dont l'intitule annonce une decision et dont le champ compteRenduRef est vide. L'absence porte sur la reference dans l'agenda, pas sur l'existence du document.",
+      "preuve": {
+        "fichier": "scripts/fetch-reunions.mjs",
+        "contient": "!x.compteRenduRef"
+      }
     },
     {
       "texte": "Données personnelles et cookies Le site ne requiert aucune inscription.",
@@ -341,12 +353,6 @@
         "fichier": "src/app/MesureAudience.tsx",
         "contient": "if (choix === undefined) return null;"
       }
-    },
-    {
-      "texte": "Enfin, les motivations réelles d'un vote — ce que chacun pense, ce qui s'est décidé ailleurs — ne figurent dans aucun document : nous rapportons ce qui a été écrit, pas ce qui a été voulu.",
-      "page": "methodologie.html",
-      "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Enregistrée 1 656 pétitions Classée par la commission 0 Examinée en commission 0 Débattue en séance publique 0 Ce que cela veut dire, et ce que cela ne veut pas dire Cela ne signifie pas qu'aucune pétition n'a jamais été examinée.",
@@ -388,13 +394,17 @@
       "texte": "Finalité : statistiques de fréquentation du site — volumes de visites, pages lues, provenance Base légale : votre consentement (article 6.1.a du RGPD), librement retirable à tout moment depuis la politique de cookies Sous-traitant : Google Ireland Limited (Google Analytics) Conservation : cookies limités à 13 mois dans votre navigateur ; données de mesure conservées au plus 14 mois dans Google Analytics Sans consentement, rien de tout cela n'existe : le script n'est même pas chargé, et aucune requête ne part vers Google Analytics.",
       "page": "politique-de-confidentialite.html",
       "fonde": "nous",
-      "note": "Fiche de traitement de l'éditeur."
+      "note": "Le composant ne rend le script qu'apres un consentement explicite : sans lui, rien n'est monte, donc aucune requete ne part. La promesse tient a cette ligne.",
+      "preuve": {
+        "fichier": "src/app/MesureAudience.tsx",
+        "contient": "if (choix === \"accepte\") return <GoogleAnalytics"
+      }
     },
     {
       "texte": "Il est constitué à partir de données publiques et n'est ni affilié à l'Assemblée nationale, ni à aucune institution publique , ni à aucun parti politique ou organisation militante.",
       "page": "mentions-legales.html",
-      "fonde": "nous",
-      "note": "Fait sur l'éditeur lui-même."
+      "fonde": "editeur",
+      "note": "Declaration de l'editeur sur lui-meme. Aucun code ne peut l'etablir ; elle engage la signature des mentions legales, qui nomment le responsable de publication."
     },
     {
       "texte": "Il nomme aussi les deux limites qui restent : les classements d'office en bloc, dont la liste n'est presque jamais jointe, et les motivations d'un vote.",
@@ -469,8 +479,8 @@
     {
       "texte": "La présente rubrique ne restreint en aucune manière ces droits.",
       "page": "mentions-legales.html",
-      "fonde": "nous",
-      "note": "Mention juridique de l'éditeur."
+      "fonde": "editeur",
+      "note": "Mention juridique : porte sur la portee du texte affiche, pas sur un fait mesurable."
     },
     {
       "texte": "Le classement en bloc Une pétition qui n'atteint pas, en six mois, le seuil de signatures fixé par sa commission — cinq mille pour la commission des lois, dix mille pour d'autres — est classée d'office, sans examen : c'est la règle, et la commission n'a aucune décision à motiver.",
@@ -502,13 +512,21 @@
       "texte": "Le fichier public lui donne toujours le statut ouverte et ne mentionne aucune décision.",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Lit le champ statut de la pétition affichée."
+      "note": "Lit deux champs de la petition affichee : statutSource et decisionTexte. « Ne mentionne aucune decision » veut dire que le champ est vide, ce que la normalisation ramene a null plutot qu'a une chaine.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "decisionTexte: decisionTexte || null"
+      }
     },
     {
       "texte": "Le jour de notre relevé, aucune des 1 656 initiatives qu'elle listait n'était rangée dans l'une de ces trois issues.",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Releve manuel date et enregistre dans SORT_PETITION : la plateforme rejette les requetes automatisees, les chiffres sont donc releves a la main, avec le lien qui permet de refaire la verification. L'accueil signale lui-meme quand le releve a vieilli.",
+      "preuve": {
+        "fichier": "src/lib/site.ts",
+        "contient": "export const SORT_PETITION"
+      }
     },
     {
       "texte": "Le motif d'un classement est donc toujours lu dans le texte de décision et dans les dates, jamais déduit du statut.",
@@ -533,8 +551,8 @@
     {
       "texte": "Le vérifier vous-même Ces affirmations sont vérifiables en quelques secondes et ne demandent aucune confiance envers l'éditeur.",
       "page": "politique-cookies.html",
-      "fonde": "nous",
-      "note": "Invite à vérifier ; les moyens sont décrits juste après."
+      "fonde": "editeur",
+      "note": "Invite a verifier ; les moyens concrets sont enumeres juste apres, sur la meme page."
     },
     {
       "texte": "Les deux sont reproduits côte à côte, tels quels : nous ne les comparons pas et n'en départageons aucun.",
@@ -600,13 +618,17 @@
       "texte": "Les trois zéros ci-dessus, eux, ne prêtent à aucune ambiguïté.",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Porte sur le relevé daté affiché juste au-dessus."
+      "note": "Porte sur les trois valeurs du releve affiche juste au-dessus, lues depuis SORT_PETITION avec leur date.",
+      "preuve": {
+        "fichier": "src/lib/site.ts",
+        "contient": "peremptionJours"
+      }
     },
     {
       "texte": "Modifications Toute évolution du site introduisant un nouveau traitement — mesure d'audience, formulaire, service tiers — donnera lieu à une mise à jour de cette page et, si la réglementation l'impose, au recueil préalable de votre consentement.",
       "page": "politique-de-confidentialite.html",
-      "fonde": "nous",
-      "note": "Engagement de l'éditeur."
+      "fonde": "editeur",
+      "note": "Engagement d'avenir : rien dans le code ne peut le prouver aujourd'hui. Le controle des preuves d'absence (aucun <form hors recherche) le rend au moins opposable pour les formulaires."
     },
     {
       "texte": "Nous affichons le seuil que le texte de la pétition écrit, et aucun quand il n'en écrit pas : il ne se déduit pas de la commission, un bureau pouvant changer sa règle.",
@@ -617,12 +639,6 @@
         "fichier": "scripts/lib/petitions-source.mjs",
         "contient": "export function seuilEnonce"
       }
-    },
-    {
-      "texte": "Nous avons vérifié la page officielle de ces pétitions : elle affiche la date limite et le statut « Acceptées », et n'emploie jamais la formule « en cours de signature ».",
-      "page": "index.html",
-      "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
       "texte": "Nous comptons le temps écoulé depuis le vote et n'en tirons aucune conclusion : nous ne savons pas quel délai s'applique, ni si un rapport viendra.",
@@ -685,16 +701,14 @@
       }
     },
     {
-      "texte": "Nous le signalons parce que ce fichier est la source de tous les travaux qui s'appuient dessus, dont le nôtre.",
-      "page": "index.html",
-      "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
-    },
-    {
       "texte": "Nous les publions côte à côte sans les comparer ni en départager aucun : à vous de lire.",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "La qualification dit seulement que deux textes officiels coexistent ; aucune comparaison n'est calculee. C'est la correction du 11/09/2026 : la phrase se declenchait auparavant comme s'ils divergeaient.",
+      "preuve": {
+        "fichier": "src/lib/petitions-format.ts",
+        "contient": "deuxTextesOfficiels"
+      }
     },
     {
       "texte": "Nous n'avons trouvé aucun rapport la concernant dans les corpus que nous lisons.",
@@ -809,12 +823,6 @@
       }
     },
     {
-      "texte": "Segment g CO 2 e / Go Part Centre de données 33,1 22 % Réseau de transport 35,6 24 % Votre appareil 79,5 54 % Ce coefficient est une convention de place, pas une mesure de notre infrastructure : nous ne disposons d'aucun relevé de consommation de nos serveurs, et notre hébergeur n'en publie pas.",
-      "page": "empreinte-carbone.html",
-      "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
-    },
-    {
       "texte": "Si vous refusez, ou si vous ignorez la bannière, rien n'est déposé et aucune donnée n'est transmise à Google.",
       "page": "politique-cookies.html",
       "fonde": "nous",
@@ -837,8 +845,8 @@
     {
       "texte": "Sont particulièrement bienvenus les regards de spécialistes du droit parlementaire, de journalistes et de chercheurs, ainsi que toute aide technique sur la récupération et le recoupement des données.",
       "page": "index.html",
-      "fonde": "nous",
-      "note": "Appel à contribution, pas un constat."
+      "fonde": "non-affirmation",
+      "note": "Appel a contribution : « toute aide » n'affirme aucun fait."
     },
     {
       "texte": "Suite à donner ← Retour au site Dernière mise à jour : 27 juillet 2026 Ce site ne dépose aucun cookie sans votre consentement.",
@@ -930,7 +938,11 @@
       "texte": "Une commission a pu auditionner, échanger, tenir compte d'une pétition dans un travail législatif dont le fichier ne garde aucune trace.",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Formulé au conditionnel : décrit ce que les données ne permettent pas d'exclure."
+      "note": "Formule au conditionnel : decrit ce que le fichier lu ne permet pas d'exclure. L'absence porte sur le champ de decision, pas sur le travail parlementaire.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "classeesHorsSeuilSansTexte"
+      }
     },
     {
       "texte": "Une commission classe des centaines de pétitions d'office en une séance sans en nommer aucune, et le compte rendu ne joint la liste que dans un cas sur les trente-quatre que nous avons lus : partout ailleurs, un signataire ne peut pas savoir si la sienne en faisait partie.",
@@ -970,6 +982,56 @@
       "preuve": {
         "fichier": "src/lib/petitions-format.ts",
         "contient": "export function formatSignatures"
+      }
+    },
+    {
+      "texte": "Segment g CO 2 e / Go Part Centre de données 33,1 22 % Réseau de transport 35,6 24 % Votre appareil 79,5 54 % Ce coefficient est une convention de place, pas une mesure de notre infrastructure : nous ne disposons d'aucun relevé de consommation de nos serveurs, et nous n'en avons trouvé aucun que notre hébergeur publierait par site hébergé.",
+      "page": "empreinte-carbone.html",
+      "fonde": "nous",
+      "note": "Deux absences, toutes deux sur nous : nous ne mesurons pas nos serveurs, et notre recherche d'un releve par site hebergé n'a rien donne. La phrase ne dit plus que l'hebergeur n'en publie pas — nous n'avons pas les moyens de l'etablir. Le coefficient affiche est une convention citee, pas une mesure.",
+      "preuve": {
+        "fichier": "src/app/(donnees)/empreinte-carbone/page.tsx",
+        "contient": "const SONDE = estimateWeb("
+      }
+    },
+    {
+      "texte": "Enfin, les motivations réelles d'un vote — ce que chacun pense, ce qui s'est décidé ailleurs — ne s'écrivent pas dans les documents que nous lisons : nous rapportons ce qu'un vote a écrit, jamais ce qu'il a voulu.",
+      "page": "methodologie.html",
+      "fonde": "nous",
+      "note": "Borne aux documents que nous lisons, et non a tous les documents. Le site ne publie que des phrases extraites telles quelles du compte rendu : la fonction qui les isole conserve le texte citable a cote de la cle de recherche, pour ne jamais publier une phrase retouchee.",
+      "preuve": {
+        "fichier": "scripts/lib/comptes-rendus.mjs",
+        "contient": "return { texte, cle:"
+      }
+    },
+    {
+      "texte": "Une vérification qu'un lecteur ne peut pas rejouer n'est pas une vérification, et la formule « ces pétitions » laissait entendre qu'elles avaient toutes été relevées.",
+      "page": "corrections.html",
+      "fonde": "nous",
+      "note": "Page des corrections : decrit une erreur que ce site a affichee et ce qu'il dit desormais. Les absolus y portent sur notre propre comportement, passe ou present. Le contenu vit dans src/lib/errata.ts.",
+      "preuve": {
+        "fichier": "src/lib/errata.ts",
+        "contient": "export const ERRATA"
+      }
+    },
+    {
+      "texte": "2026 Page empreinte carbone Le site affirmait Pourquoi c'était faux Nous n'avons jamais établi ce que l'hébergeur publie ou non.",
+      "page": "corrections.html",
+      "fonde": "nous",
+      "note": "Page des corrections : decrit une erreur que ce site a affichee et ce qu'il dit desormais. Les absolus y portent sur notre propre comportement, passe ou present. Le contenu vit dans src/lib/errata.ts.",
+      "preuve": {
+        "fichier": "src/lib/errata.ts",
+        "contient": "export const ERRATA"
+      }
+    },
+    {
+      "texte": "Ce qu'il dit désormais La page dit que nous ne disposons d'aucun relevé de nos serveurs et que nous n'en avons trouvé aucun publié par site hébergé.",
+      "page": "corrections.html",
+      "fonde": "nous",
+      "note": "Page des corrections : decrit une erreur que ce site a affichee et ce qu'il dit desormais. Les absolus y portent sur notre propre comportement, passe ou present. Le contenu vit dans src/lib/errata.ts.",
+      "preuve": {
+        "fichier": "src/lib/errata.ts",
+        "contient": "export const ERRATA"
       }
     }
   ]

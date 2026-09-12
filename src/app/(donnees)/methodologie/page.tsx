@@ -288,8 +288,9 @@ export default function Methodologie() {
           rendu ne joint la liste que dans un cas sur les trente-quatre que nous
           avons lus. Partout ailleurs, un signataire ne peut pas savoir si la sienne
           en faisait partie. Enfin, les motivations réelles d&apos;un vote — ce
-          que chacun pense, ce qui s&apos;est décidé ailleurs — ne figurent dans aucun
-          document&nbsp;: nous rapportons ce qui a été écrit, pas ce qui a été voulu.
+          que chacun pense, ce qui s&apos;est décidé ailleurs — ne s&apos;écrivent
+          pas dans les documents que nous lisons&nbsp;: nous rapportons ce qu&apos;un
+          vote a écrit, jamais ce qu&apos;il a voulu.
         </p>
       </section>
 

@@ -56,6 +56,40 @@ export function lienSortPetition(cle: string): string {
   return `${SORT_PETITION.base}?filter%5Bcustom_state%5D%5B%5D=${cle}`;
 }
 
+// RELEVÉ MANUEL — ce que la plateforme officielle affiche pour les pétitions
+// que le fichier ouvert laisse en « ouverte » alors que leur date limite est
+// passée.
+//
+// L'accueil affirmait « nous avons vérifié la page officielle de ces
+// pétitions » sans que rien n'enregistre ce qui avait été vu, ni quand, ni
+// pour combien d'entre elles. Une vérification qu'on ne peut pas rejouer n'est
+// pas une vérification : c'est une parole.
+//
+// Chaque entrée porte l'identifiant, le lien, et les deux chaînes relevées mot
+// pour mot sur la page. La formule « en cours de signature » — celle que le
+// fichier ouvert emploie — n'apparaissait sur aucune des pages relevées.
+// Ajouter une pétition à la liste des écarts sans l'ajouter ici laisse la
+// phrase de l'accueil dire plus que ce qui a été vu : le compte affiché vient
+// de ce tableau, pas du nombre d'écarts.
+export const RELEVE_PLATEFORME = {
+  releveLe: "2026-09-12",
+  formuleAbsente: "en cours de signature",
+  pages: [
+    {
+      identifiant: "2743",
+      url: "https://petitions.assemblee-nationale.fr/initiatives/i-2743",
+      statutAffiche: "Acceptées",
+      dateLimiteAffichee: "28/04/2026",
+    },
+    {
+      identifiant: "3014",
+      url: "https://petitions.assemblee-nationale.fr/initiatives/i-3014",
+      statutAffiche: "Acceptées",
+      dateLimiteAffichee: "02/12/2025",
+    },
+  ],
+} as const;
+
 // Informations légales — source unique pour les trois pages réglementaires.
 // Les valeurs d'identification proviennent de l'éditeur ; les régions
 // d'hébergement ont été relues sur l'infrastructure le 10/09/2026 par l'API

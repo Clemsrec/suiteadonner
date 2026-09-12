@@ -40,6 +40,27 @@ export const ERRATA: Erratum[] = [
     date: "2026-09-12",
     ou: "Accueil, section « Comment nous travaillons »",
     affirmait:
+      "Nous avons vérifié la page officielle de ces pétitions : elle affiche la date limite et le statut « Acceptées », et n'emploie jamais la formule « en cours de signature ».",
+    pourquoi:
+      "Rien n'enregistrait cette vérification : ni sa date, ni les pages ouvertes, ni ce qui y avait été lu. Une vérification qu'un lecteur ne peut pas rejouer n'est pas une vérification, et la formule « ces pétitions » laissait entendre qu'elles avaient toutes été relevées.",
+    corrige:
+      "L'accueil donne la date du relevé et le lien vers chacune des pages ouvertes, avec le statut et la date limite qui y figuraient. Le lecteur peut les rouvrir et comparer.",
+    gardeFou:
+      "Le relevé vit dans les données, avec sa date et ses liens ; le compte affiché vient de ce relevé, non du nombre de pétitions concernées.",
+  },
+  {
+    date: "2026-09-12",
+    ou: "Page empreinte carbone",
+    affirmait: "Notre hébergeur ne publie pas de relevé de consommation.",
+    pourquoi:
+      "Nous n'avons jamais établi ce que l'hébergeur publie ou non. Nous constations notre propre absence de données et l'attribuions à un tiers.",
+    corrige:
+      "La page dit que nous ne disposons d'aucun relevé de nos serveurs et que nous n'en avons trouvé aucun publié par site hébergé. L'absence porte sur notre recherche, pas sur l'hébergeur.",
+  },
+  {
+    date: "2026-09-12",
+    ou: "Accueil, section « Comment nous travaillons »",
+    affirmait:
       "Les échanges, les arguments et le sens du vote ne figurent pas dans les données que nous exploitons.",
     pourquoi:
       "Le site lisait déjà les comptes rendus de commission et publiait le sens des votes qu'ils portent. La page de méthodologie le disait, l'accueil affirmait encore le contraire.",

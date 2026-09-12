@@ -47,11 +47,33 @@
 // dans affirmations-connues.json avec la raison qui la fonde. Les phrases
 // héritées d'avant ce contrôle y figurent en dette, comptée à chaque passage.
 //
+// CE QUE `fonde` PEUT VALOIR
+//
+//   nous            le code garantit la phrase. Doit porter une `preuve` : sans
+//                   elle, la justification reste une parole, et le contrôle la
+//                   compte comme telle.
+//   source          une source extérieure l'établit, citée dans la note.
+//   editeur         déclaration de l'éditeur sur lui-même, engagement juridique
+//                   ou promesse d'avenir — « ni affilié à aucun parti », « toute
+//                   évolution donnera lieu à une mise à jour ». Aucun code ne
+//                   peut l'établir, et en réclamer un déguiserait en vérification
+//                   ce qui reste une parole assumée. Ces phrases ne sont donc
+//                   jamais comptées dans la dette, mais elles engagent celui qui
+//                   les signe : les mentions légales nomment le responsable.
+//   non-affirmation fragment d'interface, appel à contribution, ou phrase dont
+//                   l'absolu est grammatical et ne porte aucun constat.
+//   heritee         portait sur l'Assemblée ou la procédure, jamais justifiée :
+//                   à borner ou à sourcer.
+//   nous-a-confirmer  inscrite automatiquement par --ajouter, en attente d'une
+//                   preuve ou d'un reclassement.
+//
 // Usage :
 //   npm run build && node scripts/verifier-affirmations.mjs
 //   node scripts/verifier-affirmations.mjs --ajouter    # inscrit les nouvelles
 //   node scripts/verifier-affirmations.mjs --nettoyer   # retire celles dont la
 //                                                       # phrase n'existe plus
+//   node scripts/verifier-affirmations.mjs --parole     # nomme les « nous »
+//                                                       # encore sans preuve
 //
 // Sortie : code 1 si une affirmation non déclarée est affichée.
 
@@ -213,13 +235,29 @@ async function main() {
   if (aConfirmer) {
     console.log(`  et ${aConfirmer} décrivant notre comportement, à confirmer dans le code.`);
   }
-  const nous = connues.affirmations.filter((a) => a.fonde === "nous").length;
+  // La dette réelle, ce sont les phrases qui se disent garanties par le code
+  // sans que rien ne le vérifie. Compter « nous moins les preuves » serait
+  // faux dès qu'une preuve est attachée à une entrée d'une autre nature :
+  // on compte donc les entrées elles-mêmes, et on les nomme. Une dette qu'on
+  // ne peut pas lire ne se résorbe pas.
+  const sansPreuve = connues.affirmations.filter((a) => a.fonde === "nous" && !a.preuve);
+  const editeur = connues.affirmations.filter((a) => a.fonde === "editeur").length;
   console.log(
     `  preuves vérifiées dans le code : ${avecPreuve.length}` +
-      (nous > avecPreuve.length
-        ? ` — ${nous - avecPreuve.length} justification(s) « nous » restent sur parole.`
+      (sansPreuve.length
+        ? ` — ${sansPreuve.length} justification(s) « nous » restent sur parole.`
         : "")
   );
+  if (editeur) {
+    console.log(
+      `  et ${editeur} déclaration(s) de l'éditeur, qu'aucun code ne peut établir ` +
+        `— elles engagent sa signature, pas le dépôt.`
+    );
+  }
+  if (sansPreuve.length && process.argv.includes("--parole")) {
+    console.log(`\nLes ${sansPreuve.length} justifications « nous » sans preuve :`);
+    for (const a of sansPreuve) console.log(`  [${a.page}] ${a.texte.slice(0, 100)}`);
+  }
   if (disparues.length) {
     console.log(`\n${disparues.length} déclaration(s) sans phrase correspondante (texte réécrit ?) :`);
     for (const a of disparues.slice(0, 5)) console.log(`  – ${a.texte.slice(0, 90)}`);

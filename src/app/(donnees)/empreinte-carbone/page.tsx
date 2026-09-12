@@ -152,7 +152,8 @@ export default function EmpreinteCarbonePage() {
         <p className={propre.avertissement}>
           Ce coefficient est une convention de place, pas une mesure de notre
           infrastructure&nbsp;: nous ne disposons d&apos;aucun relevé de consommation de nos
-          serveurs, et notre hébergeur n&apos;en publie pas. Le chiffre affiché est donc un
+          serveurs, et nous n&apos;en avons trouvé aucun que notre hébergeur publierait
+          par site hébergé. Le chiffre affiché est donc un
           ordre de grandeur bâti sur des moyennes, comme le sont les estimations d&apos;empreinte
           carbone des sites web en général.
         </p>
