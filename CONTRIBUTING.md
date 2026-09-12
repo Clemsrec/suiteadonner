@@ -55,6 +55,7 @@ npm run lint             # ESLint
 npm run verifier         # contrôles de cohérence sur le CSV canonique
 npm run build            # le site doit compiler
 npm run verifier:textes  # affirmations absolues affichées (nécessite le build)
+npm run verifier:errata  # chaque erratum retrouvé dans l'historique du dépôt
 ```
 
 `verifier:textes` lit le HTML produit, pas le code : une phrase coupée par des
@@ -66,10 +67,25 @@ Les entrées portant un champ `preuve` sont vérifiées dans le code : le contr�
 ouvre le fichier cité et y cherche la chaîne déclarée. Une promesse dont le code
 cesse d'être porteur casse le contrôle, en nommant la phrase devenue fausse.
 
-Un absolu qui décrit **notre** comportement est légitime si le code le garantit.
-Un absolu sur l'Assemblée ou sur la procédure doit citer sa source, ou être borné
-(« sur les trente-quatre comptes rendus que nous avons lus »). Le détail est dans
-[CLAUDE.md](CLAUDE.md), avec la liste des erreurs qui ont motivé ce contrôle.
+Trois natures d'absolu, et une seule se passe de preuve :
+
+- **Sur notre comportement** — « nous n'écrivons jamais 0 ». Légitime *si le code
+  le garantit* : l'entrée porte alors une `preuve`. Sans elle, la justification
+  reste une parole, et le contrôle la compte comme telle
+  (`npm run verifier:textes -- --parole` les nomme ; ce compte doit rester à zéro).
+- **Sur l'Assemblée, la procédure, le monde** — « le compte rendu ne publie
+  jamais ». Interdit sauf source citée, ou borné : « sur les trente-quatre
+  comptes rendus que nous avons lus ».
+- **Sur l'éditeur lui-même** — non-affiliation, engagement juridique, promesse
+  d'avenir. Aucun code ne peut l'établir ; lui inventer une preuve déguiserait
+  une parole assumée en vérification. Ces phrases sont déclarées
+  `fonde: "editeur"` et comptées à part.
+
+`verifier:errata` applique la même exigence à la page des corrections : chaque
+erratum porte une `empreinte`, un fragment de la phrase fautive tel qu'il
+figurait dans le code, et le contrôle le retrouve dans un commit passé. Une
+erreur qu'on ne retrouve pas dans l'historique est une erreur inventée — c'est
+ainsi que quatre entrées qui paraphrasaient au lieu de citer ont été trouvées.
 
 - **Petites PR.** Une PR = un sujet. Pour un changement structurant (nouvelle
   page, nouveau champ dérivé, nouvelle source de données), ouvrez d'abord une

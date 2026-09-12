@@ -32,6 +32,22 @@ export type Erratum = {
   corrige: string;
   /** Ce qui empêche cette erreur de revenir, quand un garde-fou a été posé. */
   gardeFou?: string;
+  /**
+   * Nature de la correction, vérifiée par `npm run verifier:errata` :
+   * - `texte` la phrase écrite a changé ; l'empreinte doit avoir disparu ;
+   * - `code` la phrase est restée, le code a changé pour la rendre vraie ;
+   * - `rendu` la phrase n'a jamais été écrite, elle était produite par le code.
+   */
+  corrigee: "texte" | "code" | "rendu";
+  /**
+   * Fragment de la phrase tel qu'il figurait dans le code, que le contrôle
+   * retrouve dans l'historique git. Le JSX coupe les phrases en fin de ligne :
+   * prendre un fragment court, sur une seule ligne source. Absent pour les
+   * corrections de rendu, où aucune phrase n'a jamais été écrite.
+   */
+  empreinte?: string;
+  /** Ce qui tient la phrase désormais, pour les corrections `code` et `rendu`. */
+  preuve?: { fichier: string; contient: string };
 };
 
 // Du plus récent au plus ancien.
@@ -47,15 +63,20 @@ export const ERRATA: Erratum[] = [
       "L'accueil donne la date du relevé et le lien vers chacune des pages ouvertes, avec le statut et la date limite qui y figuraient. Le lecteur peut les rouvrir et comparer.",
     gardeFou:
       "Le relevé vit dans les données, avec sa date et ses liens ; le compte affiché vient de ce relevé, non du nombre de pétitions concernées.",
+    corrigee: "texte",
+    empreinte: "Nous avons vérifié la page officielle de ces",
   },
   {
     date: "2026-09-12",
     ou: "Page empreinte carbone",
-    affirmait: "Notre hébergeur ne publie pas de relevé de consommation.",
+    affirmait:
+      "Nous ne disposons d'aucun relevé de consommation de nos serveurs, et notre hébergeur n'en publie pas.",
     pourquoi:
       "Nous n'avons jamais établi ce que l'hébergeur publie ou non. Nous constations notre propre absence de données et l'attribuions à un tiers.",
     corrige:
       "La page dit que nous ne disposons d'aucun relevé de nos serveurs et que nous n'en avons trouvé aucun publié par site hébergé. L'absence porte sur notre recherche, pas sur l'hébergeur.",
+    corrigee: "texte",
+    empreinte: "hébergeur n&apos;en publie pas",
   },
   {
     date: "2026-09-12",
@@ -66,6 +87,8 @@ export const ERRATA: Erratum[] = [
       "Le site lisait déjà les comptes rendus de commission et publiait le sens des votes qu'ils portent. La page de méthodologie le disait, l'accueil affirmait encore le contraire.",
     corrige:
       "L'accueil dit que le compte rendu, quand il existe et qu'il nomme la pétition, donne la décision. Il nomme aussi les deux limites qui restent : les classements d'office en bloc, dont la liste n'est presque jamais jointe, et les motivations d'un vote.",
+    corrigee: "texte",
+    empreinte: "arguments et le sens du vote ne figurent",
   },
   {
     date: "2026-09-12",
@@ -77,6 +100,8 @@ export const ERRATA: Erratum[] = [
       "Les mentions légales nomment ce formulaire : la recherche est le seul du site, et sa requête part sans être conservée.",
     gardeFou:
       "Un contrôle vérifie qu'aucune balise de formulaire n'apparaît ailleurs que dans le champ de recherche.",
+    corrigee: "texte",
+    empreinte: "ne requiert aucune inscription, ne comporte",
   },
   {
     date: "2026-09-12",
@@ -88,6 +113,8 @@ export const ERRATA: Erratum[] = [
       "Le délai n'est compté que sur les pétitions dont le recueil est clos. Pour les autres, la fiche dit que l'examen a été voté, que le recueil court toujours, et qu'aucun rapport n'a été trouvé.",
     gardeFou:
       "L'état d'une pétition est qualifié dans une seule fonction, qui voit tous ses champs à la fois.",
+    corrigee: "texte",
+    empreinte: "Examen voté, rapport attendu depuis",
   },
   {
     date: "2026-09-11",
@@ -97,6 +124,8 @@ export const ERRATA: Erratum[] = [
       "Deux des trois séances relevées n'énonçaient pas un classement mais une proposition de rapporteur — « je vous propose de classer d'office ces 212 pétitions ». Le site présentait comme acquis ce qui était proposé.",
     corrige:
       "Chaque séance indique sa nature : classement constaté, ou proposé. La mention « (Assentiment.) » est rapportée quand le compte rendu la porte, sans en tirer de vote.",
+    corrigee: "texte",
+    empreinte: "pétitions classées d&apos;office",
   },
   {
     date: "2026-09-11",
@@ -106,6 +135,8 @@ export const ERRATA: Erratum[] = [
       "Ce seuil n'est pas unique. Les textes de décision du fichier l'énoncent eux-mêmes, et il varie : cinq mille signatures pour la commission des lois, dix mille pour les affaires sociales. Douze pétitions avaient atteint le seuil qui leur était opposé tout en étant présentées comme sous le seuil.",
     corrige:
       "Le site lit le seuil dans le texte de décision de chaque pétition, et ne le déduit jamais de sa commission. Quand aucun texte ne l'énonce, il s'en tient au nombre de signatures.",
+    corrigee: "texte",
+    empreinte: "en dessous duquel une pétition est classée",
   },
   {
     date: "2026-09-11",
@@ -115,16 +146,21 @@ export const ERRATA: Erratum[] = [
       "Cette liste est établie sur un statut « classée » et un champ de décision vide. Rien n'y atteste qu'un examen ait eu lieu — la méthodologie du site s'interdit d'ailleurs explicitement d'écrire « classée après examen ».",
     corrige:
       "Le site dit que le fichier les donne pour classées sans motivation, et qu'il ignore si une commission les a examinées.",
+    corrigee: "texte",
+    empreinte: "ont été examinées par une commission",
   },
   {
     date: "2026-09-11",
     ou: "Accueil, page des rapports",
-    affirmait: "Une seule suite écrite, argumentée et signée : le rapport n° 2069.",
+    affirmait:
+      "À ce jour, une seule suite écrite, argumentée et signée : le rapport n° 2069.",
     pourquoi:
       "Les corpus n'étaient lus que pour la législature en cours, alors que le fichier des pétitions en couvre trois. Deux autres rapports existaient, sur des pétitions bien présentes dans le fichier : le congé maternité et l'autoroute A69.",
     corrige:
       "Les deux législatures que l'Assemblée publie sont lues, et le périmètre est affiché à côté des chiffres qu'il borne.",
     gardeFou: "Le périmètre est un champ des données, plus une phrase écrite dans la page.",
+    corrigee: "texte",
+    empreinte: "une seule suite écrite, argumentée et signée&nbsp;: le rapport",
   },
   {
     date: "2026-09-11",
@@ -135,6 +171,8 @@ export const ERRATA: Erratum[] = [
       "Les données de pétitions sont lues par le serveur, jamais par le navigateur du visiteur. Le site se déclarait plus indiscret qu'il ne l'est.",
     corrige:
       "Seule la recherche part du navigateur. La politique le dit, et précise que l'adresse IP n'est pas transmise à la base de données.",
+    corrigee: "texte",
+    empreinte: "Deux services extérieurs sont sollicités depuis votre",
   },
   {
     date: "2026-09-11",
@@ -143,6 +181,9 @@ export const ERRATA: Erratum[] = [
     pourquoi:
       "Le script de mesure les posait pour deux ans, sa valeur par défaut : la durée annoncée n'était appliquée nulle part.",
     corrige: "La durée de treize mois est désormais déclarée explicitement au chargement du script.",
+    corrigee: "code",
+    empreinte: "conservé 13 mois",
+    preuve: { fichier: "src/app/MesureAudience.tsx", contient: "DUREE_COOKIE_SECONDES" },
   },
   {
     date: "2026-09-11",
@@ -152,6 +193,9 @@ export const ERRATA: Erratum[] = [
       "Les cookies étaient bien effacés, mais le script de mesure restait actif dans la page et les reposait au premier événement suivant.",
     corrige:
       "Le retrait désactive la mesure elle-même avant d'effacer les cookies ; elle ne repart pas tant que le consentement n'est pas redonné.",
+    corrigee: "code",
+    empreinte: "retrait supprime immédiatement les cookies",
+    preuve: { fichier: "src/app/MesureAudience.tsx", contient: "couperMesure" },
   },
   {
     date: "2026-09-11",
@@ -161,6 +205,8 @@ export const ERRATA: Erratum[] = [
       "Une mesure d'audience existait depuis la même mise à jour que cette phrase. La page se contredisait elle-même quelques paragraphes plus bas.",
     corrige:
       "Les mentions légales déclarent cette mesure et renvoient à la politique de cookies, qui en décrit le fonctionnement et le consentement.",
+    corrigee: "texte",
+    empreinte: "outil de mesure d&apos;audience.",
   },
   {
     date: "2026-09-11",
@@ -170,6 +216,8 @@ export const ERRATA: Erratum[] = [
       "Le site n'a jamais comparé les deux textes : la phrase se déclenchait dès qu'un compte rendu et le fichier en portaient chacun un, qu'ils divergent ou non.",
     corrige:
       "Le site constate que deux textes officiels portent sur la même pétition, les reproduit côte à côte, et laisse le lecteur les comparer.",
+    corrigee: "texte",
+    empreinte: "sources officielles ne disent pas la",
   },
   {
     date: "2026-09-11",
@@ -180,6 +228,8 @@ export const ERRATA: Erratum[] = [
       "Un compte rendu sur les trente-quatre lus joint cette liste, en tableau, avec l'objet, la date de dépôt et le nombre de signatures de vingt-trois pétitions.",
     corrige:
       "Le site dit que cette liste est jointe rarement, et non jamais. Il ne la reconstitue pas par recoupement : ce serait une désignation de son fait.",
+    corrigee: "texte",
+    empreinte: "annonce un effectif, jamais la liste",
   },
   {
     date: "2026-09-11",
@@ -188,5 +238,10 @@ export const ERRATA: Erratum[] = [
     pourquoi:
       "Écrire zéro affirme « aucun soutien » là où la source ne dit rien — ce que la méthodologie du site interdit explicitement.",
     corrige: "La carte indique que le nombre de soutiens n'est pas renseigné.",
+    corrigee: "rendu",
+    preuve: {
+      fichier: "src/app/(donnees)/passages-en-commission/page.tsx",
+      contient: "Nombre de soutiens non renseigné",
+    },
   },
 ];

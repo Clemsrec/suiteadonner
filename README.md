@@ -65,7 +65,9 @@ il y en a trois.
 [/corrections](https://suiteadonner.nucom.fr/corrections), avec la phrase
 fautive, la raison et ce qui la remplace. Le contenu vit dans
 [src/lib/errata.ts](src/lib/errata.ts) : une correction visible par un visiteur
-s'y inscrit, les bugs internes n'y ont pas leur place.
+s'y inscrit, les bugs internes n'y ont pas leur place. `npm run verifier:errata`
+retrouve chaque phrase citée dans l'historique du dépôt et refuse celles qui n'y
+figurent pas — une erreur qu'on ne peut pas retrouver est une erreur inventée.
 
 ## Méthodologie
 
@@ -106,6 +108,8 @@ framework, abondamment commentés :
 | Script | Commande | Rôle |
 | --- | --- | --- |
 | [verifier-coherence.mjs](scripts/verifier-coherence.mjs) | `npm run verifier` | Contrôles de cohérence sur le CSV canonique (fraîcheur, volume). Casse bruyamment plutôt que laisser passer des chiffres périmés. |
+| [verifier-affirmations.mjs](scripts/verifier-affirmations.mjs) | `npm run verifier:textes` | Lit le HTML produit par le build et casse dès qu'une phrase nouvelle porte un absolu sans être déclarée avec ce qui la fonde. Vérifie les preuves : une promesse dont le code cesse d'être porteur nomme la phrase devenue fausse. |
+| [verifier-errata.mjs](scripts/verifier-errata.mjs) | `npm run verifier:errata` | Retrouve dans l'historique git chaque phrase citée sur `/corrections`. Refuse un erratum dont la phrase n'a jamais été affichée. |
 | [import-petitions.mjs](scripts/import-petitions.mjs) | `npm run import:petitions` | Vérifie, puis importe le CSV dans Firestore et synchronise l'index Algolia. `--dry-run` pour analyser sans écrire. |
 | [fetch-debats.mjs](scripts/fetch-debats.mjs) | `npm run fetch:debats` | Aspire les comptes rendus intégraux des séances publiques (flux XML DILA) vers `.corpus/`. |
 | [fetch-reunions.mjs](scripts/fetch-reunions.mjs) | `npm run fetch:reunions` | Extrait de l'agenda de l'Assemblée les réunions de commission où une pétition figure à l'ordre du jour, lit les comptes rendus de ces réunions et en tire la décision votée, relève les classements d'office en bloc, et rattache les rapports déposés au terme d'un examen. `--push` pour écrire dans Firestore. |

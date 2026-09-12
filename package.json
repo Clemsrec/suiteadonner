@@ -12,6 +12,7 @@
     "lint": "eslint",
     "start": "next start",
     "verifier": "node scripts/verifier-coherence.mjs",
+    "verifier:errata": "node scripts/verifier-errata.mjs",
     "verifier:textes": "node scripts/verifier-affirmations.mjs"
   },
   "dependencies": {

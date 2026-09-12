@@ -33,6 +33,20 @@ export default function Corrections() {
           recopier est désagréable, et c&apos;est voulu&nbsp;: une correction qui ne montre
           pas ce qu&apos;elle corrige demande encore qu&apos;on lui fasse confiance.
         </p>
+        <p className={styles.lede}>
+          Ces citations ne sont pas écrites de mémoire. Un contrôle retrouve chacune
+          dans l&apos;historique du{" "}
+          <a
+            href="https://github.com/Clemsrec/suiteadonner"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            dépôt public
+          </a>
+          , qui date chaque version du site, et refuse une correction dont la phrase
+          n&apos;y figure pas. Quatre entrées de cette page paraphrasaient au lieu de
+          citer&nbsp;; c&apos;est ce contrôle qui les a trouvées.
+        </p>
         <p className={styles.encadre}>
           <strong>
             {ERRATA.length} correction{ERRATA.length > 1 ? "s" : ""} publiée

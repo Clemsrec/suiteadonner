@@ -22,7 +22,15 @@ export default function MentionsLegales() {
         <dt>Forme juridique</dt>
         <dd>{LEGAL.formeJuridique}</dd>
         <dt>SIREN</dt>
-        <dd>{LEGAL.siren}</dd>
+        <dd>
+          <a
+            href={`https://annuaire-entreprises.data.gouv.fr/entreprise/${LEGAL.siren.replace(/\s/g, "")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {LEGAL.siren}
+          </a>
+        </dd>
         <dt>SIRET (siège)</dt>
         <dd>{LEGAL.siret}</dd>
         <dt>Numéro de TVA</dt>
@@ -79,6 +87,15 @@ export default function MentionsLegales() {
         déposées à l&apos;Assemblée nationale. Il est constitué à partir de données publiques et{" "}
         <strong>n&apos;est ni affilié à l&apos;Assemblée nationale, ni à aucune institution
         publique</strong>, ni à aucun parti politique ou organisation militante.
+      </p>
+      <p>
+        Cette phrase est une déclaration, pas un constat vérifiable&nbsp;: rien sur ce
+        site, ni dans les données qu&apos;il exploite, ne permet d&apos;établir
+        l&apos;absence d&apos;une affiliation. Ce qui est vérifiable, c&apos;est qui la
+        signe — le SIREN
+        ci-dessus renvoie au répertoire public des entreprises, qui donne la forme
+        juridique, la date de création et l&apos;activité déclarée de l&apos;éditeur. Une
+        déclaration engage d&apos;autant plus qu&apos;on sait de qui elle vient.
       </p>
 
       <h2>5. Propriété intellectuelle</h2>
