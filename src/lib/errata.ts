@@ -38,6 +38,16 @@ export type Erratum = {
 export const ERRATA: Erratum[] = [
   {
     date: "2026-09-12",
+    ou: "Accueil, section « Comment nous travaillons »",
+    affirmait:
+      "Les échanges, les arguments et le sens du vote ne figurent pas dans les données que nous exploitons.",
+    pourquoi:
+      "Le site lisait déjà les comptes rendus de commission et publiait le sens des votes qu'ils portent. La page de méthodologie le disait, l'accueil affirmait encore le contraire.",
+    corrige:
+      "L'accueil dit que le compte rendu, quand il existe et qu'il nomme la pétition, donne la décision. Il nomme aussi les deux limites qui restent : les classements d'office en bloc, dont la liste n'est presque jamais jointe, et les motivations d'un vote.",
+  },
+  {
+    date: "2026-09-12",
     ou: "Mentions légales",
     affirmait: "Le site ne requiert aucune inscription, ne comporte aucun formulaire.",
     pourquoi:

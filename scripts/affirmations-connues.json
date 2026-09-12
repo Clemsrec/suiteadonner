@@ -355,6 +355,16 @@
       "note": "Fragment de navigation ou de tableau concaténé par l'extraction, pas une phrase affirmée."
     },
     {
+      "texte": "Et nous rapportons ce qu'un vote a écrit, jamais ce qu'il a voulu.",
+      "page": "index.html",
+      "fonde": "nous",
+      "note": "Decrit notre propre comportement : le site ne publie que des citations de comptes rendus, jamais de motivation reconstituee. Relue lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/lib/comptes-rendus.mjs",
+        "contient": "phrases"
+      }
+    },
+    {
       "texte": "Examen voté, aucun rapport trouvé — la commission s'est prononcée pour l'examen d'une pétition, et nous n'avons trouvé aucun rapport.",
       "page": "methodologie.html",
       "fonde": "nous",
@@ -385,6 +395,16 @@
       "page": "mentions-legales.html",
       "fonde": "nous",
       "note": "Fait sur l'éditeur lui-même."
+    },
+    {
+      "texte": "Il nomme aussi les deux limites qui restent : les classements d'office en bloc, dont la liste n'est presque jamais jointe, et les motivations d'un vote.",
+      "page": "corrections.html",
+      "fonde": "nous",
+      "note": "Page des corrections : decrit une erreur que ce site a affichee et ce qu'il dit desormais. Le contenu vit dans src/lib/errata.ts.",
+      "preuve": {
+        "fichier": "src/lib/errata.ts",
+        "contient": "export const ERRATA"
+      }
     },
     {
       "texte": "L'écart est signalé, jamais corrigé — voir ces pétitions .",
@@ -839,13 +859,13 @@
       "note": "Fragment de navigation ou de tableau concaténé par l'extraction, pas une phrase affirmée."
     },
     {
-      "texte": "Surtout, une commission classe des centaines de pétitions d'office en une séance sans en nommer aucune : nous relevons alors la séance et son effectif, mais aucun signataire ne peut savoir si la sienne en faisait partie — le compte rendu ne contient pas la liste.",
+      "texte": "Surtout, une commission classe des centaines de pétitions d'office en une séance sans en nommer aucune : nous relevons alors la séance et son effectif, mais le compte rendu ne joint la liste que dans un cas sur les trente-quatre que nous avons lus.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "note": "Le nombre de comptes rendus lus est un champ des donnees (perimetre.comptesRendusLus), ecrit par la collecte ; le seul qui joigne la liste est nomme et date sur /passages-en-commission, avec le lien vers le texte officiel. La phrase borne donc sa portee a ce que nous avons lu.",
       "preuve": {
-        "fichier": "scripts/lib/comptes-rendus.mjs",
-        "contient": "extraireClassementsEnBloc"
+        "fichier": "scripts/fetch-reunions.mjs",
+        "contient": "comptesRendusLus"
       }
     },
     {
@@ -911,6 +931,16 @@
       "page": "index.html",
       "fonde": "nous",
       "note": "Formulé au conditionnel : décrit ce que les données ne permettent pas d'exclure."
+    },
+    {
+      "texte": "Une commission classe des centaines de pétitions d'office en une séance sans en nommer aucune, et le compte rendu ne joint la liste que dans un cas sur les trente-quatre que nous avons lus : partout ailleurs, un signataire ne peut pas savoir si la sienne en faisait partie.",
+      "page": "index.html",
+      "fonde": "nous",
+      "note": "Le nombre de comptes rendus lus est un champ des donnees (perimetre.comptesRendusLus), ecrit par la collecte ; le seul qui joigne la liste est nomme et date sur /passages-en-commission, avec le lien vers le texte officiel. La phrase borne donc sa portee a ce que nous avons lu.",
+      "preuve": {
+        "fichier": "scripts/fetch-reunions.mjs",
+        "contient": "comptesRendusLus"
+      }
     },
     {
       "texte": "Une seule exception, et elle ne demande aucune déduction : lorsque l'ordre du jour de la réunion ne désigne qu'une pétition, par son numéro, et que le compte rendu n'en cite aucune autre, la décision qui ne la nomme pas ne peut désigner qu'elle.",

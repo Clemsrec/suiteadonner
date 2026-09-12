@@ -729,10 +729,29 @@ export default async function Home() {
               <dt>Ce que nous ne pouvons pas savoir</dt>
               <dd>
                 L&apos;ordre du jour d&apos;une réunion dit qu&apos;une pétition a
-                été examinée, pas ce qui s&apos;y est dit. Les échanges, les
-                arguments et le sens du vote ne figurent pas dans les données que
-                nous exploitons. Un travail réel a donc pu avoir lieu sans que nous
-                puissions le décrire.
+                été examinée, pas ce qui s&apos;y est dit. Le compte rendu de cette
+                réunion, lui, le dit&nbsp;: quand il existe et qu&apos;il nomme la
+                pétition, nous reproduisons la décision votée intégralement, avec le
+                lien vers le texte officiel.
+                <br />
+                Deux choses nous échappent encore. Une commission classe des
+                centaines de pétitions d&apos;office en une séance sans en nommer
+                aucune, et le compte rendu ne joint la liste que dans un cas sur les
+                trente-quatre que nous avons lus&nbsp;: partout ailleurs, un
+                signataire ne peut pas savoir si la sienne en faisait partie. Et nous
+                rapportons ce qu&apos;un vote a écrit, jamais ce qu&apos;il a voulu.
+              </dd>
+            </div>
+
+            <div className={styles.entree}>
+              <dt>Ce que nous avons affiché de faux</dt>
+              <dd>
+                Nous nous sommes trompés, et nous le publions&nbsp;: la{" "}
+                <Link href="/corrections">page des corrections</Link> cite chaque
+                phrase fautive telle qu&apos;elle était affichée, dit pourquoi elle
+                l&apos;était et ce qui la remplace. Un site qui reproche à
+                l&apos;Assemblée de ne pas publier ses décisions ne peut pas
+                corriger les siennes en silence.
               </dd>
             </div>
           </dl>
@@ -748,7 +767,9 @@ export default async function Home() {
             Ce site n&apos;a d&apos;intérêt que s&apos;il est exact. Si vous
             repérez un chiffre faux, un rapprochement abusif ou une formulation
             qui va plus loin que ce que les données démontrent, écrivez-nous&nbsp;:
-            la correction sera faite et signalée.
+            la correction sera faite et signalée sur la{" "}
+            <Link href="/corrections">page des corrections</Link>, où figurent
+            déjà celles que nous avons dû faire.
           </p>
           <p>
             Sont particulièrement bienvenus les regards de spécialistes du droit

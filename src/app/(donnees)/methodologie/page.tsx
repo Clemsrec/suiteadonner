@@ -284,9 +284,10 @@ export default function Methodologie() {
           Trois limites demeurent. Un compte rendu peut n&apos;être pas encore publié
           au moment où nous lisons l&apos;agenda. Surtout, une commission classe des
           centaines de pétitions d&apos;office en une séance sans en nommer
-          aucune&nbsp;: nous relevons alors la séance et son effectif, mais aucun
-          signataire ne peut savoir si la sienne en faisait partie — le compte rendu
-          ne contient pas la liste. Enfin, les motivations réelles d&apos;un vote — ce
+          aucune&nbsp;: nous relevons alors la séance et son effectif, mais le compte
+          rendu ne joint la liste que dans un cas sur les trente-quatre que nous
+          avons lus. Partout ailleurs, un signataire ne peut pas savoir si la sienne
+          en faisait partie. Enfin, les motivations réelles d&apos;un vote — ce
           que chacun pense, ce qui s&apos;est décidé ailleurs — ne figurent dans aucun
           document&nbsp;: nous rapportons ce qui a été écrit, pas ce qui a été voulu.
         </p>
