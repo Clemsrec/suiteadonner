@@ -101,10 +101,10 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
             <p className={styles.pfCarteTexte}>
               que la commission a voté l&apos;examen de la pétition{" "}
               <Link href={`/petition/${attente.identifiant}`}>{attente.titre}</Link>
-              {pointFinal(attente.titre)} Un examen se conclut par un rapport&nbsp;; nous
-              n&apos;en avons trouvé aucun. Le décompte ne porte que sur les pétitions dont le
-              recueil est clos&nbsp;: une pétition encore ouverte à la signature n&apos;attend
-              rien.{" "}
+              {pointFinal(attente.titre)} Nous n&apos;avons trouvé aucun rapport la
+              concernant dans les corpus que nous lisons. Le décompte ne porte que sur les
+              pétitions dont le recueil est clos&nbsp;: une pétition encore ouverte à la
+              signature n&apos;attend rien.{" "}
               {synthese.nbAttenteRapport > 1
                 ? `${synthese.nbAttenteRapport} pétitions sont dans ce cas.`
                 : ""}

@@ -51,10 +51,21 @@ donnent un accès en lecture seule aux données de production. Voir le
 ## Avant d'ouvrir une PR
 
 ```bash
-npm run lint       # ESLint
-npm run verifier   # contrôles de cohérence sur le CSV canonique
-npm run build      # le site doit compiler
+npm run lint             # ESLint
+npm run verifier         # contrôles de cohérence sur le CSV canonique
+npm run build            # le site doit compiler
+npm run verifier:textes  # affirmations absolues affichées (nécessite le build)
 ```
+
+`verifier:textes` lit le HTML produit, pas le code : une phrase coupée par des
+balises passe inaperçue dans le JSX. Il casse dès qu'une phrase nouvelle porte un
+absolu — « jamais », « toujours », « aucun », « le seul » — sans être déclarée
+dans [scripts/affirmations-connues.json](scripts/affirmations-connues.json).
+
+Un absolu qui décrit **notre** comportement est légitime si le code le garantit.
+Un absolu sur l'Assemblée ou sur la procédure doit citer sa source, ou être borné
+(« sur les trente-quatre comptes rendus que nous avons lus »). Le détail est dans
+[CLAUDE.md](CLAUDE.md), avec la liste des erreurs qui ont motivé ce contrôle.
 
 - **Petites PR.** Une PR = un sujet. Pour un changement structurant (nouvelle
   page, nouveau champ dérivé, nouvelle source de données), ouvrez d'abord une

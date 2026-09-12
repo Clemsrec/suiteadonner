@@ -284,11 +284,12 @@ export default async function FichePetition({ params }: Params) {
                     Examen voté, aucun rapport trouvé depuis{" "}
                     {formatDelaiMois(moisDepuis(decisionLue.date))}.
                   </strong>{" "}
-                  La commission s&apos;est prononcée pour l&apos;examen de cette pétition, et un
-                  examen se conclut par un rapport. Nous n&apos;en avons trouvé aucun dans les
-                  corpus que nous lisons. Nous comptons le temps écoulé depuis ce vote&nbsp;;
-                  nous n&apos;en tirons aucune conclusion, et nous ignorons quel délai
-                  s&apos;applique.
+                  La commission s&apos;est prononcée pour l&apos;examen de cette pétition. Les
+                  rapports que nous avons trouvés pour d&apos;autres pétitions s&apos;intitulent
+                  eux-mêmes «&nbsp;en conclusion des travaux&nbsp;» sur la pétition
+                  concernée&nbsp;; pour celle-ci, nous n&apos;en avons trouvé aucun. Nous
+                  comptons le temps écoulé depuis ce vote&nbsp;; nous n&apos;en tirons aucune
+                  conclusion, et nous ignorons quel délai s&apos;applique.
                 </>
               ) : (
                 <>

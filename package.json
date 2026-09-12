@@ -3,15 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint",
-    "import:petitions": "npm run verifier && node --env-file=.env.local scripts/import-petitions.mjs",
-    "verifier": "node scripts/verifier-coherence.mjs",
+    "croiser": "node scripts/croiser-petitions-debats.mjs",
+    "dev": "next dev",
     "fetch:debats": "node scripts/fetch-debats.mjs",
     "fetch:reunions": "node scripts/fetch-reunions.mjs",
-    "croiser": "node scripts/croiser-petitions-debats.mjs"
+    "import:petitions": "npm run verifier && node --env-file=.env.local scripts/import-petitions.mjs",
+    "lint": "eslint",
+    "start": "next start",
+    "verifier": "node scripts/verifier-coherence.mjs",
+    "verifier:textes": "node scripts/verifier-affirmations.mjs"
   },
   "dependencies": {
     "@next/third-parties": "^16.2.12",
