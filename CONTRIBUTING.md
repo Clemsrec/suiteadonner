@@ -62,6 +62,10 @@ balises passe inaperçue dans le JSX. Il casse dès qu'une phrase nouvelle porte
 absolu — « jamais », « toujours », « aucun », « le seul » — sans être déclarée
 dans [scripts/affirmations-connues.json](scripts/affirmations-connues.json).
 
+Les entrées portant un champ `preuve` sont vérifiées dans le code : le contrôle
+ouvre le fichier cité et y cherche la chaîne déclarée. Une promesse dont le code
+cesse d'être porteur casse le contrôle, en nommant la phrase devenue fausse.
+
 Un absolu qui décrit **notre** comportement est légitime si le code le garantit.
 Un absolu sur l'Assemblée ou sur la procédure doit citer sa source, ou être borné
 (« sur les trente-quatre comptes rendus que nous avons lus »). Le détail est dans

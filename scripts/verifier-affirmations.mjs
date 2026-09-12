@@ -33,6 +33,12 @@
 // relisant ce HTML que les erreurs ci-dessus ont été trouvées, jamais en
 // relisant le code.
 //
+// Il vérifie aussi les PREUVES. Une entrée peut porter un champ `preuve`
+// { fichier, contient } : le contrôle ouvre ce fichier et y cherche cette
+// chaîne. Sans quoi une justification reste une parole — « analytics est
+// désactivé dans src/lib/algolia.ts » resterait affiché après la suppression
+// de ce réglage, et la politique de confidentialité mentirait en silence.
+//
 // Il ne juge pas les phrases : il les compare à celles déjà connues. Toute
 // phrase NOUVELLE portant un absolu casse le contrôle, et doit être inscrite
 // dans affirmations-connues.json avec la raison qui la fonde. Les phrases
@@ -126,6 +132,22 @@ async function main() {
     : { affirmations: [] };
   const index = new Map(connues.affirmations.map((a) => [a.texte, a]));
 
+  // Les preuves d'abord : une justification qui ne tient plus est plus grave
+  // qu'une phrase non déclarée, puisqu'elle a l'apparence d'une vérification.
+  const preuvesRompues = [];
+  const avecPreuve = connues.affirmations.filter((a) => a.preuve?.fichier && a.preuve?.contient);
+  for (const a of avecPreuve) {
+    const chemin = path.resolve(a.preuve.fichier);
+    if (!existsSync(chemin)) {
+      preuvesRompues.push({ a, motif: `fichier introuvable : ${a.preuve.fichier}` });
+      continue;
+    }
+    const source = await readFile(chemin, "utf8");
+    if (!source.includes(a.preuve.contient)) {
+      preuvesRompues.push({ a, motif: `« ${a.preuve.contient} » absent de ${a.preuve.fichier}` });
+    }
+  }
+
   const nouvelles = [...trouvees.keys()].filter((t) => !index.has(t));
   const disparues = connues.affirmations.filter((a) => !trouvees.has(a.texte));
   const dette = connues.affirmations.filter((a) => a.fonde === "heritee").length;
@@ -142,6 +164,13 @@ async function main() {
   if (aConfirmer) {
     console.log(`  et ${aConfirmer} décrivant notre comportement, à confirmer dans le code.`);
   }
+  const nous = connues.affirmations.filter((a) => a.fonde === "nous").length;
+  console.log(
+    `  preuves vérifiées dans le code : ${avecPreuve.length}` +
+      (nous > avecPreuve.length
+        ? ` — ${nous - avecPreuve.length} justification(s) « nous » restent sur parole.`
+        : "")
+  );
   if (disparues.length) {
     console.log(`\n${disparues.length} déclaration(s) sans phrase correspondante (texte réécrit ?) :`);
     for (const a of disparues.slice(0, 5)) console.log(`  – ${a.texte.slice(0, 90)}`);
@@ -177,6 +206,22 @@ async function main() {
     connues.affirmations.sort((a, b) => a.texte.localeCompare(b.texte, "fr"));
     await writeFile(REFERENCE, `${JSON.stringify(connues, null, 2)}\n`);
     console.log(`\n→ ${nouvelles.length} affirmation(s) inscrite(s) dans ${path.basename(REFERENCE)}.`);
+    return;
+  }
+
+  if (preuvesRompues.length) {
+    console.error(`\n✗ ${preuvesRompues.length} justification(s) que le code ne tient plus :\n`);
+    for (const { a, motif } of preuvesRompues) {
+      console.error(`  ${motif}`);
+      console.error(`  pour : ${a.texte.slice(0, 96)}\n`);
+    }
+    console.error(
+      "Soit le code a changé et la phrase affichée est devenue fausse — corrigez la\n" +
+        "phrase ; soit la preuve a bougé — corrigez-la. Ne retirez pas la preuve pour\n" +
+        "faire passer le contrôle : c'est elle qui distingue une vérification d'une\n" +
+        "affirmation."
+    );
+    process.exitCode = 1;
     return;
   }
 

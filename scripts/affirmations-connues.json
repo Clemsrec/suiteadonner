@@ -40,13 +40,21 @@
       "texte": "Aucun identifiant de session, aucun cookie et aucune donnée de compte n'est associé à cette requête.",
       "page": "politique-de-confidentialite.html",
       "fonde": "nous",
-      "note": "src/lib/algolia.ts : la requête ne transmet ni userToken ni cookie ; analytics et clickAnalytics sont à false."
+      "note": "src/lib/algolia.ts : la requête ne transmet ni userToken ni cookie ; analytics et clickAnalytics sont à false.",
+      "preuve": {
+        "fichier": "src/lib/algolia.ts",
+        "contient": "analytics: false"
+      }
     },
     {
       "texte": "Aucun traceur n'est chargé tant que vous ne l'avez pas accepté — voir la politique de cookies .",
       "page": "empreinte-carbone.html",
       "fonde": "nous",
-      "note": "MesureAudience.tsx : GoogleAnalytics n'est monté que si le choix vaut « accepte »."
+      "note": "MesureAudience.tsx : GoogleAnalytics n'est monté que si le choix vaut « accepte ».",
+      "preuve": {
+        "fichier": "src/app/MesureAudience.tsx",
+        "contient": "if (choix === \"accepte\") return <GoogleAnalytics"
+      }
     },
     {
       "texte": "Aucun transfert hors Union européenne n'est opéré de ce fait.",
@@ -76,13 +84,21 @@
       "texte": "Aucune police d'écriture n'est téléchargée — le site utilise celles déjà présentes dans votre système.",
       "page": "empreinte-carbone.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "src/app/globals.css",
+        "contient": "--font-sans"
+      }
     },
     {
       "texte": "Aucune valeur inventée Un champ absent reste absent.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "parseNombre et parseDate renvoient null ; formatSignatures affiche « non renseigné »."
+      "note": "parseNombre et parseDate renvoient null ; formatSignatures affiche « non renseigné ».",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "if (!brut) return null;"
+      }
     },
     {
       "texte": "C'est le seul motif pour lequel le fichier emploie une formule explicite : les autres classements y sont enregistrés sans qu'aucune raison soit écrite, ce qui est précisément ce qui les range dans les autres catégories.",
@@ -106,13 +122,21 @@
       "texte": "Ce délai est calculé au moment où la page est rendue, jamais figé en base — un compteur arrêté vieillirait sans que rien ne le signale.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "moisDepuis() est appelé au rendu ; seule la date est stockée."
+      "note": "moisDepuis() est appelé au rendu ; seule la date est stockée.",
+      "preuve": {
+        "fichier": "src/lib/petitions-format.ts",
+        "contient": "export function moisDepuis"
+      }
     },
     {
       "texte": "Ce dernier ne conserve aucune requête.",
       "page": "politique-de-confidentialite.html",
       "fonde": "nous",
-      "note": "Aucun stockage de requête côté site ; analytics désactivée dans src/lib/algolia.ts."
+      "note": "Aucun stockage de requête côté site ; analytics désactivée dans src/lib/algolia.ts.",
+      "preuve": {
+        "fichier": "src/lib/algolia.ts",
+        "contient": "clickAnalytics: false"
+      }
     },
     {
       "texte": "Ce que le site ne fait pas Aucune création de compte, aucune authentification Aucun formulaire de contact, d'inscription ou de commentaire Aucun cookie ni traceur sans votre consentement explicite et révocable Aucun pixel publicitaire, aucun réseau publicitaire Aucun profilage, aucune décision automatisée vous concernant Aucune revente ni transmission commerciale de données 3.",
@@ -142,7 +166,11 @@
       "texte": "Ce stockage est strictement nécessaire à la mémorisation de votre choix ; c'est la seule chose que le site écrit dans votre navigateur sans consentement, et il est exempté à ce titre.",
       "page": "politique-cookies.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "src/lib/consentement.ts",
+        "contient": "suiteadonner-consentement-audience"
+      }
     },
     {
       "texte": "Cela signifie que le suivi prévu pour l'expliquer au citoyen n'était renseigné pour aucune des initiatives listées ce jour-là : toutes restaient à l'état « Enregistrée ».",
@@ -154,13 +182,21 @@
       "texte": "Cet appel ne dépose aucun cookie, mais il transmet nécessairement votre adresse IP au service, comme toute requête réseau.",
       "page": "politique-cookies.html",
       "fonde": "nous",
-      "note": "Requête Algolia simple, sans cookie ; l'IP est transmise comme pour toute requête réseau."
+      "note": "Requête Algolia simple, sans cookie ; l'IP est transmise comme pour toute requête réseau.",
+      "preuve": {
+        "fichier": "src/lib/algolia.ts",
+        "contient": "analytics: false"
+      }
     },
     {
       "texte": "Cette base ne contient aucune donnée relative aux visiteurs : elle ne stocke que des données publiques issues de l'open data.",
       "page": "politique-de-confidentialite.html",
       "fonde": "nous",
-      "note": "firestore.rules : seules les collections petitions, meta et reunions existent, toutes en lecture publique."
+      "note": "firestore.rules : seules les collections petitions, meta et reunions existent, toutes en lecture publique.",
+      "preuve": {
+        "fichier": "firestore.rules",
+        "contient": "allow write: if false"
+      }
     },
     {
       "texte": "clement@nucom.fr Suite à donner — projet indépendant, non affilié à l'Assemblée nationale Toutes les pétitions Méthodologie clement@nucom.fr Mentions légales Confidentialité Cookies Empreinte carbone Plan du site",
@@ -184,13 +220,21 @@
       "texte": "Elle est calculée par votre navigateur, pour votre navigateur : aucun chiffre n'est transmis à l'éditeur ni à personne d'autre, et rien n'est écrit dans votre appareil — ni cookie, ni stockage local.",
       "page": "empreinte-carbone.html",
       "fonde": "nous",
-      "note": "src/app/useEmpreinte.ts et carbone-cost : aucun fetch sortant, aucun accès au stockage."
+      "note": "src/app/useEmpreinte.ts et carbone-cost : aucun fetch sortant, aucun accès au stockage.",
+      "preuve": {
+        "fichier": "src/app/useEmpreinte.ts",
+        "contient": "useCarbon"
+      }
     },
     {
       "texte": "En pratique, si vous n'avez pas accepté la mesure d'audience, l'absence de compte et de cookie fait qu'aucune donnée de navigation ne peut vous être rattachée : l'éditeur n'est pas en mesure de vous identifier à partir des seuls journaux techniques.",
       "page": "politique-de-confidentialite.html",
       "fonde": "nous",
-      "note": "Sans consentement, aucun script tiers n'est chargé : MesureAudience.tsx rend null."
+      "note": "Sans consentement, aucun script tiers n'est chargé : MesureAudience.tsx rend null.",
+      "preuve": {
+        "fichier": "src/app/MesureAudience.tsx",
+        "contient": "if (choix === undefined) return null;"
+      }
     },
     {
       "texte": "Enfin, les motivations réelles d'un vote — ce que chacun pense, ce qui s'est décidé ailleurs — ne figurent dans aucun document : nous rapportons ce qui a été écrit, pas ce qui a été voulu.",
@@ -238,13 +282,21 @@
       "texte": "L'onglet Réseau montre par ailleurs qu'aucune requête ne part vers les domaines de Google Analytics.",
       "page": "politique-cookies.html",
       "fonde": "nous",
-      "note": "Vérifiable par le visiteur lui-même ; garanti par MesureAudience.tsx."
+      "note": "Vérifiable par le visiteur lui-même ; garanti par MesureAudience.tsx.",
+      "preuve": {
+        "fichier": "src/app/MesureAudience.tsx",
+        "contient": "couperMesure"
+      }
     },
     {
       "texte": "La phrase est reproduite telle quelle, jamais reformulée, et le lien vers le compte rendu intégral l'accompagne.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "comptes-rendus.mjs sépare `texte` (cité) de `cle` (reconnaissance des motifs)."
+      "note": "comptes-rendus.mjs sépare `texte` (cité) de `cle` (reconnaissance des motifs).",
+      "preuve": {
+        "fichier": "scripts/lib/comptes-rendus.mjs",
+        "contient": "function phrases(paragraphe)"
+      }
     },
     {
       "texte": "La plateforme officielle nous sert à comparer et à mettre en contexte, jamais à établir un chiffre.",
@@ -256,7 +308,11 @@
       "texte": "La plateforme petitions.assemblee-nationale.fr sert de contexte et de comparaison, jamais de référence.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "Aucun script du dépôt ne lit la plateforme ; le CSV de data.gouv.fr est la seule source lue."
+      "note": "Aucun script du dépôt ne lit la plateforme ; le CSV de data.gouv.fr est la seule source lue.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "export const CSV_URL"
+      }
     },
     {
       "texte": "La présente rubrique ne restreint en aucune manière ces droits.",
@@ -298,13 +354,21 @@
       "texte": "Le motif d'un classement est donc toujours lu dans le texte de décision et dans les dates, jamais déduit du statut.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "motifClassement() lit decisionTexte et les dates ; le statut n'y intervient pas."
+      "note": "motifClassement() lit decisionTexte et les dates ; le statut n'y intervient pas.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "export function motifClassement"
+      }
     },
     {
       "texte": "Le seul traceur : la mesure d'audience Si, et seulement si, vous acceptez, le script Google Analytics 4 (société Google) est chargé et dépose les cookies suivants : _ga — identifiant attribué à votre navigateur, sans autre donnée d’identification, conservé 13 mois _ga_* — état de la session de consultation, conservé 13 mois Ces cookies permettent de compter les visites et les pages vues.",
       "page": "politique-cookies.html",
       "fonde": "nous",
-      "note": "Seul GA est chargé, et seulement après consentement ; aucun autre script tiers dans le bundle."
+      "note": "Seul GA est chargé, et seulement après consentement ; aucun autre script tiers dans le bundle.",
+      "preuve": {
+        "fichier": "src/app/MesureAudience.tsx",
+        "contient": "GoogleAnalytics"
+      }
     },
     {
       "texte": "Le vérifier vous-même Ces affirmations sont vérifiables en quelques secondes et ne demandent aucune confiance envers l'éditeur.",
@@ -340,13 +404,21 @@
       "texte": "Les pétitions de la législature 2017-2022 comptent dans nos autres chiffres, mais l'Assemblée ne publie pas ces corpus pour elle : aucune décision de commission ne peut leur être rattachée — notre périmètre et ses limites .",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Déclare notre périmètre, lu dans meta/reunions.perimetre et non écrit dans la page ; la législature non couverte y est un champ."
+      "note": "Déclare notre périmètre, lu dans meta/reunions.perimetre et non écrit dans la page ; la législature non couverte y est un champ.",
+      "preuve": {
+        "fichier": "scripts/fetch-reunions.mjs",
+        "contient": "LEGISLATURES = [\"17\", \"16\"]"
+      }
     },
     {
       "texte": "Les rapprochements entre une pétition et les débats parlementaires sont des recoupements thématiques établis par mots-clés , jamais des liens officiels confirmés : il n'existe aucun identifiant commun entre ces deux ensembles de données.",
       "page": "mentions-legales.html",
       "fonde": "nous",
-      "note": "croiser-petitions-debats.mjs n'écrit que dans .corpus/ ; aucune page ne le lit."
+      "note": "croiser-petitions-debats.mjs n'écrit que dans .corpus/ ; aucune page ne le lit.",
+      "preuve": {
+        "fichier": "scripts/croiser-petitions-debats.mjs",
+        "contient": ".corpus"
+      }
     },
     {
       "texte": "Les trois zéros ci-dessus, eux, ne prêtent à aucune ambiguïté.",
@@ -364,7 +436,11 @@
       "texte": "Nous affichons le seuil que le texte de la pétition écrit, et aucun quand il n'en écrit pas : il ne se déduit pas de la commission, un bureau pouvant changer sa règle.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "scripts/lib/petitions-source.mjs",
+        "contient": "export function seuilEnonce"
+      }
     },
     {
       "texte": "Nous avons vérifié la page officielle de ces pétitions : elle affiche la date limite et le statut « Acceptées », et n'emploie jamais la formule « en cours de signature ».",
@@ -376,7 +452,11 @@
       "texte": "Nous comptons le temps écoulé depuis le vote et n'en tirons aucune conclusion : nous ne savons pas quel délai s'applique, ni si un rapport viendra.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "preuve": {
+        "fichier": "src/lib/petitions-format.ts",
+        "contient": "attenteMesurable"
+      }
     },
     {
       "texte": "Nous constatons une absence, nous n'en déduisons rien — nous ignorons si une décision a été prise sans être rendue publique, ou si aucune ne l'a été.",
@@ -466,7 +546,11 @@
       "texte": "Sans numéro cité, rien n'est affiché — à la seule exception du référent unique décrit plus haut, signalé comme tel sous la citation — voir ces décisions .",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "comptes-rendus.mjs : FORMES exige le numéro ; FORMES_SANS_NUMERO n'agit que si le référent est unique."
+      "note": "comptes-rendus.mjs : FORMES exige le numéro ; FORMES_SANS_NUMERO n'agit que si le référent est unique.",
+      "preuve": {
+        "fichier": "scripts/lib/comptes-rendus.mjs",
+        "contient": "FORMES_SANS_NUMERO"
+      }
     },
     {
       "texte": "Segment g CO 2 e / Go Part Centre de données 33,1 22 % Réseau de transport 35,6 24 % Votre appareil 79,5 54 % Ce coefficient est une convention de place, pas une mesure de notre infrastructure : nous ne disposons d'aucun relevé de consommation de nos serveurs, et notre hébergeur n'en publie pas.",
@@ -478,7 +562,11 @@
       "texte": "Si vous refusez, ou si vous ignorez la bannière, rien n'est déposé et aucune donnée n'est transmise à Google.",
       "page": "politique-cookies.html",
       "fonde": "nous",
-      "note": "MesureAudience.tsx : « refuse » et l'absence de choix rendent null, sans charger GA."
+      "note": "MesureAudience.tsx : « refuse » et l'absence de choix rendent null, sans charger GA.",
+      "preuve": {
+        "fichier": "src/app/MesureAudience.tsx",
+        "contient": "if (choix === \"refuse\") return null;"
+      }
     },
     {
       "texte": "Sont particulièrement bienvenus les regards de spécialistes du droit parlementaire, de journalistes et de chercheurs, ainsi que toute aide technique sur la récupération et le recoupement des données.",
@@ -544,7 +632,11 @@
       "texte": "Un nombre de signatures manquant s'affiche « non renseigné » et jamais « 0 » — écrire zéro reviendrait à affirmer « aucun soutien » là où le fichier ne dit rien.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "formatSignatures(null) renvoie « non renseigné » ; verifier-coherence contrôle la règle."
+      "note": "formatSignatures(null) renvoie « non renseigné » ; verifier-coherence contrôle la règle.",
+      "preuve": {
+        "fichier": "src/lib/petitions-format.ts",
+        "contient": "return nbVotes === null ? \"non renseigné\""
+      }
     },
     {
       "texte": "Un recoupement n'est pas un lien officiel Il n'existe aucun identifiant commun entre une pétition et un débat parlementaire.",
@@ -562,7 +654,11 @@
       "texte": "Une seule exception, et elle ne demande aucune déduction : lorsque l'ordre du jour de la réunion ne désigne qu'une pétition, par son numéro, et que le compte rendu n'en cite aucune autre, la décision qui ne la nomme pas ne peut désigner qu'elle.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "extraireDecisions() vérifie qu'aucun autre numéro n'est cité dans le document."
+      "note": "extraireDecisions() vérifie qu'aucun autre numéro n'est cité dans le document.",
+      "preuve": {
+        "fichier": "scripts/lib/comptes-rendus.mjs",
+        "contient": "referentUnique"
+      }
     },
     {
       "texte": "Une seule source canonique Tous les chiffres proviennent du fichier officiel des pétitions de l'Assemblée nationale publié sur data.gouv.fr, complété par l' agenda officiel des réunions de l'Assemblée et par les comptes rendus que ces réunions produisent, pour les passages en commission.",
@@ -574,7 +670,11 @@
       "texte": "Votre navigateur ne contacte donc jamais Firestore, et votre adresse IP ne lui est pas transmise.",
       "page": "politique-cookies.html",
       "fonde": "nous",
-      "note": "Toutes les lectures Firestore sont faites par des Server Components ; aucun composant client n'importe les fonctions de lecture (voir src/lib/petitions-format.ts)."
+      "note": "Toutes les lectures Firestore sont faites par des Server Components ; aucun composant client n'importe les fonctions de lecture (voir src/lib/petitions-format.ts).",
+      "preuve": {
+        "fichier": "src/lib/petitions-format.ts",
+        "contient": "export function formatSignatures"
+      }
     }
   ]
 }
