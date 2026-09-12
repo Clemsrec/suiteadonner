@@ -49,12 +49,19 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
         reproduisons la phrase officielle et donnons le lien vers le texte intégral —{" "}
         <Link href="/passages-en-commission">voir les décisions et leurs sources</Link>.
       </p>
-      <p className={styles.pfPerimetre}>
-        Ces chiffres portent sur les deux législatures dont l&apos;Assemblée publie les
-        réunions, comptes rendus et rapports. Les pétitions déposées avant 2022 comptent
-        dans nos autres chiffres, mais aucune décision de commission ne peut leur être
-        rattachée — <Link href="/methodologie">notre périmètre et ses limites</Link>.
-      </p>
+      {synthese.perimetre && (
+        <p className={styles.pfPerimetre}>
+          Ces chiffres portent sur{" "}
+          {synthese.perimetre.legislatures.length === 1
+            ? "une législature"
+            : `${synthese.perimetre.legislatures.length} législatures`}{" "}
+          et sur les {synthese.perimetre.comptesRendusLus} comptes rendus que nous en avons
+          lus. Les pétitions de la législature {synthese.perimetre.legislatureNonCouverte}{" "}
+          comptent dans nos autres chiffres, mais l&apos;Assemblée ne publie pas ces corpus
+          pour elle&nbsp;: aucune décision de commission ne peut leur être rattachée —{" "}
+          <Link href="/methodologie">notre périmètre et ses limites</Link>.
+        </p>
+      )}
 
       <div className={styles.pfCartes}>
         {emblematique && (

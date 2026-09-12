@@ -11,7 +11,11 @@ import { db } from "./firebase";
 // texte de décision indique un classement d'office.
 
 export * from "./petitions-format";
-import type { Petition } from "./petitions-format";
+import type {
+  PassageEnCommission,
+  Petition,
+  SyntheseCommission,
+} from "./petitions-format";
 
 export type Stats = {
   calculeLe: string;
@@ -205,157 +209,6 @@ export async function getEcartStatutDates(max = 5): Promise<Petition[]> {
   return snap.docs.map((d) => d.data() as Petition);
 }
 
-/**
- * Décision énoncée par la commission dans le compte rendu de sa réunion, là où
- * le fichier public laisse souvent le champ prévu vide. Extraite par
- * scripts/lib/comptes-rendus.mjs, qui n'en retient que les formes citant le
- * numéro de la pétition : la commission désigne elle-même, rien n'est déduit.
- */
-export type DecisionCompteRendu = {
-  sens: "examen" | "classement";
-  /** La phrase officielle, reproduite sans modification. */
-  citation: string;
-  /**
-   * Comment la décision a été rattachée à cette pétition — le site l'affiche,
-   * pour que le lecteur juge de la solidité du lien :
-   * « cite » la phrase nomme la pétition ; « unique » elle ne la nomme pas,
-   * mais le compte rendu ne traite que d'elle et l'ordre du jour la désignait
-   * par son numéro.
-   */
-  referent: "cite" | "unique";
-  url: string;
-};
-
-export type ReunionCommission = {
-  date: string;
-  etat: string | null;
-  organeRef: string | null;
-  compteRenduRef: string | null;
-  intitule: string;
-  estCommission: boolean;
-  /**
-   * Comment la commission a désigné la pétition — les trois voies sont d'égale
-   * certitude, aucune ne repose sur une déduction de notre part :
-   * « numero » et « titre », lus dans l'ordre du jour ; « compte-rendu »,
-   * lorsque seul le compte rendu de la réunion la nomme.
-   */
-  appariement: "numero" | "titre" | "compte-rendu";
-  decision: DecisionCompteRendu | null;
-};
-
-export type PassageEnCommission = {
-  identifiant: string;
-  titre: string;
-  /** Absent du fichier pour certaines pétitions : jamais remplacé par zéro. */
-  nbVotes: number | null;
-  statut: string;
-  commission: string;
-  decisionPubliee: boolean;
-  /** Le champ « décision de la commission » du fichier public, mot pour mot. */
-  decisionTexte: string | null;
-  /** Date limite de signature, pour distinguer un recueil clos d'un recueil en cours. */
-  dateLimiteVote: string | null;
-  url: string;
-  nbReunions: number;
-  premiereReunion: string;
-  derniereReunion: string;
-  /** La plus récente des décisions lues dans les comptes rendus. */
-  derniereDecision: (DecisionCompteRendu & { date: string; compteRenduRef: string }) | null;
-  /** Le rapport déposé au terme d'un examen, quand il existe. */
-  rapport: RapportCommission | null;
-  reunions: ReunionCommission[];
-};
-
-/** Une pétition résumée pour l'accueil, sans charger sa fiche. */
-export type CasCommission = {
-  identifiant: string;
-  titre: string;
-  nbVotes: number | null;
-  statut: string;
-  sens: "examen" | "classement" | null;
-  date: string | null;
-  /** Ce que le fichier public écrit, s'il écrit quelque chose. */
-  decisionTexte: string | null;
-  /** Ce que la commission a écrit dans son compte rendu. */
-  citation: string | null;
-};
-
-/**
- * Le rapport qu'une commission dépose au terme de l'examen d'une pétition — la
- * seule suite écrite, argumentée et signée qu'une pétition puisse recevoir. Ni
- * le fichier de data.gouv.fr ni la fiche de la pétition sur la plateforme n'y
- * renvoient : le lien se lit dans le titre du rapport, qui cite son numéro.
- */
-export type RapportCommission = {
-  /** Numéro du rapport parlementaire, ex. « 2069 ». */
-  numero: string | null;
-  uid: string;
-  dateDepot: string | null;
-  /** L'intitulé officiel du document, reproduit sans modification. */
-  titre: string;
-  url: string;
-};
-
-/**
- * Une séance où une commission classe d'office, en bloc, toutes les pétitions
- * de son ressort restées sous le seuil de signatures. Aucune n'y est nommée :
- * le relevé porte donc sur la séance, jamais sur une pétition en particulier.
- */
-export type ClassementEnBloc = {
-  date: string;
-  nombre: number;
-  citation: string;
-  /**
-   * « accompli » : le compte rendu constate le classement. « proposition » :
-   * un rapporteur le propose — deux séances sur trois sont dans ce cas, et les
-   * présenter comme acquises ferait dire au site plus que le document.
-   */
-  nature: "accompli" | "proposition";
-  /** Le paragraphe mentionne « (Assentiment.) » — fait du document, pas conclusion. */
-  assentiment: boolean;
-  compteRenduRef: string;
-  url: string;
-};
-
-/**
- * Les points forts de l'accueil, calculés par scripts/fetch-reunions.mjs et
- * relus d'un seul document. Aucun de ces chiffres n'est écrit dans le code :
- * deux constats de l'accueil l'ont été et ont fini par affirmer le faux.
- */
-export type SyntheseCommission = {
-  nbPetitions: number;
-  nbDecisions: number;
-  nbDecisionsAbsentesDuFichier: number;
-  signaturesDecisionsAbsentes: number;
-  emblematique: CasCommission | null;
-  nbDivergences: number;
-  divergence: CasCommission | null;
-  nbDecisionsAttendues: number;
-  signaturesDecisionsAttendues: number;
-  classementsEnBloc: ClassementEnBloc[];
-  nbClassementsEnBloc: number;
-  /** Effectif cumulé annoncé en séance, propositions comprises. */
-  petitionsClasseesEnBloc: number;
-  attenteRapport: {
-    identifiant: string;
-    titre: string;
-    nbVotes: number | null;
-    statut: string;
-    /** Date à laquelle la commission a voté l'examen. */
-    dateExamen: string;
-    dateLimiteVote: string | null;
-    citation: string;
-    url: string;
-  }[];
-  nbAttenteRapport: number;
-  signaturesAttenteRapport: number;
-  nbRapports: number;
-  rapports: (RapportCommission & {
-    identifiant: string;
-    titrePetition: string;
-    nbVotes: number | null;
-  })[];
-};
 
 export async function getSyntheseCommission(): Promise<SyntheseCommission | null> {
   const snap = await getDoc(doc(db, "meta", "reunions"));

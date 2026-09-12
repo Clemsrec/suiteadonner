@@ -492,7 +492,7 @@ async function collecterRapports(resultats, petitions) {
 // La date du jour, isolée pour que la règle de clôture se lise d'un coup.
 const aujourdhui = () => new Date().toISOString().slice(0, 10);
 
-function construireSynthese(resultats, classementsEnBloc = []) {
+function construireSynthese(resultats, classementsEnBloc = [], lus = 0) {
   const decidees = resultats.filter((r) => r.derniereDecision);
   const avecRapport = resultats.filter((r) => r.rapport);
 
@@ -563,6 +563,16 @@ function construireSynthese(resultats, classementsEnBloc = []) {
     // Le classement en bloc : le sort le plus courant, et le seul qui ne
     // laisse aucune trace au nom de la pétition concernée.
     classementsEnBloc,
+    // Le périmètre voyage avec les chiffres. Séparé de la page, il se perdait :
+    // les totaux ne portaient que sur deux législatures et se lisaient comme des
+    // états complets — c'est ainsi qu'on a publié « un seul rapport » quand il y
+    // en avait trois.
+    perimetre: {
+      legislatures: LEGISLATURES,
+      legislatureNonCouverte: "2017-2022",
+      comptesRendusLus: lus,
+      calculeLe: aujourdhui(),
+    },
     nbClassementsEnBloc: classementsEnBloc.length,
     petitionsClasseesEnBloc: classementsEnBloc.reduce((t, c) => t + c.nombre, 0),
     // Le rapport est la seule suite écrite, argumentée et signée qu'une
@@ -829,7 +839,7 @@ async function main() {
 
   verifierDecisions(resultats);
 
-  const synthese = construireSynthese(resultats, cr?.classementsEnBloc ?? []);
+  const synthese = construireSynthese(resultats, cr?.classementsEnBloc ?? [], cr?.lus ?? 0);
   console.log(
     `\nSynthèse : ${synthese.nbDecisionsAbsentesDuFichier} décision(s) absente(s) du fichier, ` +
       `${(synthese.signaturesDecisionsAbsentes ?? 0).toLocaleString("fr-FR")} signatures cumulées` +

@@ -12,6 +12,7 @@ import {
   formatFrDate,
   formatSignatures,
   getPetition,
+  etatPetition,
   getReunionsPetition,
   moisDepuis,
   type Petition,
@@ -131,13 +132,10 @@ export default async function FichePetition({ params }: Params) {
   const passages = await getReunionsPetition(identifiant).catch(() => null);
 
   const annee = p.datePublication?.slice(0, 4) ?? null;
-  const sansDecisionPubliee = p.statutSource === "classee" && p.motifClassement === "absent";
-  // La décision que la commission a énoncée dans son compte rendu, quand elle y
-  // nomme la pétition. Le plus souvent absente : c'est le cas normal.
-  const decisionLue = passages?.derniereDecision ?? null;
-  // Le rapport déposé au terme d'un examen. Très rare : trois pétitions du
-  // fichier en ont reçu un au 10/09/2026, sur les corpus que nous lisons.
-  const rapport = passages?.rapport ?? null;
+  // Un seul endroit qualifie l'état d'une pétition, en voyant tous ses champs :
+  // la fiche n'écrit plus ses propres conditions. Voir etatPetition().
+  const etat = etatPetition({ ...p, ...passages });
+  const { decisionLue, rapport } = etat;
 
   const filAriane = {
     "@context": "https://schema.org",
@@ -174,8 +172,8 @@ export default async function FichePetition({ params }: Params) {
         </p>
         <h1>{p.titre}</h1>
         <div className={styles.etat}>
-          <span className={`${cartes.tag} ${sansDecisionPubliee ? cartes.tagNone : cartes.tagExamined}`}>
-            {sansDecisionPubliee ? "Décision non publiée" : p.statutLabel}
+          <span className={`${cartes.tag} ${etat.classeeSansMotif ? cartes.tagNone : cartes.tagExamined}`}>
+            {etat.classeeSansMotif ? "Décision non publiée" : p.statutLabel}
           </span>
           <span>
             <span className={styles.n}>{formatSignatures(p.nbVotes)}</span> soutiens
@@ -223,7 +221,7 @@ export default async function FichePetition({ params }: Params) {
             deux libellés identiques à l&apos;œil ne comptent pas pour deux. Un champ vide
             est affiché vide.
           </p>
-          {p.decisionTexte ? (
+          {etat.decisionAuFichier === "publiee" ? (
             <blockquote className={styles.citation}>
               {p.decisionTexte}
               <span className={styles.citationSource}>
@@ -258,7 +256,7 @@ export default async function FichePetition({ params }: Params) {
                   .
                 </span>
               </blockquote>
-              {p.decisionTexte ? (
+              {etat.deuxTextesOfficiels ? (
                 <p className={styles.encadre}>
                   <strong>Deux textes officiels portent sur cette pétition.</strong>{" "}
                   Le fichier réutilisable et le compte rendu de la commission émanent tous deux
@@ -276,9 +274,9 @@ export default async function FichePetition({ params }: Params) {
             </>
           )}
 
-          {decisionLue?.sens === "examen" && !rapport && (
+          {etat.examenSansRapport && decisionLue && (
             <p className={styles.encadre}>
-              {p.recueilTermine ? (
+              {etat.attenteMesurable ? (
                 <>
                   <strong>
                     Examen voté, aucun rapport trouvé depuis{" "}
@@ -337,7 +335,7 @@ export default async function FichePetition({ params }: Params) {
             ))}
           </ul>
 
-          {sansDecisionPubliee && (
+          {etat.classeeSansMotif && (
             <p className={styles.encadre}>
               <strong>Classée sans décision publiée.</strong>{" "}Le jeu de données officiel
               prévoit un champ pour motiver le classement d&apos;une pétition&nbsp;:

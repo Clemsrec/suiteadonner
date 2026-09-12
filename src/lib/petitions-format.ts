@@ -184,3 +184,258 @@ export function acteCommission(intitule: string): string {
   return "Évoquée en réunion";
 }
 
+/**
+ * Décision énoncée par la commission dans le compte rendu de sa réunion, là où
+ * le fichier public laisse souvent le champ prévu vide. Extraite par
+ * scripts/lib/comptes-rendus.mjs, qui n'en retient que les formes citant le
+ * numéro de la pétition : la commission désigne elle-même, rien n'est déduit.
+ */
+export type DecisionCompteRendu = {
+  sens: "examen" | "classement";
+  /** La phrase officielle, reproduite sans modification. */
+  citation: string;
+  /**
+   * Comment la décision a été rattachée à cette pétition — le site l'affiche,
+   * pour que le lecteur juge de la solidité du lien :
+   * « cite » la phrase nomme la pétition ; « unique » elle ne la nomme pas,
+   * mais le compte rendu ne traite que d'elle et l'ordre du jour la désignait
+   * par son numéro.
+   */
+  referent: "cite" | "unique";
+  url: string;
+};
+
+export type ReunionCommission = {
+  date: string;
+  etat: string | null;
+  organeRef: string | null;
+  compteRenduRef: string | null;
+  intitule: string;
+  estCommission: boolean;
+  /**
+   * Comment la commission a désigné la pétition — les trois voies sont d'égale
+   * certitude, aucune ne repose sur une déduction de notre part :
+   * « numero » et « titre », lus dans l'ordre du jour ; « compte-rendu »,
+   * lorsque seul le compte rendu de la réunion la nomme.
+   */
+  appariement: "numero" | "titre" | "compte-rendu";
+  decision: DecisionCompteRendu | null;
+};
+
+export type PassageEnCommission = {
+  identifiant: string;
+  titre: string;
+  /** Absent du fichier pour certaines pétitions : jamais remplacé par zéro. */
+  nbVotes: number | null;
+  statut: string;
+  commission: string;
+  decisionPubliee: boolean;
+  /** Le champ « décision de la commission » du fichier public, mot pour mot. */
+  decisionTexte: string | null;
+  /** Date limite de signature, pour distinguer un recueil clos d'un recueil en cours. */
+  dateLimiteVote: string | null;
+  url: string;
+  nbReunions: number;
+  premiereReunion: string;
+  derniereReunion: string;
+  /** La plus récente des décisions lues dans les comptes rendus. */
+  derniereDecision: (DecisionCompteRendu & { date: string; compteRenduRef: string }) | null;
+  /** Le rapport déposé au terme d'un examen, quand il existe. */
+  rapport: RapportCommission | null;
+  reunions: ReunionCommission[];
+};
+
+/** Une pétition résumée pour l'accueil, sans charger sa fiche. */
+export type CasCommission = {
+  identifiant: string;
+  titre: string;
+  nbVotes: number | null;
+  statut: string;
+  sens: "examen" | "classement" | null;
+  date: string | null;
+  /** Ce que le fichier public écrit, s'il écrit quelque chose. */
+  decisionTexte: string | null;
+  /** Ce que la commission a écrit dans son compte rendu. */
+  citation: string | null;
+};
+
+/**
+ * Le rapport qu'une commission dépose au terme de l'examen d'une pétition — la
+ * seule suite écrite, argumentée et signée qu'une pétition puisse recevoir. Ni
+ * le fichier de data.gouv.fr ni la fiche de la pétition sur la plateforme n'y
+ * renvoient : le lien se lit dans le titre du rapport, qui cite son numéro.
+ */
+export type RapportCommission = {
+  /** Numéro du rapport parlementaire, ex. « 2069 ». */
+  numero: string | null;
+  uid: string;
+  dateDepot: string | null;
+  /** L'intitulé officiel du document, reproduit sans modification. */
+  titre: string;
+  url: string;
+};
+
+/**
+ * Une séance où une commission classe d'office, en bloc, toutes les pétitions
+ * de son ressort restées sous le seuil de signatures. Aucune n'y est nommée :
+ * le relevé porte donc sur la séance, jamais sur une pétition en particulier.
+ */
+export type ClassementEnBloc = {
+  date: string;
+  nombre: number;
+  citation: string;
+  /**
+   * « accompli » : le compte rendu constate le classement. « proposition » :
+   * un rapporteur le propose — deux séances sur trois sont dans ce cas, et les
+   * présenter comme acquises ferait dire au site plus que le document.
+   */
+  nature: "accompli" | "proposition";
+  /** Le paragraphe mentionne « (Assentiment.) » — fait du document, pas conclusion. */
+  assentiment: boolean;
+  compteRenduRef: string;
+  url: string;
+};
+
+/**
+ * Les points forts de l'accueil, calculés par scripts/fetch-reunions.mjs et
+ * relus d'un seul document. Aucun de ces chiffres n'est écrit dans le code :
+ * deux constats de l'accueil l'ont été et ont fini par affirmer le faux.
+ */
+export type SyntheseCommission = {
+  nbPetitions: number;
+  nbDecisions: number;
+  nbDecisionsAbsentesDuFichier: number;
+  signaturesDecisionsAbsentes: number;
+  emblematique: CasCommission | null;
+  nbDivergences: number;
+  divergence: CasCommission | null;
+  nbDecisionsAttendues: number;
+  signaturesDecisionsAttendues: number;
+  classementsEnBloc: ClassementEnBloc[];
+  /**
+   * Ce que ces chiffres couvrent. Attaché à la synthèse et non à une page : un
+   * total qui voyage sans son périmètre finit par se lire comme exhaustif.
+   */
+  perimetre: {
+    legislatures: string[];
+    /** Législature dont l'Assemblée ne publie pas ces corpus à cette adresse. */
+    legislatureNonCouverte: string;
+    comptesRendusLus: number;
+    calculeLe: string;
+  };
+  nbClassementsEnBloc: number;
+  /** Effectif cumulé annoncé en séance, propositions comprises. */
+  petitionsClasseesEnBloc: number;
+  attenteRapport: {
+    identifiant: string;
+    titre: string;
+    nbVotes: number | null;
+    statut: string;
+    /** Date à laquelle la commission a voté l'examen. */
+    dateExamen: string;
+    dateLimiteVote: string | null;
+    citation: string;
+    url: string;
+  }[];
+  nbAttenteRapport: number;
+  signaturesAttenteRapport: number;
+  nbRapports: number;
+  rapports: (RapportCommission & {
+    identifiant: string;
+    titrePetition: string;
+    nbVotes: number | null;
+  })[];
+};
+
+/**
+ * L'état d'une pétition, qualifié en un seul endroit.
+ *
+ * POURQUOI CETTE FONCTION EXISTE
+ *
+ * Chaque page qualifiait la même pétition à sa façon, dans des conditions
+ * écrites à même le JSX. L'une d'elles regardait `derniereDecision` sans voir
+ * `dateLimiteVote`, et la fiche de la pétition n° 3070 a affiché « rapport
+ * attendu depuis 5 mois » alors que son recueil courait jusqu'en 2029 : le
+ * compteur y suggérait un retard que rien n'établissait.
+ *
+ * Un `if` local ne voit que ce qu'on lui passe. Cette fonction reçoit la
+ * pétition et son dossier de commission, et croise les champs une fois pour
+ * toutes ; les pages n'ont plus qu'à afficher un état déjà qualifié. Toute
+ * nouvelle qualification s'ajoute ici, jamais dans une page.
+ */
+export type EtatPetition = {
+  /** Le fichier public porte-t-il un texte de décision ? */
+  decisionAuFichier: "publiee" | "absente";
+  /** « inconnu » quand le fichier ne renseigne aucune date limite. */
+  recueil: "clos" | "en-cours" | "inconnu";
+  /** Ce que la commission a écrit dans son compte rendu, s'il a pu être lu. */
+  decisionLue: (DecisionCompteRendu & { date: string; compteRenduRef: string }) | null;
+  rapport: RapportCommission | null;
+  /**
+   * Le fichier et un compte rendu portent chacun un texte sur cette pétition.
+   * Le site les affiche alors côte à côte — il ne les compare pas, et ne
+   * prétend donc jamais qu'ils divergent.
+   */
+  deuxTextesOfficiels: boolean;
+  /** Un examen a été voté, et aucun rapport n'a été trouvé. */
+  examenSansRapport: boolean;
+  /**
+   * Le délai depuis ce vote a-t-il un sens ? Seulement si le recueil est clos :
+   * une pétition encore ouverte à la signature n'attend rien.
+   */
+  attenteMesurable: boolean;
+  /** Classée, et le champ prévu pour motiver la décision est resté vide. */
+  classeeSansMotif: boolean;
+};
+
+/**
+ * Une seule entrée, et des champs tous facultatifs sauf ceux qui fondent l'état.
+ * La fiche d'une pétition passe son `Petition` complété de son document
+ * `reunions` ; une liste de passages passe le document `reunions` seul, qui
+ * porte déjà le texte de décision et la date limite. Deux signatures auraient
+ * signifié deux endroits où qualifier, donc deux endroits où se tromper.
+ */
+export type SourceEtat = {
+  statutSource?: StatutSource;
+  motifClassement?: MotifClassement;
+  decisionTexte: string | null;
+  dateLimiteVote: string | null;
+  /** Calculé depuis la date limite s'il n'est pas fourni. */
+  recueilTermine?: boolean;
+  derniereDecision?: (DecisionCompteRendu & { date: string; compteRenduRef: string }) | null;
+  rapport?: RapportCommission | null;
+};
+
+export function etatPetition(source: SourceEtat, aujourdhui = new Date()): EtatPetition {
+  const decisionLue = source.derniereDecision ?? null;
+  const rapport = source.rapport ?? null;
+
+  const clos =
+    source.recueilTermine ??
+    Boolean(source.dateLimiteVote && source.dateLimiteVote < aujourdhui.toISOString().slice(0, 10));
+  const recueil: EtatPetition["recueil"] = !source.dateLimiteVote
+    ? "inconnu"
+    : clos
+      ? "clos"
+      : "en-cours";
+
+  const examenSansRapport = decisionLue?.sens === "examen" && !rapport;
+
+  // Sans motif calculé, on retombe sur ce que le document porte : un sort
+  // décidé et aucun texte. C'est la même définition, lue autrement.
+  const sortDecide = source.motifClassement
+    ? source.motifClassement === "absent"
+    : ["classee", "archivee", "expiree"].includes(source.statutSource ?? "");
+
+  return {
+    decisionAuFichier: source.decisionTexte ? "publiee" : "absente",
+    recueil,
+    decisionLue,
+    rapport,
+    deuxTextesOfficiels: Boolean(source.decisionTexte && decisionLue),
+    examenSansRapport,
+    // La condition qui manquait : le délai ne se compte que sur un recueil clos.
+    attenteMesurable: examenSansRapport && recueil === "clos",
+    classeeSansMotif: sortDecide && !source.decisionTexte,
+  };
+}

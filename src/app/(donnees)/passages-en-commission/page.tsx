@@ -4,6 +4,7 @@ import styles from "../donnees.module.css";
 import cartes from "@/app/page.module.css";
 import { FriseReunions } from "@/app/FriseReunions";
 import {
+  etatPetition,
   formatFrDate,
   formatSignatures,
   getPassagesEnCommission,
@@ -38,9 +39,13 @@ export default async function PassagesEnCommission() {
   // Ces décomptes étaient écrits en dur dans le chapeau. Ils ont cessé d'être
   // vrais le jour où une pétition de la liste a eu, elle, un texte de décision
   // au fichier : on les calcule désormais sur les données affichées.
+  //
+  // Le croisement des champs passe par etatPetition(), comme sur la fiche : une
+  // page ne qualifie plus une pétition avec ses propres conditions.
+  const etats = new Map(passages.map((p) => [p.identifiant, etatPetition(p)]));
   const sansDecision = passages.filter((p) => !p.decisionPubliee);
-  const avecDecisionLue = passages.filter((p) => p.derniereDecision);
-  const divergentes = passages.filter((p) => p.derniereDecision && p.decisionTexte);
+  const avecDecisionLue = passages.filter((p) => etats.get(p.identifiant)?.decisionLue);
+  const divergentes = passages.filter((p) => etats.get(p.identifiant)?.deuxTextesOfficiels);
 
   return (
     <>
@@ -123,7 +128,7 @@ export default async function PassagesEnCommission() {
 
               <FriseReunions reunions={p.reunions} />
 
-              {p.decisionTexte && p.derniereDecision && (
+              {etats.get(p.identifiant)?.deuxTextesOfficiels && p.derniereDecision && (
                 <div className={styles.encadre}>
                   <strong>Deux textes officiels portent sur cette pétition.</strong>{" "}
                   Le fichier public écrit&nbsp;: «&nbsp;{p.decisionTexte}&nbsp;»

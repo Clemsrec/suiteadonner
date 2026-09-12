@@ -337,10 +337,10 @@
       "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
     },
     {
-      "texte": "Les pétitions déposées avant 2022 comptent dans nos autres chiffres, mais aucune décision de commission ne peut leur être rattachée — notre périmètre et ses limites .",
+      "texte": "Les pétitions de la législature 2017-2022 comptent dans nos autres chiffres, mais l'Assemblée ne publie pas ces corpus pour elle : aucune décision de commission ne peut leur être rattachée — notre périmètre et ses limites .",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026."
+      "note": "Déclare notre périmètre, lu dans meta/reunions.perimetre et non écrit dans la page ; la législature non couverte y est un champ."
     },
     {
       "texte": "Les rapprochements entre une pétition et les débats parlementaires sont des recoupements thématiques établis par mots-clés , jamais des liens officiels confirmés : il n'existe aucun identifiant commun entre ces deux ensembles de données.",
