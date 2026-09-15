@@ -1,0 +1,1608 @@
+{
+  "version": 1,
+  "generatedAt": "2026-09-15T10:35:36.537Z",
+  "codegraph": {
+    "version": "1.6.0"
+  },
+  "stats": {
+    "files": 55,
+    "edges": 155,
+    "client": 7,
+    "server": 21,
+    "universal": 27
+  },
+  "files": [
+    {
+      "file": ".github/workflows/import-petitions.yml",
+      "language": "yaml",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 0
+    },
+    {
+      "file": "apphosting.yaml",
+      "language": "yaml",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 0
+    },
+    {
+      "file": "eslint.config.mjs",
+      "language": "javascript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 5
+    },
+    {
+      "file": "next.config.ts",
+      "language": "typescript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 6
+    },
+    {
+      "file": "scripts/croiser-petitions-debats.mjs",
+      "language": "javascript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 27
+    },
+    {
+      "file": "scripts/fetch-debats.mjs",
+      "language": "javascript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 6,
+      "criticalityLevel": "low",
+      "inDegree": 1,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 29
+    },
+    {
+      "file": "scripts/fetch-reunions.mjs",
+      "language": "javascript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 6,
+      "criticalityLevel": "low",
+      "inDegree": 1,
+      "outDegree": 4,
+      "tags": [],
+      "symbolCount": 38
+    },
+    {
+      "file": "scripts/import-petitions.mjs",
+      "language": "javascript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 6,
+      "criticalityLevel": "low",
+      "inDegree": 1,
+      "outDegree": 1,
+      "tags": [],
+      "symbolCount": 19
+    },
+    {
+      "file": "scripts/lib/comptes-rendus.mjs",
+      "language": "javascript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 6,
+      "criticalityLevel": "low",
+      "inDegree": 1,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 26
+    },
+    {
+      "file": "scripts/lib/petitions-source.mjs",
+      "language": "javascript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 18,
+      "criticalityLevel": "low",
+      "inDegree": 3,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 16
+    },
+    {
+      "file": "scripts/lib/rapports.mjs",
+      "language": "javascript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 6,
+      "criticalityLevel": "low",
+      "inDegree": 1,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 7
+    },
+    {
+      "file": "scripts/verifier-affirmations.mjs",
+      "language": "javascript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 1,
+      "tags": [],
+      "symbolCount": 14
+    },
+    {
+      "file": "scripts/verifier-coherence.mjs",
+      "language": "javascript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 1,
+      "tags": [],
+      "symbolCount": 11
+    },
+    {
+      "file": "scripts/verifier-errata.mjs",
+      "language": "javascript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 21
+    },
+    {
+      "file": "scripts/verifier-tiers.mjs",
+      "language": "javascript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 18
+    },
+    {
+      "file": "src/app/(donnees)/corrections/page.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry page (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 3,
+      "tags": [],
+      "symbolCount": 11
+    },
+    {
+      "file": "src/app/(donnees)/decisions-non-publiees/page.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry page (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 4,
+      "tags": [],
+      "symbolCount": 13
+    },
+    {
+      "file": "src/app/(donnees)/empreinte-carbone/DetailEmpreinte.tsx",
+      "language": "tsx",
+      "role": "client",
+      "roleReason": "'use client' directive",
+      "criticality": 6,
+      "criticalityLevel": "low",
+      "inDegree": 1,
+      "outDegree": 2,
+      "tags": [],
+      "symbolCount": 11
+    },
+    {
+      "file": "src/app/(donnees)/empreinte-carbone/page.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry page (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 3,
+      "tags": [],
+      "symbolCount": 20
+    },
+    {
+      "file": "src/app/(donnees)/fichier-non-a-jour/page.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry page (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 4,
+      "tags": [],
+      "symbolCount": 13
+    },
+    {
+      "file": "src/app/(donnees)/layout.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry layout (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 2,
+      "tags": [],
+      "symbolCount": 6
+    },
+    {
+      "file": "src/app/(donnees)/methodologie/page.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry page (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 1,
+      "tags": [],
+      "symbolCount": 8
+    },
+    {
+      "file": "src/app/(donnees)/passages-en-commission/page.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry page (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 4,
+      "tags": [],
+      "symbolCount": 13
+    },
+    {
+      "file": "src/app/(donnees)/petition/[identifiant]/page.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry page (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 4,
+      "tags": [],
+      "symbolCount": 20
+    },
+    {
+      "file": "src/app/(donnees)/petitions/[annee]/page.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry page (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 4,
+      "tags": [],
+      "symbolCount": 18
+    },
+    {
+      "file": "src/app/(donnees)/petitions/page.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry page (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 3,
+      "tags": [],
+      "symbolCount": 11
+    },
+    {
+      "file": "src/app/(donnees)/plan-du-site/page.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry page (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 2,
+      "tags": [],
+      "symbolCount": 10
+    },
+    {
+      "file": "src/app/(legal)/layout.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry layout (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 2,
+      "tags": [],
+      "symbolCount": 6
+    },
+    {
+      "file": "src/app/(legal)/mentions-legales/page.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry page (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 1,
+      "tags": [],
+      "symbolCount": 8
+    },
+    {
+      "file": "src/app/(legal)/politique-cookies/ChoixConsentement.tsx",
+      "language": "tsx",
+      "role": "client",
+      "roleReason": "'use client' directive",
+      "criticality": 12,
+      "criticalityLevel": "low",
+      "inDegree": 2,
+      "outDegree": 1,
+      "tags": [],
+      "symbolCount": 6
+    },
+    {
+      "file": "src/app/(legal)/politique-cookies/page.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry page (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 4,
+      "tags": [],
+      "symbolCount": 11
+    },
+    {
+      "file": "src/app/(legal)/politique-de-confidentialite/page.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry page (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 1,
+      "tags": [],
+      "symbolCount": 8
+    },
+    {
+      "file": "src/app/CetteSemaine.tsx",
+      "language": "tsx",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 6,
+      "criticalityLevel": "low",
+      "inDegree": 1,
+      "outDegree": 2,
+      "tags": [],
+      "symbolCount": 8
+    },
+    {
+      "file": "src/app/EmpreinteCarbone.tsx",
+      "language": "tsx",
+      "role": "client",
+      "roleReason": "'use client' directive",
+      "criticality": 18,
+      "criticalityLevel": "low",
+      "inDegree": 3,
+      "outDegree": 2,
+      "tags": [],
+      "symbolCount": 7
+    },
+    {
+      "file": "src/app/FriseReunions.tsx",
+      "language": "tsx",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 18,
+      "criticalityLevel": "low",
+      "inDegree": 3,
+      "outDegree": 1,
+      "tags": [],
+      "symbolCount": 5
+    },
+    {
+      "file": "src/app/MesureAudience.tsx",
+      "language": "tsx",
+      "role": "client",
+      "roleReason": "'use client' directive",
+      "criticality": 6,
+      "criticalityLevel": "low",
+      "inDegree": 1,
+      "outDegree": 3,
+      "tags": [],
+      "symbolCount": 13
+    },
+    {
+      "file": "src/app/PointsForts.tsx",
+      "language": "tsx",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 6,
+      "criticalityLevel": "low",
+      "inDegree": 1,
+      "outDegree": 1,
+      "tags": [],
+      "symbolCount": 5
+    },
+    {
+      "file": "src/app/SearchBar.tsx",
+      "language": "tsx",
+      "role": "client",
+      "roleReason": "'use client' directive",
+      "criticality": 6,
+      "criticalityLevel": "low",
+      "inDegree": 1,
+      "outDegree": 3,
+      "tags": [],
+      "symbolCount": 10
+    },
+    {
+      "file": "src/app/TableauPetitions.tsx",
+      "language": "tsx",
+      "role": "client",
+      "roleReason": "'use client' directive",
+      "criticality": 30,
+      "criticalityLevel": "medium",
+      "inDegree": 5,
+      "outDegree": 1,
+      "tags": [],
+      "symbolCount": 27
+    },
+    {
+      "file": "src/app/layout.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry layout (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 2,
+      "tags": [],
+      "symbolCount": 8
+    },
+    {
+      "file": "src/app/opengraph-image.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry opengraph-image (RSC default)",
+      "criticality": 6,
+      "criticalityLevel": "low",
+      "inDegree": 1,
+      "outDegree": 1,
+      "tags": [],
+      "symbolCount": 8
+    },
+    {
+      "file": "src/app/page.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry page (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 9,
+      "tags": [],
+      "symbolCount": 24
+    },
+    {
+      "file": "src/app/robots.ts",
+      "language": "typescript",
+      "role": "server",
+      "roleReason": "App Router entry robots (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 1,
+      "tags": [],
+      "symbolCount": 4
+    },
+    {
+      "file": "src/app/sitemap.ts",
+      "language": "typescript",
+      "role": "server",
+      "roleReason": "App Router entry sitemap (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 2,
+      "tags": [],
+      "symbolCount": 6
+    },
+    {
+      "file": "src/app/twitter-image.tsx",
+      "language": "tsx",
+      "role": "server",
+      "roleReason": "App Router entry twitter-image (RSC default)",
+      "criticality": 0,
+      "criticalityLevel": "low",
+      "inDegree": 0,
+      "outDegree": 1,
+      "tags": [],
+      "symbolCount": 1
+    },
+    {
+      "file": "src/app/useEmpreinte.ts",
+      "language": "typescript",
+      "role": "client",
+      "roleReason": "'use client' directive",
+      "criticality": 12,
+      "criticalityLevel": "low",
+      "inDegree": 2,
+      "outDegree": 1,
+      "tags": [],
+      "symbolCount": 5
+    },
+    {
+      "file": "src/lib/algolia.ts",
+      "language": "typescript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 6,
+      "criticalityLevel": "low",
+      "inDegree": 1,
+      "outDegree": 1,
+      "tags": [],
+      "symbolCount": 20
+    },
+    {
+      "file": "src/lib/consentement.ts",
+      "language": "typescript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 12,
+      "criticalityLevel": "low",
+      "inDegree": 2,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 8
+    },
+    {
+      "file": "src/lib/empreinte.ts",
+      "language": "typescript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 24,
+      "criticalityLevel": "low",
+      "inDegree": 4,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 9
+    },
+    {
+      "file": "src/lib/errata.ts",
+      "language": "typescript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 6,
+      "criticalityLevel": "low",
+      "inDegree": 1,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 12
+    },
+    {
+      "file": "src/lib/firebase.ts",
+      "language": "typescript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 6,
+      "criticalityLevel": "low",
+      "inDegree": 1,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 6
+    },
+    {
+      "file": "src/lib/petitions-format.ts",
+      "language": "typescript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 60,
+      "criticalityLevel": "high",
+      "inDegree": 16,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 127
+    },
+    {
+      "file": "src/lib/petitions.ts",
+      "language": "typescript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 60,
+      "criticalityLevel": "high",
+      "inDegree": 10,
+      "outDegree": 3,
+      "tags": [],
+      "symbolCount": 68
+    },
+    {
+      "file": "src/lib/site.ts",
+      "language": "typescript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 60,
+      "criticalityLevel": "high",
+      "inDegree": 21,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 11
+    },
+    {
+      "file": "src/lib/tiers.ts",
+      "language": "typescript",
+      "role": "universal",
+      "roleReason": "no client/server signal",
+      "criticality": 6,
+      "criticalityLevel": "low",
+      "inDegree": 1,
+      "outDegree": 0,
+      "tags": [],
+      "symbolCount": 10
+    }
+  ],
+  "edges": [
+    {
+      "from": "scripts/fetch-reunions.mjs",
+      "to": "scripts/import-petitions.mjs",
+      "kind": "calls",
+      "count": 2
+    },
+    {
+      "from": "scripts/fetch-reunions.mjs",
+      "to": "scripts/lib/comptes-rendus.mjs",
+      "kind": "calls",
+      "count": 6
+    },
+    {
+      "from": "scripts/fetch-reunions.mjs",
+      "to": "scripts/lib/comptes-rendus.mjs",
+      "kind": "imports",
+      "count": 6
+    },
+    {
+      "from": "scripts/fetch-reunions.mjs",
+      "to": "scripts/lib/petitions-source.mjs",
+      "kind": "calls",
+      "count": 2
+    },
+    {
+      "from": "scripts/fetch-reunions.mjs",
+      "to": "scripts/lib/petitions-source.mjs",
+      "kind": "imports",
+      "count": 3
+    },
+    {
+      "from": "scripts/fetch-reunions.mjs",
+      "to": "scripts/lib/rapports.mjs",
+      "kind": "calls",
+      "count": 2
+    },
+    {
+      "from": "scripts/fetch-reunions.mjs",
+      "to": "scripts/lib/rapports.mjs",
+      "kind": "imports",
+      "count": 3
+    },
+    {
+      "from": "scripts/import-petitions.mjs",
+      "to": "scripts/lib/petitions-source.mjs",
+      "kind": "calls",
+      "count": 2
+    },
+    {
+      "from": "scripts/import-petitions.mjs",
+      "to": "scripts/lib/petitions-source.mjs",
+      "kind": "imports",
+      "count": 5
+    },
+    {
+      "from": "scripts/verifier-affirmations.mjs",
+      "to": "scripts/fetch-reunions.mjs",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "scripts/verifier-coherence.mjs",
+      "to": "scripts/lib/petitions-source.mjs",
+      "kind": "calls",
+      "count": 2
+    },
+    {
+      "from": "scripts/verifier-coherence.mjs",
+      "to": "scripts/lib/petitions-source.mjs",
+      "kind": "imports",
+      "count": 6
+    },
+    {
+      "from": "src/app/(donnees)/corrections/page.tsx",
+      "to": "src/lib/errata.ts",
+      "kind": "calls",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/corrections/page.tsx",
+      "to": "src/lib/errata.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/corrections/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "calls",
+      "count": 3
+    },
+    {
+      "from": "src/app/(donnees)/corrections/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/corrections/page.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/decisions-non-publiees/page.tsx",
+      "to": "src/app/TableauPetitions.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/decisions-non-publiees/page.tsx",
+      "to": "src/app/TableauPetitions.tsx",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/decisions-non-publiees/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/decisions-non-publiees/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/decisions-non-publiees/page.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "calls",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/decisions-non-publiees/page.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/decisions-non-publiees/page.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/empreinte-carbone/DetailEmpreinte.tsx",
+      "to": "src/app/useEmpreinte.ts",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/empreinte-carbone/DetailEmpreinte.tsx",
+      "to": "src/app/useEmpreinte.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/empreinte-carbone/DetailEmpreinte.tsx",
+      "to": "src/lib/empreinte.ts",
+      "kind": "calls",
+      "count": 9
+    },
+    {
+      "from": "src/app/(donnees)/empreinte-carbone/DetailEmpreinte.tsx",
+      "to": "src/lib/empreinte.ts",
+      "kind": "imports",
+      "count": 6
+    },
+    {
+      "from": "src/app/(donnees)/empreinte-carbone/DetailEmpreinte.tsx",
+      "to": "src/lib/empreinte.ts",
+      "kind": "references",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/empreinte-carbone/page.tsx",
+      "to": "src/app/(donnees)/empreinte-carbone/DetailEmpreinte.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/empreinte-carbone/page.tsx",
+      "to": "src/app/(donnees)/empreinte-carbone/DetailEmpreinte.tsx",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/empreinte-carbone/page.tsx",
+      "to": "src/lib/empreinte.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/empreinte-carbone/page.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/fichier-non-a-jour/page.tsx",
+      "to": "src/app/TableauPetitions.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/fichier-non-a-jour/page.tsx",
+      "to": "src/app/TableauPetitions.tsx",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/fichier-non-a-jour/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/fichier-non-a-jour/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/fichier-non-a-jour/page.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "calls",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/fichier-non-a-jour/page.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/fichier-non-a-jour/page.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/layout.tsx",
+      "to": "src/app/EmpreinteCarbone.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/layout.tsx",
+      "to": "src/app/EmpreinteCarbone.tsx",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/layout.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/methodologie/page.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/passages-en-commission/page.tsx",
+      "to": "src/app/FriseReunions.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/passages-en-commission/page.tsx",
+      "to": "src/app/FriseReunions.tsx",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/passages-en-commission/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "calls",
+      "count": 6
+    },
+    {
+      "from": "src/app/(donnees)/passages-en-commission/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "imports",
+      "count": 4
+    },
+    {
+      "from": "src/app/(donnees)/passages-en-commission/page.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "calls",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/passages-en-commission/page.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/passages-en-commission/page.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/petition/[identifiant]/page.tsx",
+      "to": "src/app/FriseReunions.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/petition/[identifiant]/page.tsx",
+      "to": "src/app/FriseReunions.tsx",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/petition/[identifiant]/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "calls",
+      "count": 18
+    },
+    {
+      "from": "src/app/(donnees)/petition/[identifiant]/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "imports",
+      "count": 8
+    },
+    {
+      "from": "src/app/(donnees)/petition/[identifiant]/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "references",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/petition/[identifiant]/page.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "calls",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/petition/[identifiant]/page.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/petition/[identifiant]/page.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/petitions/[annee]/page.tsx",
+      "to": "src/app/TableauPetitions.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/petitions/[annee]/page.tsx",
+      "to": "src/app/TableauPetitions.tsx",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/petitions/[annee]/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/petitions/[annee]/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/petitions/[annee]/page.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "calls",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/petitions/[annee]/page.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/petitions/[annee]/page.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/petitions/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/petitions/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/petitions/page.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "calls",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/petitions/page.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/(donnees)/petitions/page.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/plan-du-site/page.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/plan-du-site/page.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(donnees)/plan-du-site/page.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(legal)/layout.tsx",
+      "to": "src/app/EmpreinteCarbone.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(legal)/layout.tsx",
+      "to": "src/app/EmpreinteCarbone.tsx",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(legal)/layout.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/(legal)/mentions-legales/page.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(legal)/mentions-legales/page.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 3
+    },
+    {
+      "from": "src/app/(legal)/politique-cookies/ChoixConsentement.tsx",
+      "to": "src/lib/consentement.ts",
+      "kind": "calls",
+      "count": 2
+    },
+    {
+      "from": "src/app/(legal)/politique-cookies/ChoixConsentement.tsx",
+      "to": "src/lib/consentement.ts",
+      "kind": "imports",
+      "count": 4
+    },
+    {
+      "from": "src/app/(legal)/politique-cookies/ChoixConsentement.tsx",
+      "to": "src/lib/consentement.ts",
+      "kind": "references",
+      "count": 1
+    },
+    {
+      "from": "src/app/(legal)/politique-cookies/page.tsx",
+      "to": "src/app/(legal)/politique-cookies/ChoixConsentement.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(legal)/politique-cookies/page.tsx",
+      "to": "src/app/(legal)/politique-cookies/ChoixConsentement.tsx",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(legal)/politique-cookies/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(legal)/politique-cookies/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/(legal)/politique-cookies/page.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/(legal)/politique-cookies/page.tsx",
+      "to": "src/lib/tiers.ts",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/(legal)/politique-cookies/page.tsx",
+      "to": "src/lib/tiers.ts",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/(legal)/politique-de-confidentialite/page.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/CetteSemaine.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "calls",
+      "count": 5
+    },
+    {
+      "from": "src/app/CetteSemaine.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "imports",
+      "count": 3
+    },
+    {
+      "from": "src/app/CetteSemaine.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/CetteSemaine.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "references",
+      "count": 2
+    },
+    {
+      "from": "src/app/EmpreinteCarbone.tsx",
+      "to": "src/app/useEmpreinte.ts",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/EmpreinteCarbone.tsx",
+      "to": "src/app/useEmpreinte.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/EmpreinteCarbone.tsx",
+      "to": "src/lib/empreinte.ts",
+      "kind": "calls",
+      "count": 3
+    },
+    {
+      "from": "src/app/EmpreinteCarbone.tsx",
+      "to": "src/lib/empreinte.ts",
+      "kind": "imports",
+      "count": 3
+    },
+    {
+      "from": "src/app/FriseReunions.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "calls",
+      "count": 3
+    },
+    {
+      "from": "src/app/FriseReunions.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "imports",
+      "count": 4
+    },
+    {
+      "from": "src/app/FriseReunions.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "references",
+      "count": 2
+    },
+    {
+      "from": "src/app/MesureAudience.tsx",
+      "to": "src/app/(legal)/politique-cookies/ChoixConsentement.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/MesureAudience.tsx",
+      "to": "src/app/(legal)/politique-cookies/ChoixConsentement.tsx",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/MesureAudience.tsx",
+      "to": "src/lib/consentement.ts",
+      "kind": "calls",
+      "count": 3
+    },
+    {
+      "from": "src/app/MesureAudience.tsx",
+      "to": "src/lib/consentement.ts",
+      "kind": "imports",
+      "count": 3
+    },
+    {
+      "from": "src/app/MesureAudience.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/PointsForts.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "calls",
+      "count": 10
+    },
+    {
+      "from": "src/app/PointsForts.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "imports",
+      "count": 6
+    },
+    {
+      "from": "src/app/PointsForts.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "references",
+      "count": 1
+    },
+    {
+      "from": "src/app/SearchBar.tsx",
+      "to": "src/app/TableauPetitions.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/SearchBar.tsx",
+      "to": "src/app/TableauPetitions.tsx",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/SearchBar.tsx",
+      "to": "src/lib/algolia.ts",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/SearchBar.tsx",
+      "to": "src/lib/algolia.ts",
+      "kind": "imports",
+      "count": 4
+    },
+    {
+      "from": "src/app/SearchBar.tsx",
+      "to": "src/lib/algolia.ts",
+      "kind": "references",
+      "count": 2
+    },
+    {
+      "from": "src/app/SearchBar.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/TableauPetitions.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "calls",
+      "count": 2
+    },
+    {
+      "from": "src/app/TableauPetitions.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/layout.tsx",
+      "to": "src/app/MesureAudience.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/layout.tsx",
+      "to": "src/app/MesureAudience.tsx",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/layout.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 6
+    },
+    {
+      "from": "src/app/opengraph-image.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/opengraph-image.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 3
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/app/CetteSemaine.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/app/CetteSemaine.tsx",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/app/EmpreinteCarbone.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/app/EmpreinteCarbone.tsx",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/app/FriseReunions.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/app/FriseReunions.tsx",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/app/PointsForts.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/app/PointsForts.tsx",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/app/SearchBar.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/app/SearchBar.tsx",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/app/TableauPetitions.tsx",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/app/TableauPetitions.tsx",
+      "kind": "imports",
+      "count": 2
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "calls",
+      "count": 8
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "imports",
+      "count": 6
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "references",
+      "count": 5
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "calls",
+      "count": 7
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "imports",
+      "count": 9
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/lib/petitions.ts",
+      "kind": "references",
+      "count": 2
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/page.tsx",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 4
+    },
+    {
+      "from": "src/app/robots.ts",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/sitemap.ts",
+      "to": "src/lib/petitions.ts",
+      "kind": "calls",
+      "count": 1
+    },
+    {
+      "from": "src/app/sitemap.ts",
+      "to": "src/lib/petitions.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/sitemap.ts",
+      "to": "src/lib/site.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/app/twitter-image.tsx",
+      "to": "src/app/opengraph-image.tsx",
+      "kind": "imports",
+      "count": 3
+    },
+    {
+      "from": "src/app/useEmpreinte.ts",
+      "to": "src/lib/empreinte.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/lib/algolia.ts",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/lib/algolia.ts",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "references",
+      "count": 2
+    },
+    {
+      "from": "src/lib/petitions.ts",
+      "to": "scripts/fetch-debats.mjs",
+      "kind": "calls",
+      "count": 4
+    },
+    {
+      "from": "src/lib/petitions.ts",
+      "to": "scripts/fetch-debats.mjs",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/lib/petitions.ts",
+      "to": "src/lib/firebase.ts",
+      "kind": "imports",
+      "count": 1
+    },
+    {
+      "from": "src/lib/petitions.ts",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "imports",
+      "count": 3
+    },
+    {
+      "from": "src/lib/petitions.ts",
+      "to": "src/lib/petitions-format.ts",
+      "kind": "references",
+      "count": 8
+    }
+  ]
+}
