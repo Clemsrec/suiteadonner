@@ -50,5 +50,6 @@ next-env.d.ts
 # journaux de debug de la CLI/extension Firebase (spécifiques au poste)
 /.firebase/
 
-# index CodeGraph local (base binaire regenerable via npx aidoc-kit index)
+# index du code généré localement (volumineux, regénérable)
 /.codegraph/
+/aidoc-graph.json
