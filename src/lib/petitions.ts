@@ -1,4 +1,14 @@
-import { collection, doc, getDoc, getDocs, limit, orderBy, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  where,
+  type QueryConstraint,
+} from "firebase/firestore";
 import { db } from "./firebase";
 
 // Schéma miroir de scripts/lib/petitions-source.mjs. Les champs bruts viennent
@@ -141,6 +151,8 @@ export type ImportDelta = {
   nbRecueilsClos: number;
   nbDecisionsPubliees: number;
   nbStatutsChanges: number;
+  /** Absent des imports antérieurs au 29/09/2026, qui ne comptaient pas les sorties. */
+  nbSorties?: number;
   signaturesGagnees: number;
   /** Listes bornées (échantillon cliquable) : les compteurs ci-dessus font foi. */
   nouvelles: PetitionResume[];
@@ -148,6 +160,7 @@ export type ImportDelta = {
   recueilsClos: PetitionResume[];
   decisionsPubliees: (PetitionResume & { decisionTexte: string })[];
   statutsChanges: (PetitionResume & { de: string; vers: string })[];
+  sorties?: PetitionResume[];
 };
 
 export async function getDernierImport(): Promise<ImportDelta | null> {
@@ -161,6 +174,13 @@ export async function getDernierImport(): Promise<ImportDelta | null> {
 // plus ancienne. Bornes textuelles sur la date ISO : les dates sont validées
 // AAAA-MM-JJ à l'import, la comparaison lexicographique est donc exacte, et
 // la requête ne demande aucun index composite.
+// Une pétition sortie du fichier garde son document (voir l'import) mais ne
+// figure plus dans les listes, qui décrivent le fichier. Les requêtes bornées
+// lisent quelques documents de plus pour que le filtre ne raccourcisse pas la
+// liste affichée.
+const MARGE_SORTIES = 5;
+const dansLeFichier = (docs: Petition[]) => docs.filter((p) => !p.absenteDuFichierDepuis);
+
 export async function getPetitionsParAnnee(annee: string): Promise<Petition[]> {
   const q = query(
     collection(db, "petitions"),
@@ -169,7 +189,7 @@ export async function getPetitionsParAnnee(annee: string): Promise<Petition[]> {
     orderBy("datePublication", "desc")
   );
   const snap = await getDocs(q);
-  return snap.docs.map((d) => d.data() as Petition);
+  return dansLeFichier(snap.docs.map((d) => d.data() as Petition));
 }
 
 // Les plus signées parmi celles que le fichier déclare classées.
@@ -178,10 +198,10 @@ export async function getFlagshipPetitions(max = 6): Promise<Petition[]> {
     collection(db, "petitions"),
     where("statutSource", "==", "classee"),
     orderBy("nbVotes", "desc"),
-    limit(max)
+    limit(max + MARGE_SORTIES)
   );
   const snap = await getDocs(q);
-  return snap.docs.map((d) => d.data() as Petition);
+  return dansLeFichier(snap.docs.map((d) => d.data() as Petition)).slice(0, max);
 }
 
 // Pétitions classées sans que le motif du seuil soit invoqué et sans aucun
@@ -192,10 +212,10 @@ export async function getSansDecision(max = 8): Promise<Petition[]> {
     where("statutSource", "==", "classee"),
     where("motifClassement", "==", "absent"),
     orderBy("nbVotes", "desc"),
-    limit(max)
+    limit(max + MARGE_SORTIES)
   );
   const snap = await getDocs(q);
-  return snap.docs.map((d) => d.data() as Petition);
+  return dansLeFichier(snap.docs.map((d) => d.data() as Petition)).slice(0, max);
 }
 
 // Écart constaté entre le fichier et les dates : signalé, jamais corrigé.
@@ -204,10 +224,10 @@ export async function getEcartStatutDates(max = 5): Promise<Petition[]> {
     collection(db, "petitions"),
     where("ecartStatutDates", "==", true),
     orderBy("nbVotes", "desc"),
-    limit(max)
+    limit(max + MARGE_SORTIES)
   );
   const snap = await getDocs(q);
-  return snap.docs.map((d) => d.data() as Petition);
+  return dansLeFichier(snap.docs.map((d) => d.data() as Petition)).slice(0, max);
 }
 
 
@@ -244,6 +264,32 @@ async function requalifierAttentes(synthese: SyntheseCommission): Promise<Synthe
 export async function getSyntheseCommission(): Promise<SyntheseCommission | null> {
   const snap = await getDoc(doc(db, "meta", "reunions"));
   return snap.exists() ? requalifierAttentes(snap.data() as SyntheseCommission) : null;
+}
+
+// Les fiches à pré-générer au build, pour que verifier:textes lise chaque
+// branche de la fiche : chaque motif, chaque seuil énoncé, les pétitions
+// passées en commission (examen, classement, rapport), l'écart statut/dates,
+// le compteur absent, la clôture groupée, les pétitions sorties du fichier.
+// Recalculé à chaque build : aucun numéro n'est écrit à la main, et une
+// branche qui apparaît dans les données entre dans l'échantillon.
+export async function getEchantillonFiches(): Promise<string[]> {
+  const petitions = collection(db, "petitions");
+  const une = (...contraintes: QueryConstraint[]) => getDocs(query(petitions, ...contraintes, limit(1)));
+  const lots = await Promise.all([
+    getDocs(collection(db, "reunions")),
+    une(where("motifClassement", "==", "seuil")),
+    une(where("motifClassement", "==", "constat")),
+    une(where("motifClassement", "==", "absent")),
+    une(where("motifClassement", "==", "sans_objet")),
+    une(where("seuilEnonce", "==", 5000)),
+    une(where("seuilEnonce", "==", 10000)),
+    une(where("seuilAtteint", "==", true)),
+    une(where("nbVotes", "==", null)),
+    une(where("ecartStatutDates", "==", true)),
+    une(where("clotureGroupee", "==", true)),
+    getDocs(query(petitions, where("absenteDuFichierDepuis", ">", ""), limit(3))),
+  ]);
+  return [...new Set(lots.flatMap((lot) => lot.docs.map((d) => d.id)))];
 }
 
 // Contrairement aux rapprochements thématiques, ces passages sont établis à

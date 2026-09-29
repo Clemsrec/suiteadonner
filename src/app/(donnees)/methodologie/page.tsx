@@ -258,7 +258,9 @@ export default function Methodologie() {
           L&apos;Assemblée republie le fichier chaque lundi matin. Nous le récupérons
           ensuite, recalculons toutes les catégories dérivées et mettons le site à
           jour. La date du dernier import figure sur les fiches et sur les listes tirées
-          du fichier. Les passages en commission suivent un autre pipeline, dont la date
+          du fichier. Une pétition qui ne figure plus dans le fichier n&apos;est pas
+          supprimée&nbsp;: elle sort des listes et de la recherche, et sa fiche le dit,
+          avec la date de la dernière lecture qui la contenait. Les passages en commission suivent un autre pipeline, dont la date
           n&apos;est pas encore affichée&nbsp;: leurs chiffres peuvent donc être en léger
           décalage avec ceux des autres pages.
         </p>

@@ -38,8 +38,12 @@ export default function CetteSemaine({ delta }: { delta: ImportDelta | null }) {
 
   const age = joursDepuis(delta.calculeLe) ?? 0;
   const perime = age > JOURS_AVANT_ALERTE;
+  // `nbSorties` n'existe que depuis l'import qui suit le 29/09/2026 : avant, la
+  // comparaison ne voyait pas les sorties, et la note le dit.
+  const sortiesComptees = delta.nbSorties !== undefined;
+  const nbSorties = delta.nbSorties ?? 0;
   const rienDeNeuf =
-    delta.nbNouvelles + delta.nbSeuilFranchi + delta.nbRecueilsClos + delta.nbDecisionsPubliees + delta.nbStatutsChanges === 0;
+    delta.nbNouvelles + delta.nbSeuilFranchi + delta.nbRecueilsClos + delta.nbDecisionsPubliees + delta.nbStatutsChanges + nbSorties === 0;
 
   const faits: string[] = [];
   if (delta.nbNouvelles) faits.push(`${pluriel(delta.nbNouvelles, "nouvelle pétition déposée", "nouvelles pétitions déposées")}`);
@@ -47,6 +51,7 @@ export default function CetteSemaine({ delta }: { delta: ImportDelta | null }) {
   if (delta.nbRecueilsClos) faits.push(`${pluriel(delta.nbRecueilsClos, "recueil de signatures clos", "recueils de signatures clos")}`);
   if (delta.nbDecisionsPubliees) faits.push(`${pluriel(delta.nbDecisionsPubliees, "décision de commission publiée", "décisions de commission publiées")}`);
   if (delta.nbStatutsChanges) faits.push(`${pluriel(delta.nbStatutsChanges, "changement de statut", "changements de statut")}`);
+  if (nbSorties) faits.push(`${pluriel(nbSorties, "pétition sortie du fichier", "pétitions sorties du fichier")}`);
 
   return (
     <section className={`${styles.semaine} ${perime ? styles.perime : ""}`} aria-labelledby="semaine-titre">
@@ -71,7 +76,8 @@ export default function CetteSemaine({ delta }: { delta: ImportDelta | null }) {
       {rienDeNeuf ? (
         <p className={styles.resume}>
           Le fichier officiel a été relu&nbsp;: <strong>aucune pétition ajoutée, aucun
-          changement de statut, aucun champ de décision rempli</strong> depuis la lecture
+          changement de statut, aucun champ de décision rempli</strong>
+          {sortiesComptees ? ", aucune pétition sortie du fichier" : ""} depuis la lecture
           précédente
           {delta.signaturesGagnees > 0
             ? ` — seuls les compteurs de signatures ont augmenté (+${delta.signaturesGagnees.toLocaleString("fr-FR")}).`
@@ -111,14 +117,33 @@ export default function CetteSemaine({ delta }: { delta: ImportDelta | null }) {
             <Liste items={delta.recueilsClos} total={delta.nbRecueilsClos} />
           </div>
         )}
+        {nbSorties > 0 && (
+          <div>
+            <h3>Sorties du fichier</h3>
+            <Liste items={delta.sorties ?? []} total={nbSorties} />
+          </div>
+        )}
       </div>
 
       <p className={styles.note}>
         Différences constatées entre deux lectures du même fichier officiel, sans
         interprétation. Une «&nbsp;décision publiée&nbsp;» signifie seulement que le
-        champ prévu à cet effet, vide jusque-là, a été renseigné. La comparaison ne
-        voit ni les textes réécrits ou effacés, ni les pétitions retirées du fichier,
-        ni les baisses de compteur&nbsp;: elle relève des apparitions, pas un bilan.
+        champ prévu à cet effet, vide jusque-là, a été renseigné.{" "}
+        {sortiesComptees ? (
+          <>
+            Une pétition «&nbsp;sortie du fichier&nbsp;» n&apos;y figure plus&nbsp;: sa
+            fiche reste consultable, avec les valeurs de la dernière lecture qui la
+            contenait. La comparaison ne voit ni les textes réécrits ou effacés, ni les
+            baisses de compteur&nbsp;: elle relève des apparitions et des sorties, pas un
+            bilan.
+          </>
+        ) : (
+          <>
+            La comparaison ne voit ni les textes réécrits ou effacés, ni les pétitions
+            retirées du fichier, ni les baisses de compteur&nbsp;: elle relève des
+            apparitions, pas un bilan.
+          </>
+        )}
       </p>
     </section>
   );

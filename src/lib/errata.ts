@@ -61,6 +61,41 @@ export type Erratum = {
 export const ERRATA: Erratum[] = [
   {
     date: "2026-09-29",
+    ou: "Fiches des pétitions ayant un rapport de commission",
+    affirmait: "C'est la seule suite écrite, argumentée et signée qu'une pétition puisse recevoir.",
+    pourquoi:
+      "Les données établissent qu'un rapport existe et qu'il cite la pétition. Elles ne disent rien de l'existence d'autres formes de suite écrite. Une phrase voisine avait été corrigée sur l'accueil le 11 septembre ; elle restait sur les fiches, que le contrôle des textes ne lisait pas.",
+    corrige:
+      "La fiche donne la date et le numéro du rapport, son intitulé officiel et son lien, sans le qualifier.",
+    gardeFou:
+      "Un échantillon de fiches, recalculé à chaque build pour couvrir chaque cas, est désormais lu par le contrôle des affirmations absolues.",
+    corrigee: "texte",
+    empreinte: "suite écrite, argumentée et signée qu&apos;une pétition puisse recevoir",
+  },
+  {
+    date: "2026-09-29",
+    ou: "Fiches des pétitions dont le champ de décision est vide",
+    affirmait: "Le champ de décision est vide : aucun motif n'est publié.",
+    pourquoi:
+      "Le constat porte sur un champ du fichier. Sur une même fiche, le compte rendu d'une commission pouvait publier la décision que ce champ ne portait pas : la phrase disait plus que le champ.",
+    corrige: "Le champ de décision du fichier est vide : le fichier ne donne pas de motif.",
+    corrigee: "texte",
+    empreinte: "Le champ de décision est vide : aucun motif n'est publié.",
+  },
+  {
+    date: "2026-09-29",
+    ou: "Fiches des pétitions dont l'examen a été voté, recueil en cours",
+    affirmait:
+      "Nous n'avons trouvé aucun rapport à ce jour, et nous ne comptons aucun délai : une pétition encore ouverte à la signature n'est pas une pétition en attente.",
+    pourquoi:
+      "« À ce jour » datait la recherche du jour de la lecture. Elle date de notre dernière collecte des comptes rendus, qui a pu précéder la page de plusieurs semaines : celle du 12 septembre 2026 est restée affichée jusqu'au 29.",
+    corrige:
+      "Nous n'avons pas trouvé de rapport dans les corpus que nous lisons, et nous ne comptons pas de délai.",
+    corrigee: "texte",
+    empreinte: "trouvé aucun rapport à ce jour, et nous ne comptons aucun délai",
+  },
+  {
+    date: "2026-09-29",
     ou: "Fiches des pétitions dont le texte de décision énonce un seuil",
     affirmait: "A atteint le seuil de 5 000 signatures que son texte de décision énonce.",
     pourquoi:
