@@ -116,6 +116,11 @@ function texteVisible(html) {
       .replace(/<blockquote[\s\S]*?<\/blockquote>/gi, " ")
       .replace(/<a[^>]+href="\/petition\/[^"]*"[^>]*>[\s\S]*?<\/a>/gi, " ")
       .replace(/<(h1|title)[^>]*>[\s\S]*?<\/\1>/gi, " ")
+      // Une limite de bloc termine une phrase, même sans point : un titre, une
+      // cellule ou un lien « Lire le compte rendu → » se collait sinon à la
+      // phrase suivante, et la déclaration de celle-ci se périmait dès que ce
+      // voisin changeait avec les données.
+      .replace(BLOC, FIN_DE_BLOC)
     .replace(/<[^>]+>/g, " ")
     .replace(/&nbsp;|&#160;| /g, " ")
     .replace(/&apos;|&#x27;|&#39;/g, "'")
@@ -123,17 +128,31 @@ function texteVisible(html) {
     .replace(/&raquo;|&#187;/g, "»")
     .replace(/&amp;/g, "&")
       .replace(/&[a-z]+;|&#x?[0-9a-f]+;/gi, " ")
-      .replace(/\s+/g, " ")
+      .replace(/[^\S\u0000]+/g, " ")
   );
+}
+
+const FIN_DE_BLOC = " \u0000 ";
+const BLOC =
+  /<\/?(?:p|li|h[1-6]|div|td|th|dt|dd|tr|ul|ol|dl|table|section|article|header|footer|nav|aside|main|figcaption)\b[^>]*>|<br\s*\/?>/gi;
+
+// La clé de comparaison d'une phrase : son texte, chiffres neutralisés. Ce
+// contrôle porte sur les absolus, et les nombres du site sont calculés. Une
+// déclaration qui retenait « +11 980 » ou « 1 007 pétitions » se périmait à
+// chaque import, sans qu'aucun mot de la phrase n'ait changé.
+function cle(phrase) {
+  return phrase.replace(/[+\-−]?\d(?:[\d\u00a0\u202f .,]*\d)?/g, "#");
 }
 
 // Une phrase, et non un paragraphe : c'est l'unité qu'un lecteur cite, et donc
 // celle sur laquelle le site peut être pris en défaut.
 function phrases(texte) {
   return texte
-    .split(/(?<=[.!?])\s+/)
+    .split(/\u0000|(?<=[.!?])\s+/)
     .map((p) => p.trim())
-    .filter((p) => p.split(/\s+/).length >= 5 && ABSOLUS.test(p));
+    // Deux mots et non cinq depuis le découpage par blocs : un intertitre comme
+    // « Aucune valeur inventée » est désormais isolé, et c'est une affirmation.
+    .filter((p) => p.split(/\s+/).length >= 2 && ABSOLUS.test(p));
 }
 
 // Cherche une chaîne dans un dossier de code, et retourne le premier fichier
@@ -172,17 +191,19 @@ async function main() {
     );
   }
 
+  // Indexées par clé : deux phrases qui ne diffèrent que par leurs chiffres
+  // sont la même affirmation. On garde le texte de la première rencontrée.
   const trouvees = new Map();
   for (const f of await pagesRendues(RENDU)) {
     for (const p of phrases(texteVisible(await readFile(f, "utf8")))) {
-      if (!trouvees.has(p)) trouvees.set(p, path.relative(RENDU, f));
+      if (!trouvees.has(cle(p))) trouvees.set(cle(p), { texte: p, page: path.relative(RENDU, f) });
     }
   }
 
   const connues = existsSync(REFERENCE)
     ? JSON.parse(await readFile(REFERENCE, "utf8"))
     : { affirmations: [] };
-  const index = new Map(connues.affirmations.map((a) => [a.texte, a]));
+  const index = new Map(connues.affirmations.map((a) => [cle(a.texte), a]));
 
   // Les preuves d'abord : une justification qui ne tient plus est plus grave
   // qu'une phrase non déclarée, puisqu'elle a l'apparence d'une vérification.
@@ -219,8 +240,8 @@ async function main() {
     }
   }
 
-  const nouvelles = [...trouvees.keys()].filter((t) => !index.has(t));
-  const disparues = connues.affirmations.filter((a) => !trouvees.has(a.texte));
+  const nouvelles = [...trouvees.keys()].filter((k) => !index.has(k));
+  const disparues = connues.affirmations.filter((a) => !trouvees.has(cle(a.texte)));
   const dette = connues.affirmations.filter((a) => a.fonde === "heritee").length;
   const aConfirmer = connues.affirmations.filter((a) => a.fonde === "nous-a-confirmer").length;
 
@@ -266,7 +287,7 @@ async function main() {
   // Une phrase corrigée laisse sa déclaration derrière elle. Sans purge, la
   // dette se compte en fantômes et cesse d'être lisible.
   if (nettoyer && disparues.length) {
-    connues.affirmations = connues.affirmations.filter((a) => trouvees.has(a.texte));
+    connues.affirmations = connues.affirmations.filter((a) => trouvees.has(cle(a.texte)));
     await writeFile(REFERENCE, `${JSON.stringify(connues, null, 2)}\n`);
     console.log(`\n→ ${disparues.length} déclaration(s) retirée(s) : leur phrase n'est plus affichée.`);
     return;
@@ -274,7 +295,8 @@ async function main() {
 
   if (ajouter && nouvelles.length) {
     connues.affirmations.push(
-      ...nouvelles.map((texte) => {
+      ...nouvelles.map((k) => {
+        const { texte, page } = trouvees.get(k);
         // Tri initial, et non justification : une phrase qui se donne pour
         // sujet le site relève probablement de notre propre comportement,
         // donc vérifiable dans le code. Elle reste à confirmer une par une —
@@ -282,7 +304,7 @@ async function main() {
         const parleDeNous = /\b(nous|notre|nos|ce site|le site)\b/i.test(texte);
         return {
           texte,
-          page: trouvees.get(texte),
+          page,
           fonde: parleDeNous ? "nous-a-confirmer" : "heritee",
           note: parleDeNous
             ? "Semble décrire notre propre comportement : confirmer que le code le garantit."
@@ -314,9 +336,10 @@ async function main() {
 
   if (nouvelles.length) {
     console.error(`\n✗ ${nouvelles.length} affirmation(s) absolue(s) non déclarée(s) :\n`);
-    for (const t of nouvelles) {
-      console.error(`  [${trouvees.get(t)}]`);
-      console.error(`  ${t}\n`);
+    for (const k of nouvelles) {
+      const { texte, page } = trouvees.get(k);
+      console.error(`  [${page}]`);
+      console.error(`  ${texte}\n`);
     }
     console.error(
       "Chacune porte un absolu — jamais, toujours, aucun, le seul. Si elle décrit\n" +
