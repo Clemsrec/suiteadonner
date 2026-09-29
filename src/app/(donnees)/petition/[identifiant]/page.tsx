@@ -134,7 +134,10 @@ export default async function FichePetition({ params }: Params) {
   const annee = p.datePublication?.slice(0, 4) ?? null;
   // Un seul endroit qualifie l'état d'une pétition, en voyant tous ses champs :
   // la fiche n'écrit plus ses propres conditions. Voir etatPetition().
-  const etat = etatPetition({ ...p, ...passages });
+  // Le fichier des pétitions passe en dernier : le document `reunions` recopie
+  // texte de décision et date limite au jour de sa collecte, et ne doit pas
+  // contredire ce que le reste de la fiche affiche depuis l'import plus récent.
+  const etat = etatPetition({ ...passages, ...p });
   const { decisionLue, rapport } = etat;
 
   const filAriane = {

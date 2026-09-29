@@ -11,6 +11,7 @@ import { db } from "./firebase";
 // texte de décision indique un classement d'office.
 
 export * from "./petitions-format";
+import { etatPetition } from "./petitions-format";
 import type {
   PassageEnCommission,
   Petition,
@@ -210,9 +211,39 @@ export async function getEcartStatutDates(max = 5): Promise<Petition[]> {
 }
 
 
+// `attenteRapport` est qualifiée au jour de la collecte des commissions, avec
+// la date limite lue ce jour-là. La collecte du 12/09/2026 donnait à la n° 2760
+// une date limite au 31/07/2026 ; l'import du fichier la porte au 19/06/2029.
+// L'accueil l'affichait pourtant en attente de rapport, sous une phrase
+// promettant que le décompte ne porte que sur les recueils clos. Chaque entrée
+// est donc requalifiée par etatPetition() avec l'import le plus récent. Le
+// constat « examen voté, aucun rapport trouvé » reste celui de la collecte.
+async function requalifierAttentes(synthese: SyntheseCommission): Promise<SyntheseCommission> {
+  const attentes = synthese.attenteRapport ?? [];
+  const retenues = await Promise.all(
+    attentes.map(async (a) => {
+      const p = await getPetition(a.identifiant);
+      if (!p) return null;
+      const { recueil } = etatPetition({
+        decisionTexte: p.decisionTexte,
+        dateLimiteVote: p.dateLimiteVote,
+        recueilTermine: p.recueilTermine,
+      });
+      return recueil === "clos" ? { ...a, nbVotes: p.nbVotes, dateLimiteVote: p.dateLimiteVote } : null;
+    })
+  );
+  const attenteRapport = retenues.filter((a) => a !== null);
+  return {
+    ...synthese,
+    attenteRapport,
+    nbAttenteRapport: attenteRapport.length,
+    signaturesAttenteRapport: attenteRapport.reduce((t, a) => t + (a.nbVotes ?? 0), 0),
+  };
+}
+
 export async function getSyntheseCommission(): Promise<SyntheseCommission | null> {
   const snap = await getDoc(doc(db, "meta", "reunions"));
-  return snap.exists() ? (snap.data() as SyntheseCommission) : null;
+  return snap.exists() ? requalifierAttentes(snap.data() as SyntheseCommission) : null;
 }
 
 // Contrairement aux rapprochements thématiques, ces passages sont établis à

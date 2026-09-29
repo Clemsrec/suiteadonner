@@ -724,10 +724,10 @@
       "texte": "Nous affichons le seuil que le texte de la pétition écrit, et aucun quand il n'en écrit pas : il ne se déduit pas de la commission, un bureau pouvant changer sa règle.",
       "page": "methodologie.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "note": "La preuve est la ligne de l'import qui enregistre le seuil, et non la fonction qui le calcule : du 10 au 29/09/2026 la fonction existait et le seuil n'arrivait jamais aux fiches (voir errata).",
       "preuve": {
-        "fichier": "scripts/lib/petitions-source.mjs",
-        "contient": "export function seuilEnonce"
+        "fichier": "scripts/import-petitions.mjs",
+        "contient": "seuilEnonce: p.seuilEnonce"
       }
     },
     {
