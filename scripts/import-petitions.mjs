@@ -166,7 +166,8 @@ function calculerDelta(precedents, documents, aujourdhui, importPrecedentLe) {
   }
 
   const tri = (a, b) => (b.nbVotes ?? -1) - (a.nbVotes ?? -1);
-  const borner = (liste) => liste.sort(tri).slice(0, MAX_EVENEMENTS_LISTES);
+  const borner = (liste) => [...liste].sort(tri).slice(0, MAX_EVENEMENTS_LISTES);
+  const numeros = (liste) => liste.map((p) => p.identifiant);
 
   return {
     calculeLe: aujourdhui,
@@ -185,6 +186,16 @@ function calculerDelta(precedents, documents, aujourdhui, importPrecedentLe) {
     recueilsClos: borner(recueilsClos),
     decisionsPubliees: borner(decisionsPubliees),
     statutsChanges: borner(statutsChanges),
+    // Les listes s'arrêtent à douze fiches, le compteur fait foi. Les numéros,
+    // eux, sont tous gardés : le relevé de la newsletter du 21/09/2026 comptait
+    // quinze pétitions et ne pouvait nommer que douze d'entre elles.
+    identifiants: {
+      nouvelles: numeros(nouvelles),
+      seuilFranchi: numeros(seuilFranchi),
+      recueilsClos: numeros(recueilsClos),
+      decisionsPubliees: numeros(decisionsPubliees),
+      statutsChanges: numeros(statutsChanges),
+    },
   };
 }
 
