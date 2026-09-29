@@ -9,7 +9,7 @@
 // Usage :
 //   node scripts/import-petitions.mjs            # importe si le fichier a changé
 //   node scripts/import-petitions.mjs --dry-run  # analyse et résume, sans écrire
-//   node scripts/import-petitions.mjs --force    # importe même si le fichier est inchangé
+//   node scripts/import-petitions.mjs --force    # réécrit les documents d'un fichier inchangé, sans toucher au journal
 //
 // Auth Firestore : credentials Google Cloud ayant accès au projet
 // "suiteadonner" — `gcloud auth application-default login` ou la variable
@@ -217,7 +217,7 @@ async function lireSourcePrecedente(db) {
   return stats.exists ? (stats.data().sourceModifieLe ?? null) : null;
 }
 
-async function ecrireFirestore(db, documents, stats, aujourdhui, sourceModifieLe) {
+async function ecrireFirestore(db, documents, stats, aujourdhui, sourceModifieLe, memeFichier) {
   const { Timestamp } = await import("firebase-admin/firestore");
 
   // Le delta se calcule AVANT d'écraser la collection ; s'il échoue, l'import
@@ -270,7 +270,14 @@ async function ecrireFirestore(db, documents, stats, aujourdhui, sourceModifieLe
   // Un delta calculé contre un import du même jour ne compare pas deux semaines
   // mais deux lectures du même fichier : il n'apprend rien et écraserait le récit
   // réel de la semaine. On garde l'entrée existante.
-  if (delta && delta.depuis === delta.calculeLe) {
+  // Même raisonnement pour un import forcé sur un fichier déjà importé : les
+  // documents sont réécrits (un champ ajouté à l'import doit pouvoir arriver
+  // sans attendre le fichier suivant), mais la comparaison porte sur deux
+  // lectures du même fichier et remplacerait le récit de la semaine par
+  // « aucune pétition ajoutée ».
+  if (memeFichier) {
+    console.log("Journal inchangé : même fichier que l'import précédent, rien à comparer.");
+  } else if (delta && delta.depuis === delta.calculeLe) {
     console.log("Journal inchangé : l'import précédent date du même jour, rien à comparer.");
   } else if (delta) {
     const ref = db.collection("meta").doc("journal");
@@ -353,7 +360,8 @@ async function main() {
   // Sortie en succès, et non en échec : un fichier pas encore republié est le
   // cas nominal des passages de rattrapage, pas une anomalie à signaler.
   const importePrecedemment = await lireSourcePrecedente(db);
-  if (!force && sourceModifieLe && sourceModifieLe === importePrecedemment) {
+  const memeFichier = Boolean(sourceModifieLe && sourceModifieLe === importePrecedemment);
+  if (!force && memeFichier) {
     console.log(
       `\nFichier inchangé depuis le dernier import (déposé le ${sourceModifieLe}) — aucune écriture.`
     );
@@ -361,7 +369,7 @@ async function main() {
   }
 
   console.log("\nÉcriture dans Firestore (collection `petitions` + `meta/stats` + `meta/sitemap` + `meta/journal`)...");
-  await ecrireFirestore(db, documents, stats, aujourdhui, sourceModifieLe);
+  await ecrireFirestore(db, documents, stats, aujourdhui, sourceModifieLe, memeFichier);
   await synchroniserAlgolia(documents);
   console.log("\nImport terminé.");
 }
