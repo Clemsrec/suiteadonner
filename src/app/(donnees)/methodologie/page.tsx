@@ -174,6 +174,8 @@ export default function Methodologie() {
             2026, 811 énoncent cinq mille et 688 dix mille. Nous affichons le seuil que
             le texte de la pétition écrit, et aucun quand il n&apos;en écrit pas&nbsp;:
             il ne se déduit pas de la commission, un bureau pouvant changer sa règle.
+            Nous le citons sans le comparer au nombre de signatures&nbsp;: le fichier
+            donne celui du dernier import, pas celui du terme des six mois.
           </li>
           <li>
             <strong>Classement constaté, sans motif</strong> — un texte de décision
