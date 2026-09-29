@@ -89,6 +89,9 @@ function versDocument(p, calculeLe) {
     recueilTermine: p.recueilTermine,
     motifClassement: p.motifClassement,
     seuilAtteint: p.seuilAtteint,
+    // Sans cette ligne, la fiche ne reçoit jamais le seuil que le texte écrit
+    // et affirme que le fichier ne l'énonce pas : voir src/lib/errata.ts.
+    seuilEnonce: p.seuilEnonce,
     ecartStatutDates: p.ecartStatutDates,
     clotureGroupee: p.clotureGroupee,
 

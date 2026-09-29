@@ -53,6 +53,33 @@ export type Erratum = {
 // Du plus récent au plus ancien.
 export const ERRATA: Erratum[] = [
   {
+    date: "2026-09-29",
+    ou: "Accueil, carte des examens votés sans rapport trouvé",
+    affirmait:
+      "Examen voté, aucun rapport trouvé. 5 mois que la commission a voté l'examen de la pétition Pétition pour l'abrogation des ZFE. Nous n'avons trouvé aucun rapport la concernant dans les corpus que nous lisons. Le décompte ne porte que sur les pétitions dont le recueil est clos : une pétition encore ouverte à la signature n'attend rien.",
+    pourquoi:
+      "La carte reprenait une liste qualifiée lors de la collecte des commissions du 12 septembre 2026, qui donnait à cette pétition une date limite au 31 juillet 2026. Le fichier officiel importé le 28 septembre 2026 la porte au 19 juin 2029 : le recueil est ouvert, et la carte contredisait sa propre phrase. La correction du 12 septembre avait posé le bon garde-fou sur la fiche, pas sur cette liste, calculée ailleurs.",
+    corrige:
+      "Avant d'être affichée, chaque pétition de la liste est requalifiée avec le dernier import du fichier officiel. Une pétition dont le recueil n'est pas clos en sort.",
+    corrigee: "rendu",
+    preuve: { fichier: "src/lib/petitions.ts", contient: "requalifierAttentes" },
+  },
+  {
+    date: "2026-09-29",
+    ou: "Fiches des pétitions",
+    affirmait:
+      "N'a pas dépassé 10 000 signatures. Le seuil de classement d'office varie selon la commission, et le fichier ne l'énonce pas pour cette pétition.",
+    pourquoi:
+      "Le seuil lu dans le texte de décision n'était pas transmis aux fiches : l'import le calculait, puis ne l'enregistrait pas. Chaque fiche dont le nombre de signatures est renseigné affichait donc cette phrase, ou sa variante « A dépassé 10 000 signatures », y compris quand le texte énonce cinq mille ou dix mille signatures — le 10 septembre 2026, 1 499 textes de décision sur 1 560. La méthodologie et la correction du 11 septembre décrivaient un comportement que le site n'avait pas.",
+    corrige:
+      "Quand le texte de décision énonce un seuil, la fiche l'affiche et dit si la pétition l'a atteint. La phrase reste affichée pour les pétitions dont le texte n'énonce pas de seuil.",
+    gardeFou:
+      "La phrase de la méthodologie qui promet ce comportement a pour preuve la ligne de l'import qui enregistre le seuil : la retirer fait échouer le contrôle des textes.",
+    corrigee: "code",
+    empreinte: "et le fichier ne l'énonce pas pour cette pétition",
+    preuve: { fichier: "scripts/import-petitions.mjs", contient: "seuilEnonce: p.seuilEnonce" },
+  },
+  {
     date: "2026-09-12",
     ou: "Accueil, section « Comment nous travaillons »",
     affirmait:
