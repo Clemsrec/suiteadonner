@@ -28,6 +28,11 @@ import {
 //    gtag déjà exécuté, qui repose ses cookies au premier évènement suivant.
 //    On arme donc l'interrupteur officiel `ga-disable-<id>` et on repasse le
 //    consentement en « denied » avant l'effacement.
+//
+// ET UNE TROISIÈME : la politique de confidentialité promet « aucun réseau
+// publicitaire ». Les signaux publicitaires de Google Analytics dépendaient
+// d'un réglage de la propriété GA, hors de ce dépôt. Ils sont refusés ici,
+// avant que le script ne lise sa configuration.
 
 // Treize mois, plafond recommandé par la CNIL pour un traceur de mesure
 // d'audience — exprimé en secondes, comme l'attend gtag.
@@ -41,8 +46,31 @@ function gtag(): Gtag | undefined {
   return (window as unknown as { gtag?: Gtag }).gtag;
 }
 
+const SANS_PUBLICITE = {
+  ad_storage: "denied",
+  ad_user_data: "denied",
+  ad_personalization: "denied",
+} as const;
+
+// Empilé dans dataLayer avant le montage de <GoogleAnalytics>, qui réutilise
+// la file existante : gtag.js lit donc ce refus avant sa configuration. Il ne
+// reconnaît que des objets `arguments`, pas des tableaux.
+function refuserPublicite() {
+  const w = window as unknown as { dataLayer?: unknown[] };
+  const file = (w.dataLayer = w.dataLayer ?? []);
+  const empiler: Gtag = function () {
+    // eslint-disable-next-line prefer-rest-params
+    file.push(arguments);
+  };
+  empiler("consent", "default", SANS_PUBLICITE);
+}
+
 function appliquerDureeCookie() {
-  gtag()?.("config", GA_MESURE_ID, { cookie_expires: DUREE_COOKIE_SECONDES });
+  gtag()?.("config", GA_MESURE_ID, {
+    cookie_expires: DUREE_COOKIE_SECONDES,
+    allow_google_signals: false,
+    allow_ad_personalization_signals: false,
+  });
 }
 
 function couperMesure() {
@@ -62,6 +90,7 @@ export default function MesureAudience() {
       // gtag n'existe qu'une fois le script chargé : on redit la durée à
       // chaque synchronisation, et une fois le chargement terminé.
       if (nouveau === "accepte") {
+        refuserPublicite();
         appliquerDureeCookie();
         window.setTimeout(appliquerDureeCookie, 1500);
       }
