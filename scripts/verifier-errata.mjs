@@ -63,6 +63,22 @@ function presenteDansLHistorique(empreinte) {
   return git(["log", "--format=%H", "-S", empreinte, ...PORTEE]).trim().split("\n").filter(Boolean);
 }
 
+function citeeAvantRectification(disait) {
+  const commits = git(["log", "--format=%H", "-S", disait, "--", "src/lib/errata.ts"])
+    .trim()
+    .split("\n")
+    .filter(Boolean);
+  return commits.some((c) => {
+    const version = git(["show", `${c}:src/lib/errata.ts`]);
+    let i = version.indexOf(disait);
+    while (i !== -1) {
+      if (!/disait:\s*"?\s*$/.test(version.slice(Math.max(0, i - 40), i))) return true;
+      i = version.indexOf(disait, i + 1);
+    }
+    return false;
+  });
+}
+
 // Lignes de commentaire à ignorer. On ne cherche pas à analyser la syntaxe :
 // une ligne dont le premier caractère non blanc ouvre ou prolonge un
 // commentaire ne compte pas comme du texte affiché.
@@ -102,6 +118,9 @@ function lireErrata(source) {
       empreinte: champ("empreinte"),
       corrigee: champ("corrigee"),
       preuve: preuve ? { fichier: preuve[1], contient: preuve[2].replace(/\\"/g, '"') } : null,
+      disait: [...bloc.matchAll(/disait:\s*\n?\s*"((?:[^"\\]|\\.)*)"/g)].map((m) =>
+        m[1].replace(/\\"/g, '"')
+      ),
     });
   }
   return entrees;
@@ -152,6 +171,18 @@ for (const e of errata) {
       if (!e.preuve) {
         echecs.push(`${ou} : une correction « code » doit porter une preuve de ce qui la tient.`);
       }
+    }
+  }
+
+  // Une rectification cite ce que l'entrée disait. Ce texte doit avoir figuré
+  // dans ce fichier ailleurs que dans une rectification : sinon la citation
+  // serait inventée au moment même où l'on prétend la corriger.
+  for (const disait of e.disait) {
+    if (!citeeAvantRectification(disait)) {
+      echecs.push(
+        `${ou} : rectification — « ${disait.slice(0, 60)}… » ne figure dans aucune ` +
+          `version passée de l'entrée. Citer ce qu'elle disait mot pour mot.`
+      );
     }
   }
 

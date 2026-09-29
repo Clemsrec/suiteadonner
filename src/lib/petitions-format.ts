@@ -386,6 +386,14 @@ export type EtatPetition = {
   attenteMesurable: boolean;
   /** Classée, et le champ prévu pour motiver la décision est resté vide. */
   classeeSansMotif: boolean;
+  /**
+   * Le seuil que le texte de décision énonce, et s'il le borne à six mois
+   * après le dépôt. Le fichier ne donne que le nombre de signatures du dernier
+   * import, pas celui du terme de ce délai : la pétition n° 4023, classée
+   * d'office faute de cinq mille signatures en six mois, en compte 19 156. Le
+   * site n'en conclut donc pas qu'une pétition a atteint ou manqué ce seuil.
+   */
+  seuil: { signatures: number; sixMois: boolean } | null;
 };
 
 /**
@@ -404,6 +412,7 @@ export type SourceEtat = {
   recueilTermine?: boolean;
   derniereDecision?: (DecisionCompteRendu & { date: string; compteRenduRef: string }) | null;
   rapport?: RapportCommission | null;
+  seuilEnonce?: number | null;
 };
 
 export function etatPetition(source: SourceEtat, aujourdhui = new Date()): EtatPetition {
@@ -437,5 +446,13 @@ export function etatPetition(source: SourceEtat, aujourdhui = new Date()): EtatP
     // La condition qui manquait : le délai ne se compte que sur un recueil clos.
     attenteMesurable: examenSansRapport && recueil === "clos",
     classeeSansMotif: sortDecide && !source.decisionTexte,
+    // typeof : les documents importés avant ce champ le rendent `undefined`.
+    seuil:
+      typeof source.seuilEnonce === "number"
+        ? {
+            signatures: source.seuilEnonce,
+            sixMois: (source.decisionTexte ?? "").toLowerCase().includes("six mois"),
+          }
+        : null,
   };
 }

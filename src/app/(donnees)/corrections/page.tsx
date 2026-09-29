@@ -86,6 +86,16 @@ export default function Corrections() {
                   <strong>Pour que cela ne revienne pas&nbsp;:</strong> {e.gardeFou}
                 </p>
               )}
+
+              {e.rectifications?.map((r) => (
+                <div key={r.date + r.disait.slice(0, 40)}>
+                  <p className={propre.etiquette}>
+                    Entrée rectifiée le {formatFrDate(r.date)}. Elle disait
+                  </p>
+                  <blockquote className={propre.faux}>{r.disait}</blockquote>
+                  <p className={propre.texte}>{r.raison}</p>
+                </div>
+              ))}
             </li>
           ))}
         </ol>

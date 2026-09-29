@@ -15,6 +15,7 @@ import {
   etatPetition,
   getReunionsPetition,
   moisDepuis,
+  type EtatPetition,
   type Petition,
 } from "@/lib/petitions";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
@@ -72,7 +73,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 // Ce que les champs dérivés permettent d'affirmer — et rien de plus. Chaque
 // formulation reprend celles de l'accueil : des faits vérifiables, jamais une
 // cause supposée.
-function constats(p: Petition): string[] {
+function constats(p: Petition, etat: EtatPetition): string[] {
   const faits: string[] = [];
 
   // Le motif n'est « lu dans le texte » que lorsqu'un texte existe. Sans lui,
@@ -85,15 +86,18 @@ function constats(p: Petition): string[] {
   }
 
   // Le seuil opposé à une pétition dépend de sa commission, et n'est connu que
-  // si son texte de décision l'énonce. À défaut, on s'en tient au fait brut :
-  // le nombre de signatures comparé à 10 000.
-  // typeof et non « !== null » : les documents importés avant l'ajout de ce
-  // champ le rendent `undefined`, qui n'est pas `null`. La fiche serait entrée
-  // dans cette branche avec un seuil inexistant jusqu'au prochain import.
-  if (typeof p.seuilEnonce === "number" && p.nbVotes !== null) {
-    const atteint = p.nbVotes >= p.seuilEnonce;
+  // si son texte de décision l'énonce. Il porte sur un délai que le nombre de
+  // signatures du fichier ne couvre pas : on le cite sans l'y comparer. À
+  // défaut de seuil, on s'en tient au fait brut, le nombre comparé à 10 000.
+  if (etat.seuil) {
+    const delai = etat.seuil.sixMois ? " dans un délai de six mois après le dépôt" : "";
     faits.push(
-      `${atteint ? "A atteint" : "N'a pas atteint"} le seuil de ${p.seuilEnonce.toLocaleString("fr-FR")} signatures que son texte de décision énonce.`
+      `Son texte de décision énonce un seuil de ${etat.seuil.signatures.toLocaleString("fr-FR")} signatures${delai}.`
+    );
+    faits.push(
+      p.nbVotes === null
+        ? "Le nombre de signatures n'est pas renseigné dans le fichier."
+        : `Le fichier lui en compte ${p.nbVotes.toLocaleString("fr-FR")} au dernier import${etat.seuil.sixMois ? ", sans dire combien elle en avait au terme de ce délai" : ""}.`
     );
   } else if (p.seuilAtteint === null) {
     faits.push(
@@ -333,7 +337,7 @@ export default async function FichePetition({ params }: Params) {
         <section className={styles.section}>
           <h2>Ce que nous constatons</h2>
           <ul>
-            {constats(p).map((fait) => (
+            {constats(p, etat).map((fait) => (
               <li key={fait.slice(0, 40)}>{fait}</li>
             ))}
           </ul>

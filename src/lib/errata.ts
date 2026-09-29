@@ -48,10 +48,30 @@ export type Erratum = {
   empreinte?: string;
   /** Ce qui tient la phrase désormais, pour les corrections `code` et `rendu`. */
   preuve?: { fichier: string; contient: string };
+  /**
+   * Une entrée de cette page est elle-même une phrase affichée. Quand elle se
+   * révèle fausse, elle est rectifiée ici, en citant ce qu'elle disait : la
+   * réécrire sans trace serait la faute que cette page existe pour empêcher.
+   * `verifier:errata` retrouve `disait` dans l'historique de ce fichier.
+   */
+  rectifications?: { date: string; disait: string; raison: string }[];
 };
 
 // Du plus récent au plus ancien.
 export const ERRATA: Erratum[] = [
+  {
+    date: "2026-09-29",
+    ou: "Fiches des pétitions dont le texte de décision énonce un seuil",
+    affirmait: "A atteint le seuil de 5 000 signatures que son texte de décision énonce.",
+    pourquoi:
+      "Le texte fixe ce seuil à six mois après le dépôt ; le nombre comparé était celui du dernier import. La pétition n° 4023, classée d'office faute de cinq mille signatures en six mois, en compte 19 156 : la fiche affichait côte à côte le motif « seuil non atteint » et cette phrase. La variante « N'a pas atteint le seuil » reposait sur la même comparaison. Ces phrases ont été affichées le 29 septembre 2026, entre l'import du matin et cette correction.",
+    corrige:
+      "La fiche cite le seuil et le délai que le texte énonce, puis le nombre de signatures du dernier import, en précisant que le fichier ne dit pas combien la pétition en avait au terme du délai.",
+    gardeFou:
+      "La qualification du seuil est faite dans la fonction qui qualifie l'état de chaque pétition, et la méthodologie dit que le seuil n'est pas comparé au nombre de signatures.",
+    corrigee: "texte",
+    empreinte: "signatures que son texte de décision énonce",
+  },
   {
     date: "2026-09-29",
     ou: "Accueil, carte des examens votés sans rapport trouvé",
@@ -72,12 +92,21 @@ export const ERRATA: Erratum[] = [
     pourquoi:
       "Le seuil lu dans le texte de décision n'était pas transmis aux fiches : l'import le calculait, puis ne l'enregistrait pas. Chaque fiche dont le nombre de signatures est renseigné affichait donc cette phrase, ou sa variante « A dépassé 10 000 signatures », y compris quand le texte énonce cinq mille ou dix mille signatures — le 10 septembre 2026, 1 499 textes de décision sur 1 560. La méthodologie et la correction du 11 septembre décrivaient un comportement que le site n'avait pas.",
     corrige:
-      "Quand le texte de décision énonce un seuil, la fiche l'affiche et dit si la pétition l'a atteint. La phrase reste affichée pour les pétitions dont le texte n'énonce pas de seuil.",
+      "Quand le texte de décision énonce un seuil, la fiche le cite avec le délai qu'il fixe. La phrase reste affichée pour les pétitions dont le texte n'énonce pas de seuil.",
     gardeFou:
       "La phrase de la méthodologie qui promet ce comportement a pour preuve la ligne de l'import qui enregistre le seuil : la retirer fait échouer le contrôle des textes.",
     corrigee: "code",
     empreinte: "et le fichier ne l'énonce pas pour cette pétition",
     preuve: { fichier: "scripts/import-petitions.mjs", contient: "seuilEnonce: p.seuilEnonce" },
+    rectifications: [
+      {
+        date: "2026-09-29",
+        disait:
+          "Quand le texte de décision énonce un seuil, la fiche l'affiche et dit si la pétition l'a atteint.",
+        raison:
+          "Dire si la pétition l'avait atteint comparait un seuil fixé à six mois après le dépôt au nombre de signatures du dernier import. Voir la correction sur les fiches dont le texte énonce un seuil.",
+      },
+    ],
   },
   {
     date: "2026-09-12",
@@ -159,11 +188,20 @@ export const ERRATA: Erratum[] = [
     ou: "Accueil, méthodologie, fiches",
     affirmait: "Le seuil de 10 000 signatures, en dessous duquel une pétition est classée d'office.",
     pourquoi:
-      "Ce seuil n'est pas unique. Les textes de décision du fichier l'énoncent eux-mêmes, et il varie : cinq mille signatures pour la commission des lois, dix mille pour les affaires sociales. Douze pétitions avaient atteint le seuil qui leur était opposé tout en étant présentées comme sous le seuil.",
+      "Ce seuil n'est pas unique. Les textes de décision du fichier l'énoncent eux-mêmes, et il varie : cinq mille signatures pour la commission des lois, dix mille pour les affaires sociales.",
     corrige:
       "Le site lit le seuil dans le texte de décision de chaque pétition, et ne le déduit jamais de sa commission. Quand aucun texte ne l'énonce, il s'en tient au nombre de signatures.",
     corrigee: "texte",
     empreinte: "en dessous duquel une pétition est classée",
+    rectifications: [
+      {
+        date: "2026-09-29",
+        disait:
+          "Douze pétitions avaient atteint le seuil qui leur était opposé tout en étant présentées comme sous le seuil.",
+        raison:
+          "Ces douze pétitions avaient été comptées d'après leur commission, celle des lois, et leur nombre de signatures, entre 5 000 et 10 000. Dans le fichier du 28 septembre 2026, leur texte de décision n'énonce pas de seuil, et le nombre de signatures du fichier n'est pas celui du terme des six mois : rien n'établissait qu'elles avaient atteint le leur. C'était déduire le seuil de la commission, ce que cette même correction s'interdisait.",
+      },
+    ],
   },
   {
     date: "2026-09-11",
