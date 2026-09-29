@@ -11,6 +11,7 @@ import {
   formatDelaiMois,
   formatFrDate,
   formatSignatures,
+  getEchantillonFiches,
   getPetition,
   etatPetition,
   getReunionsPetition,
@@ -26,11 +27,15 @@ import { SITE_NAME, SITE_URL } from "@/lib/site";
 // effet sur Firestore — deux lectures par fiche et par jour au maximum.
 export const revalidate = 86400;
 
-// Aucune fiche pré-générée au build : 4 000 lectures Firestore par build pour
-// des pages que personne n'a encore demandées seraient du gaspillage. Elles
-// sont générées à la demande puis mises en cache (dynamicParams par défaut).
+// Les 4 000 fiches sont générées à la demande puis mises en cache
+// (dynamicParams par défaut) : les pré-générer toutes coûterait 4 000 lectures
+// Firestore par build. Un échantillon l'est pourtant, pour que verifier:textes,
+// qui ne lit que le rendu du build, lise aussi les phrases des fiches. Il n'en
+// avait jamais lu une : « A atteint le seuil de 5 000 signatures » (n° 4023)
+// ne pouvait pas y être vu. Voir getEchantillonFiches().
 export async function generateStaticParams(): Promise<{ identifiant: string }[]> {
-  return [];
+  const identifiants = await getEchantillonFiches();
+  return identifiants.map((identifiant) => ({ identifiant }));
 }
 
 // Une seule lecture partagée entre generateMetadata et la page.
@@ -51,8 +56,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!p) return { title: `Pétition introuvable — ${SITE_NAME}` };
 
   const extrait = p.description.length > 150 ? `${p.description.slice(0, 150).trimEnd()}…` : p.description;
+  const statut = p.absenteDuFichierDepuis
+    ? `Absente du fichier officiel lu le ${formatFrDate(p.absenteDuFichierDepuis)}`
+    : p.statutLabel;
   const description =
-    `${p.statutLabel} · ${formatSignatures(p.nbVotes)} soutiens · déposée le ` +
+    `${statut} · ${formatSignatures(p.nbVotes)} soutiens · déposée le ` +
     `${formatFrDate(p.datePublication)}. ${extrait}`;
 
   return {
@@ -82,7 +90,9 @@ function constats(p: Petition, etat: EtatPetition): string[] {
   if (p.decisionTexte) {
     faits.push(`Motif lu dans le texte de décision : ${MOTIF_LABELS[p.motifClassement].toLowerCase()}.`);
   } else if (p.motifClassement === "absent") {
-    faits.push("Le champ de décision est vide : aucun motif n'est publié.");
+    // Borné au fichier : sur la même fiche, un compte rendu peut publier la
+    // décision que ce champ ne porte pas.
+    faits.push("Le champ de décision du fichier est vide : le fichier ne donne pas de motif.");
   }
 
   // Le seuil opposé à une pétition dépend de sa commission, et n'est connu que
@@ -94,10 +104,11 @@ function constats(p: Petition, etat: EtatPetition): string[] {
     faits.push(
       `Son texte de décision énonce un seuil de ${etat.seuil.signatures.toLocaleString("fr-FR")} signatures${delai}.`
     );
+    const lecture = etat.horsFichier ? `à la lecture du ${formatFrDate(p.calculeLe)}` : "au dernier import";
     faits.push(
       p.nbVotes === null
         ? "Le nombre de signatures n'est pas renseigné dans le fichier."
-        : `Le fichier lui en compte ${p.nbVotes.toLocaleString("fr-FR")} au dernier import${etat.seuil.sixMois ? ", sans dire combien elle en avait au terme de ce délai" : ""}.`
+        : `Le fichier lui en compte ${p.nbVotes.toLocaleString("fr-FR")} ${lecture}${etat.seuil.sixMois ? ", sans dire combien elle en avait au terme de ce délai" : ""}.`
     );
   } else if (p.seuilAtteint === null) {
     faits.push(
@@ -179,8 +190,14 @@ export default async function FichePetition({ params }: Params) {
         </p>
         <h1>{p.titre}</h1>
         <div className={styles.etat}>
-          <span className={`${cartes.tag} ${etat.classeeSansMotif ? cartes.tagNone : cartes.tagExamined}`}>
-            {etat.classeeSansMotif ? "Décision non publiée" : p.statutLabel}
+          <span
+            className={`${cartes.tag} ${etat.horsFichier || etat.classeeSansMotif ? cartes.tagNone : cartes.tagExamined}`}
+          >
+            {etat.horsFichier
+              ? "Absente du fichier officiel"
+              : etat.classeeSansMotif
+                ? "Décision non publiée"
+                : p.statutLabel}
           </span>
           <span>
             <span className={styles.n}>{formatSignatures(p.nbVotes)}</span> soutiens
@@ -219,6 +236,17 @@ export default async function FichePetition({ params }: Params) {
       </aside>
 
       <div className={styles.corps}>
+        {etat.horsFichier && (
+          <p className={styles.encadre}>
+            <strong>Cette pétition ne figure plus dans le fichier officiel.</strong>{" "}
+            Notre import du {formatFrDate(etat.horsFichier.constateLe)} ne l&apos;y a pas
+            trouvée. Les champs du fichier affichés sur cette page sont ceux de notre
+            lecture du {formatFrDate(etat.horsFichier.derniereLecture)}, la dernière qui la
+            contenait. Nous ne savons pas pourquoi elle en est sortie, ni si elle reste
+            consultable sur la plateforme de l&apos;Assemblée nationale.
+          </p>
+        )}
+
         <section className={styles.section}>
           <h2>La décision de la commission</h2>
           <p>
@@ -302,8 +330,9 @@ export default async function FichePetition({ params }: Params) {
                   La commission s&apos;est prononcée pour l&apos;examen de cette pétition le{" "}
                   {formatFrDate(decisionLue.date)}, alors que le fichier lui donne une date
                   limite de signature au {formatFrDate(p.dateLimiteVote)}. Nous n&apos;avons
-                  trouvé aucun rapport à ce jour, et nous ne comptons aucun délai&nbsp;: une
-                  pétition encore ouverte à la signature n&apos;est pas une pétition en attente.
+                  pas trouvé de rapport dans les corpus que nous lisons, et nous ne comptons
+                  pas de délai&nbsp;: une pétition encore ouverte à la signature n&apos;est pas
+                  une pétition en attente.
                 </>
               )}
             </p>
@@ -315,10 +344,8 @@ export default async function FichePetition({ params }: Params) {
               <p>
                 L&apos;examen s&apos;est conclu par un rapport, déposé le{" "}
                 {formatFrDate(rapport.dateDepot)}
-                {rapport.numero ? ` sous le numéro ${rapport.numero}` : ""}. C&apos;est la seule
-                suite écrite, argumentée et signée qu&apos;une pétition puisse recevoir. Ni le
-                fichier de données ouvertes, ni la page où cette pétition a été signée n&apos;y
-                renvoient.
+                {rapport.numero ? ` sous le numéro ${rapport.numero}` : ""}. Ni le fichier de
+                données ouvertes, ni la page où cette pétition a été signée n&apos;y renvoient.
               </p>
               <blockquote className={styles.citation}>
                 {rapport.titre}
@@ -391,7 +418,9 @@ export default async function FichePetition({ params }: Params) {
 
         <section className={styles.section}>
           <h2>Texte de la pétition</h2>
-          <p className={styles.texteIntegral}>{p.description}</p>
+          <p className={styles.texteIntegral} data-texte-tiers>
+            {p.description}
+          </p>
           <p className={styles.provenance}>
             Texte republié intégralement depuis le{" "}
             <a

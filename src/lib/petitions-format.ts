@@ -50,6 +50,12 @@ export type Petition = {
   statutLabel: string;
   sourceCsv: string;
   calculeLe: string;
+  /**
+   * Date de l'import qui a constaté que la pétition ne figure plus dans le
+   * fichier. Les autres champs sont alors ceux de la dernière lecture qui la
+   * contenait (`calculeLe`). Absent tant qu'elle y figure.
+   */
+  absenteDuFichierDepuis?: string;
 };
 
 export const MOTIF_LABELS: Record<MotifClassement, string> = {
@@ -260,8 +266,9 @@ export type CasCommission = {
 };
 
 /**
- * Le rapport qu'une commission dépose au terme de l'examen d'une pétition — la
- * seule suite écrite, argumentée et signée qu'une pétition puisse recevoir. Ni
+ * Le rapport qu'une commission dépose au terme de l'examen d'une pétition. Ce
+ * n'est pas « la seule suite écrite » possible : rien de ce que nous lisons ne
+ * l'établit (erratum du 29/09/2026). Ni
  * le fichier de data.gouv.fr ni la fiche de la pétition sur la plateforme n'y
  * renvoient : le lien se lit dans le titre du rapport, qui cite son numéro.
  */
@@ -394,6 +401,12 @@ export type EtatPetition = {
    * site n'en conclut donc pas qu'une pétition a atteint ou manqué ce seuil.
    */
   seuil: { signatures: number; sixMois: boolean } | null;
+  /**
+   * La pétition ne figure plus dans le fichier officiel. Tout ce que la fiche
+   * affiche vient alors de `derniereLecture` : le présenter comme l'état du
+   * dernier import dirait ce que ce fichier ne dit plus.
+   */
+  horsFichier: { constateLe: string; derniereLecture: string | null } | null;
 };
 
 /**
@@ -413,6 +426,8 @@ export type SourceEtat = {
   derniereDecision?: (DecisionCompteRendu & { date: string; compteRenduRef: string }) | null;
   rapport?: RapportCommission | null;
   seuilEnonce?: number | null;
+  absenteDuFichierDepuis?: string;
+  calculeLe?: string;
 };
 
 export function etatPetition(source: SourceEtat, aujourdhui = new Date()): EtatPetition {
@@ -454,5 +469,8 @@ export function etatPetition(source: SourceEtat, aujourdhui = new Date()): EtatP
             sixMois: (source.decisionTexte ?? "").toLowerCase().includes("six mois"),
           }
         : null,
+    horsFichier: source.absenteDuFichierDepuis
+      ? { constateLe: source.absenteDuFichierDepuis, derniereLecture: source.calculeLe ?? null }
+      : null,
   };
 }

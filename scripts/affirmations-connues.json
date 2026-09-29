@@ -24,10 +24,10 @@
       "texte": "Accueil — le constat d'ensemble, les chiffres à jour et la recherche parmi toutes les pétitions.",
       "page": "plan-du-site.html",
       "fonde": "nous",
-      "note": "Chaque import envoie à l'index de recherche l'ensemble des documents importés.",
+      "note": "Chaque import envoie à l'index de recherche tous les documents du fichier, et en retire les pétitions qui n'y figurent plus : « toutes les pétitions » désigne celles du fichier.",
       "preuve": {
         "fichier": "scripts/import-petitions.mjs",
-        "contient": "await synchroniserAlgolia(documents);"
+        "contient": "await synchroniserAlgolia(documents, absentes);"
       }
     },
     {
@@ -396,6 +396,16 @@
       }
     },
     {
+      "texte": "Examen voté, recueil toujours en cours.",
+      "page": "petition/2760.html",
+      "fonde": "nous",
+      "note": "« Toujours » dit « encore », pas « à chaque fois ». Qualification calculée par etatPetition() : examen lu au compte rendu, aucun rapport, recueil non clos d'après le fichier.",
+      "preuve": {
+        "fichier": "src/lib/petitions-format.ts",
+        "contient": "attenteMesurable: examenSansRapport && recueil === \"clos\""
+      }
+    },
+    {
       "texte": "Il est constitué à partir de données publiques et n'est ni affilié à l'Assemblée nationale, ni à aucune institution publique , ni à aucun parti politique ou organisation militante.",
       "page": "mentions-legales.html",
       "fonde": "editeur",
@@ -530,6 +540,16 @@
       }
     },
     {
+      "texte": "Le fichier de données n'est pas la seule trace publique.",
+      "page": "petition/1109.html",
+      "fonde": "nous",
+      "note": "N'est affichée que lorsqu'une décision a été lue dans un compte rendu publié, cité juste après avec son lien : l'autre trace est celle-là.",
+      "preuve": {
+        "fichier": "src/app/(donnees)/petition/[identifiant]/page.tsx",
+        "contient": "{decisionLue && ("
+      }
+    },
+    {
       "texte": "Le fichier ne renseigne pas toujours cette date : sans elle, nous ne signalons rien.",
       "page": "index.html",
       "fonde": "nous",
@@ -543,10 +563,20 @@
       "texte": "Le fichier officiel a été relu : aucune pétition ajoutée, aucun changement de statut, aucun champ de décision rempli depuis la lecture précédente — seuls les compteurs de signatures ont augmenté (+11 980).",
       "page": "index.html",
       "fonde": "nous",
-      "note": "Affichée seulement quand le journal compte zéro pétition nouvelle, zéro statut changé et zéro décision publiée depuis l'import précédent (rienDeNeuf). Le journal n'est pas réécrit quand un import forcé relit le même fichier.",
+      "note": "Affichée seulement quand le journal compte zéro pétition nouvelle, zéro statut changé, zéro décision publiée et zéro sortie depuis l'import précédent (rienDeNeuf). Pour les imports antérieurs au 29/09/2026, qui ne comptaient pas les sorties, la note du bloc dit que la comparaison ne les voit pas. Le journal n'est pas réécrit quand un import forcé relit le même fichier.",
       "preuve": {
         "fichier": "src/app/CetteSemaine.tsx",
-        "contient": "delta.nbNouvelles + delta.nbSeuilFranchi + delta.nbRecueilsClos + delta.nbDecisionsPubliees + delta.nbStatutsChanges === 0"
+        "contient": "delta.nbStatutsChanges + nbSorties === 0"
+      }
+    },
+    {
+      "texte": "Le fichier officiel a été relu : aucune pétition ajoutée, aucun changement de statut, aucun champ de décision rempli, aucune pétition sortie du fichier depuis la lecture précédente — seuls les compteurs de signatures ont augmenté (+11 980).",
+      "page": "index.html",
+      "fonde": "nous",
+      "note": "Affichée seulement quand le journal compte zéro pétition nouvelle, zéro statut changé, zéro décision publiée et zéro sortie depuis l'import précédent (rienDeNeuf). Pour les imports antérieurs au 29/09/2026, qui ne comptaient pas les sorties, la note du bloc dit que la comparaison ne les voit pas. Le journal n'est pas réécrit quand un import forcé relit le même fichier.",
+      "preuve": {
+        "fichier": "src/app/CetteSemaine.tsx",
+        "contient": "delta.nbStatutsChanges + nbSorties === 0"
       }
     },
     {
@@ -1147,6 +1177,12 @@
         "fichier": "src/lib/errata.ts",
         "contient": "export const ERRATA"
       }
+    },
+    {
+      "texte": "Voir toutes les pétitions concernées .",
+      "page": "petition/100.html",
+      "fonde": "non-affirmation",
+      "note": "Libellé d'un lien vers la liste complète de la catégorie : il renvoie à une page, il n'affirme rien."
     },
     {
       "texte": "Votre navigateur ne contacte donc jamais Firestore, et votre adresse IP ne lui est pas transmise.",

@@ -49,7 +49,7 @@ export function FriseReunions({ reunions }: { reunions: ReunionCommission[] }) {
 
             <details className={styles.friseDetail}>
               <summary>Texte officiel</summary>
-              <p>{r.intitule}</p>
+              <p data-texte-tiers>{r.intitule}</p>
               {r.compteRenduRef && (
                 <p className={styles.friseCr}>
                   Compte rendu de la réunion&nbsp;: {r.compteRenduRef}

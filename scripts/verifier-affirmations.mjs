@@ -114,6 +114,10 @@ function texteVisible(html) {
       // l'Assemblée ou d'un pétitionnaire, et « pour tous ! » dans un titre de
       // pétition n'engage personne ici.
       .replace(/<blockquote[\s\S]*?<\/blockquote>/gi, " ")
+      // Même raison pour les textes que le site reproduit sans en être l'auteur
+      // hors d'une citation : le texte d'une pétition, l'intitulé d'un ordre du
+      // jour. « ils sont tous nos salariés » est la phrase d'un pétitionnaire.
+      .replace(/<(\w+)[^>]*\sdata-texte-tiers[^>]*>[\s\S]*?<\/\1>/gi, " ")
       .replace(/<a[^>]+href="\/petition\/[^"]*"[^>]*>[\s\S]*?<\/a>/gi, " ")
       .replace(/<(h1|title)[^>]*>[\s\S]*?<\/\1>/gi, " ")
       // Une limite de bloc termine une phrase, même sans point : un titre, une
@@ -193,8 +197,20 @@ async function main() {
 
   // Indexées par clé : deux phrases qui ne diffèrent que par leurs chiffres
   // sont la même affirmation. On garde le texte de la première rencontrée.
+  // Les fiches ne sont lues que si l'échantillon a été pré-généré. Sans elles,
+  // le contrôle passerait en silence sur des phrases qu'il n'a pas lues.
+  const pages = await pagesRendues(RENDU);
+  const fiches = pages.filter((f) => f.includes(`${path.sep}petition${path.sep}`));
+  if (!fiches.length) {
+    throw new Error(
+      "Aucune fiche de pétition dans le rendu : l'échantillon de generateStaticParams n'a pas été généré. " +
+        "Le contrôle ne lirait aucune phrase de fiche."
+    );
+  }
+  console.log(`Fiches lues : ${fiches.length}`);
+
   const trouvees = new Map();
-  for (const f of await pagesRendues(RENDU)) {
+  for (const f of pages) {
     for (const p of phrases(texteVisible(await readFile(f, "utf8")))) {
       if (!trouvees.has(cle(p))) trouvees.set(cle(p), { texte: p, page: path.relative(RENDU, f) });
     }

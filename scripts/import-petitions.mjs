@@ -139,6 +139,12 @@ function resume(d) {
 
 function calculerDelta(precedents, documents, aujourdhui, importPrecedentLe) {
   const avant = new Map(precedents.map((p) => [p.identifiant, p]));
+  const lus = new Set(documents.map((d) => d.identifiant));
+  // Une pétition déjà constatée absente l'est restée : la compter à chaque
+  // import ferait d'une seule sortie un événement hebdomadaire.
+  const sorties = precedents
+    .filter((p) => !lus.has(p.identifiant) && !p.absenteDuFichierDepuis)
+    .map(resume);
   const nouvelles = [];
   const seuilFranchi = [];
   const recueilsClos = [];
@@ -180,12 +186,14 @@ function calculerDelta(precedents, documents, aujourdhui, importPrecedentLe) {
     nbRecueilsClos: recueilsClos.length,
     nbDecisionsPubliees: decisionsPubliees.length,
     nbStatutsChanges: statutsChanges.length,
+    nbSorties: sorties.length,
     signaturesGagnees,
     nouvelles: borner(nouvelles),
     seuilFranchi: borner(seuilFranchi),
     recueilsClos: borner(recueilsClos),
     decisionsPubliees: borner(decisionsPubliees),
     statutsChanges: borner(statutsChanges),
+    sorties: borner(sorties),
     // Les listes s'arrêtent à douze fiches, le compteur fait foi. Les numéros,
     // eux, sont tous gardés : le relevé de la newsletter du 21/09/2026 comptait
     // quinze pétitions et ne pouvait nommer que douze d'entre elles.
@@ -195,6 +203,7 @@ function calculerDelta(precedents, documents, aujourdhui, importPrecedentLe) {
       recueilsClos: numeros(recueilsClos),
       decisionsPubliees: numeros(decisionsPubliees),
       statutsChanges: numeros(statutsChanges),
+      sorties: numeros(sorties),
     },
   };
 }
@@ -204,7 +213,8 @@ function calculerDelta(precedents, documents, aujourdhui, importPrecedentLe) {
 // 4 000 lectures par semaine ne pèsent rien.
 async function lireEtatPrecedent(db) {
   const snap = await db.collection("petitions").select(
-    "identifiant", "nbVotes", "seuilAtteint", "recueilTermine", "decisionTexte", "statutSource"
+    "identifiant", "titre", "nbVotes", "seuilAtteint", "recueilTermine", "decisionTexte", "statutSource",
+    "absenteDuFichierDepuis"
   ).get();
   const precedents = snap.docs.map((d) => d.data());
   const stats = await db.collection("meta").doc("stats").get();
@@ -234,8 +244,11 @@ async function ecrireFirestore(db, documents, stats, aujourdhui, sourceModifieLe
   // Le delta se calcule AVANT d'écraser la collection ; s'il échoue, l'import
   // continue sans journal — la mise à jour des données passe avant le récit.
   let delta = null;
+  let precedents = null;
   try {
-    const { precedents, importPrecedentLe } = await lireEtatPrecedent(db);
+    const etat = await lireEtatPrecedent(db);
+    precedents = etat.precedents;
+    const { importPrecedentLe } = etat;
     if (precedents.length) delta = calculerDelta(precedents, documents, aujourdhui, importPrecedentLe);
     console.log(
       delta
@@ -256,6 +269,27 @@ async function ecrireFirestore(db, documents, stats, aujourdhui, sourceModifieLe
     }
     await lot.commit();
     console.log(`  importé ${Math.min(i + TAILLE_LOT, documents.length)}/${documents.length}`);
+  }
+
+  // Une pétition qui sort du fichier n'est pas supprimée : sa fiche a pu être
+  // lue et citée. Elle est marquée, et garde les valeurs de la dernière lecture
+  // qui la contenait (son `calculeLe`). Le 28/09/2026, les n° 3122 et 4061 ont
+  // quitté le fichier ; leurs fiches affichaient encore « En cours de
+  // signature » comme si l'import du jour le disait. Une pétition qui revient
+  // est réécrite par le `set` ci-dessus, et perd donc sa marque.
+  const absentes = [];
+  if (precedents) {
+    const lus = new Set(documents.map((d) => d.identifiant));
+    for (const p of precedents) {
+      if (lus.has(p.identifiant)) continue;
+      absentes.push(p.identifiant);
+      if (!p.absenteDuFichierDepuis) {
+        await db.collection("petitions").doc(p.identifiant).update({ absenteDuFichierDepuis: aujourdhui });
+        console.log(`  n° ${p.identifiant} absente du fichier : marquée, non supprimée.`);
+      }
+    }
+  } else {
+    console.error("État précédent illisible : les pétitions sorties du fichier ne sont pas marquées.");
   }
 
   await db
@@ -300,9 +334,10 @@ async function ecrireFirestore(db, documents, stats, aujourdhui, sourceModifieLe
     );
     await ref.set({ imports, updatedAt: Timestamp.now() });
   }
+  return absentes;
 }
 
-async function synchroniserAlgolia(documents) {
+async function synchroniserAlgolia(documents, absentes) {
   const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
   const adminKey = process.env.ALGOLIA_ADMIN_KEY;
   const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "petitions";
@@ -344,6 +379,12 @@ async function synchroniserAlgolia(documents) {
   console.log(`\nSynchronisation Algolia (index "${indexName}")...`);
   await client.saveObjects({ indexName, objects: records, waitForTasks: false });
   console.log(`  ${records.length} objets envoyés.`);
+  // La recherche ne propose que ce que le fichier contient : une pétition
+  // sortie reste consultable par sa fiche, pas trouvable comme si elle y était.
+  if (absentes.length) {
+    await client.deleteObjects({ indexName, objectIDs: absentes, waitForTasks: false });
+    console.log(`  ${absentes.length} objet(s) retiré(s) : pétitions absentes du fichier.`);
+  }
 }
 
 async function main() {
@@ -380,8 +421,8 @@ async function main() {
   }
 
   console.log("\nÉcriture dans Firestore (collection `petitions` + `meta/stats` + `meta/sitemap` + `meta/journal`)...");
-  await ecrireFirestore(db, documents, stats, aujourdhui, sourceModifieLe, memeFichier);
-  await synchroniserAlgolia(documents);
+  const absentes = await ecrireFirestore(db, documents, stats, aujourdhui, sourceModifieLe, memeFichier);
+  await synchroniserAlgolia(documents, absentes);
   console.log("\nImport terminé.");
 }
 
