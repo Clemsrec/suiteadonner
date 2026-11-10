@@ -300,3 +300,43 @@ export async function getPassagesEnCommission(max = 6): Promise<PassageEnCommiss
   const snap = await getDocs(q);
   return snap.docs.map((d) => d.data() as PassageEnCommission);
 }
+
+// Pétitions publiées sur la plateforme de l'Assemblée nationale mais absentes
+// du fichier ouvert, relevées par scripts/relever-absentes.mjs. Champs lus sur
+// la plateforme, jamais dans le fichier : ils ne rejoignent pas la collection
+// `petitions`, qui décrit le fichier seul.
+export type PetitionAbsente = {
+  identifiant: string;
+  titre: string;
+  nbVotes: number | null;
+  datePublication: string | null;
+  commission: string | null;
+  url: string;
+};
+
+export type ReleveAbsentes = {
+  releveLe: string;
+  sourceModifieLe: string | null;
+  numeroMax: number;
+  nbNumerosTestes: number;
+  nbPubliees: number;
+  totalSoutiens: number;
+  soutiensInconnus: number;
+  petitions: PetitionAbsente[];
+};
+
+export async function getReleveAbsentes(): Promise<ReleveAbsentes | null> {
+  const snap = await getDoc(doc(db, "meta", "absentes"));
+  if (!snap.exists()) return null;
+  const d = snap.data();
+  return {
+    releveLe: d.releveLe ?? "",
+    sourceModifieLe: d.sourceModifieLe ?? null,
+    numeroMax: d.numeroMax ?? 0,
+    nbNumerosTestes: d.nbNumerosTestes ?? 0,
+    nbPubliees: d.nbPubliees ?? 0,
+    totalSoutiens: d.totalSoutiens ?? 0,
+    soutiensInconnus: d.soutiensInconnus ?? 0,
+    petitions: (d.petitions as PetitionAbsente[]) ?? [],
+  };
+}

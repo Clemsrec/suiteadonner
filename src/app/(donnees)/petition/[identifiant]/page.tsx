@@ -5,6 +5,7 @@ import { cache } from "react";
 import styles from "../../donnees.module.css";
 import cartes from "@/app/page.module.css";
 import { FriseReunions } from "@/app/FriseReunions";
+import { FicheAbsente } from "./FicheAbsente";
 import {
   MOTIF_LABELS,
   SEUIL_SIGNATURES,
@@ -13,6 +14,7 @@ import {
   formatSignatures,
   getEchantillonFiches,
   getPetition,
+  getReleveAbsentes,
   etatPetition,
   getReunionsPetition,
   moisDepuis,
@@ -41,6 +43,15 @@ export async function generateStaticParams(): Promise<{ identifiant: string }[]>
 // Une seule lecture partagée entre generateMetadata et la page.
 const chargerPetition = cache(async (identifiant: string) => getPetition(identifiant));
 
+// Repli pour un numéro que le fichier ignore mais que la plateforme publie
+// (relevé de scripts/relever-absentes.mjs). Lu seulement quand le fichier ne
+// connaît pas le numéro : les fiches ordinaires n'en paient pas la lecture.
+const chargerAbsente = cache(async (identifiant: string) => {
+  const releve = await getReleveAbsentes().catch(() => null);
+  const p = releve?.petitions.find((a) => a.identifiant === identifiant);
+  return releve && p ? { p, releveLe: releve.releveLe } : null;
+});
+
 type Params = { params: Promise<{ identifiant: string }> };
 
 // Les identifiants du CSV sont numériques et courts. Refuser le reste évite
@@ -53,7 +64,16 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { identifiant } = await params;
   if (!identifiantValide(identifiant)) return { title: `Pétition introuvable — ${SITE_NAME}` };
   const p = await chargerPetition(identifiant);
-  if (!p) return { title: `Pétition introuvable — ${SITE_NAME}` };
+  if (!p) {
+    const absente = await chargerAbsente(identifiant);
+    if (!absente) return { title: `Pétition introuvable — ${SITE_NAME}` };
+    return {
+      title: `Pétition n°${identifiant} : ${absente.p.titre}`,
+      description: `Publiée sur la plateforme de l'Assemblée nationale, absente du fichier de données ouvertes · ${formatSignatures(absente.p.nbVotes)} soutiens au relevé du ${formatFrDate(absente.releveLe)}.`,
+      alternates: { canonical: `/petition/${identifiant}` },
+      robots: { index: false, follow: true },
+    };
+  }
 
   const extrait = p.description.length > 150 ? `${p.description.slice(0, 150).trimEnd()}…` : p.description;
   const statut = p.absenteDuFichierDepuis
@@ -140,7 +160,11 @@ export default async function FichePetition({ params }: Params) {
   if (!identifiantValide(identifiant)) notFound();
 
   const p = await chargerPetition(identifiant);
-  if (!p) notFound();
+  if (!p) {
+    const absente = await chargerAbsente(identifiant);
+    if (!absente) notFound();
+    return <FicheAbsente p={absente.p} releveLe={absente.releveLe} />;
+  }
 
   // La plupart des pétitions n'ont aucun passage en commission : l'absence de
   // document est le cas normal, et la fiche dégrade sans cette section.

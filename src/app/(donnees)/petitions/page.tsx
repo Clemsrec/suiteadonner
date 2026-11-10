@@ -87,6 +87,11 @@ export default async function IndexPetitions() {
             signature est passée, mais le fichier ouvert conserve à ces pétitions le statut{" "}
             <code>ouverte</code>.
           </li>
+          <li>
+            <Link href="/absentes-du-fichier">Absentes du fichier</Link>{" "}— publiées sur la
+            plateforme de l&apos;Assemblée nationale, mais jamais entrées dans le fichier
+            ouvert, et donc absentes de cette liste.
+          </li>
         </ul>
       </section>
 

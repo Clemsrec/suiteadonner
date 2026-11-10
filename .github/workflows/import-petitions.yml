@@ -49,7 +49,8 @@ concurrency:
 jobs:
   import:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # 15 minutes pour l'import, une dizaine pour le relevé des absentes.
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
 
@@ -80,3 +81,13 @@ jobs:
           NEXT_PUBLIC_ALGOLIA_INDEX_NAME: petitions
           ALGOLIA_ADMIN_KEY: ${{ secrets.ALGOLIA_ADMIN_KEY }}
         run: npm run verifier && node scripts/import-petitions.mjs ${{ inputs.force && '--force' || '' }}
+
+      # Pétitions publiées sur la plateforme mais absentes du fichier
+      # (scripts/relever-absentes.mjs, issue datagouv 839). Indépendant de
+      # l'import : un échec ici ne doit pas faire échouer celui-ci, et le
+      # relevé précédent reste alors affiché.
+      - name: Relever les pétitions absentes du fichier
+        continue-on-error: true
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
+        run: node scripts/relever-absentes.mjs ${{ inputs.force && '--force' || '' }}

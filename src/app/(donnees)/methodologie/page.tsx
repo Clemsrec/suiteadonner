@@ -81,6 +81,14 @@ export default function Methodologie() {
           l&apos;avons contrôlée le 27 juillet 2026. Nous lisons la ressource déclarée
           par le jeu de données officiel, à son adresse stable.
         </p>
+        <p>
+          <strong>Ce fichier n&apos;est pas complet.</strong>{" "}Des pétitions publiées sur
+          la plateforme n&apos;y sont jamais entrées, à cause d&apos;un défaut du programme
+          qui le produit. Elles sont absentes de nos chiffres, puisque nous ne les
+          ajoutons pas au fichier. Nous les relevons chaque semaine sur la plateforme et
+          les listons à part&nbsp;:{" "}
+          <Link href="/absentes-du-fichier">voir ces pétitions</Link>.
+        </p>
       </section>
 
       <section className={styles.section}>

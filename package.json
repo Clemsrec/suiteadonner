@@ -10,6 +10,7 @@
     "fetch:reunions": "node scripts/fetch-reunions.mjs",
     "import:petitions": "npm run verifier && node --env-file=.env.local scripts/import-petitions.mjs",
     "lint": "eslint",
+    "relever:absentes": "node --env-file=.env.local scripts/relever-absentes.mjs",
     "start": "next start",
     "verifier": "node scripts/verifier-coherence.mjs",
     "verifier:errata": "node scripts/verifier-errata.mjs",

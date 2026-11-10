@@ -77,6 +77,9 @@ export default async function PlanDuSite() {
           <li>
             <Link href="/fichier-non-a-jour">Le fichier public n&apos;est pas à jour</Link>
           </li>
+          <li>
+            <Link href="/absentes-du-fichier">Des pétitions publiées manquent au fichier public</Link>
+          </li>
         </ul>
       </section>
 
