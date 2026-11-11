@@ -163,7 +163,8 @@ export default async function FichePetition({ params }: Params) {
   if (!p) {
     const absente = await chargerAbsente(identifiant);
     if (!absente) notFound();
-    return <FicheAbsente p={absente.p} releveLe={absente.releveLe} />;
+    const passagesAbsente = await getReunionsPetition(identifiant).catch(() => null);
+    return <FicheAbsente p={absente.p} releveLe={absente.releveLe} passages={passagesAbsente} />;
   }
 
   // La plupart des pétitions n'ont aucun passage en commission : l'absence de

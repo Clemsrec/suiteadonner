@@ -123,6 +123,18 @@ export function motifClassement(decisionTexte, recueilTermine, statutSource = ""
   return decidee ? MOTIFS.ABSENT : MOTIFS.SANS_OBJET;
 }
 
+// Libellé affiché. Il décrit un fait vérifiable et jamais ce que la plateforme
+// montre — vérification faite le 27/07/2026, elle affiche « Acceptées » et la
+// date limite, sans employer « en cours de signature ».
+export function libelleStatut(p) {
+  if (p.motifClassement === MOTIFS.SEUIL) return "Classée d'office (seuil non atteint)";
+  if (p.statutSource === "ouverte") return p.recueilTermine ? "Recueil terminé" : "En cours de signature";
+  if (p.statutSource === "classee") return "Classée";
+  if (p.statutSource === "archivee") return "Classée d'office";
+  if (p.statutSource === "expiree") return "Expirée";
+  return p.statutSource;
+}
+
 // --- Lecture d'une ligne --------------------------------------------------
 
 export function mapLigne(row, aujourdhui) {

@@ -230,6 +230,11 @@ export type ReunionCommission = {
 
 export type PassageEnCommission = {
   identifiant: string;
+  /**
+   * Publiée sur la plateforme mais absente du fichier ouvert (relevé
+   * meta/absentes). Absent des documents écrits avant le 11/11/2026.
+   */
+  horsFichier?: boolean;
   titre: string;
   /** Absent du fichier pour certaines pétitions : jamais remplacé par zéro. */
   nbVotes: number | null;

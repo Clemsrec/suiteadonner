@@ -2,7 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import styles from "../donnees.module.css";
 import TableauPetitions, { type LignePetition } from "@/app/TableauPetitions";
-import { formatFrDate, getReleveAbsentes } from "@/lib/petitions";
+import {
+  STATUT_TAG,
+  formatFrDate,
+  getReleveAbsentes,
+  type PetitionAbsente,
+  type StatutSource,
+} from "@/lib/petitions";
 import { SITE_NAME } from "@/lib/site";
 
 export const revalidate = 86400;
@@ -24,6 +30,15 @@ export const metadata: Metadata = {
       "Des pétitions publiées, parfois très signées, que le fichier de données ouvertes ne contient pas.",
   },
 };
+
+// Relevés antérieurs au 11/11/2026 : pas de statut lu. Recueil terminé sans
+// texte de décision : même étiquette neutre que les décisions non publiées.
+function etiquette(p: PetitionAbsente): Pick<LignePetition, "tagLabel" | "tagType"> {
+  if (!p.statutSource) return { tagLabel: "Absente du fichier", tagType: "none" };
+  const tagLabel = p.statutLabel ?? p.statutSource;
+  if (p.recueilTermine && !p.decisionTexte) return { tagLabel, tagType: "none" };
+  return { tagLabel, tagType: STATUT_TAG[p.statutSource as StatutSource] ?? "none" };
+}
 
 async function loadReleve() {
   try {
@@ -53,6 +68,13 @@ export default async function AbsentesDuFichier() {
               <strong>{n(releve.nbPubliees)} pétitions</strong> publiées sur la plateforme
               de l&apos;Assemblée nationale sont absentes du fichier de données ouvertes.
               Elles totalisent {n(releve.totalSoutiens)} signatures.
+              {releve.nbDecidees !== null && releve.nbSansDecision !== null && (
+                <>
+                  {" "}Pour {n(releve.nbDecidees)} d&apos;entre elles, le recueil est
+                  terminé ou le sort décidé&nbsp;; {n(releve.nbSansDecision)} n&apos;affichent
+                  aucun texte de décision sur la plateforme.
+                </>
+              )}
             </>
           ) : (
             <>
@@ -95,14 +117,14 @@ export default async function AbsentesDuFichier() {
         {releve && releve.petitions.length ? (
           <TableauPetitions
             enteteDate="Publiée le"
+            enteteStatut="Ce qu'en dit la plateforme"
             complet
-            legende="Liste complète. Titre, signatures, commission et date sont lus sur la plateforme officielle le jour du relevé, faute de figurer dans le fichier."
+            legende="Liste complète. Titre, signatures, statut, commission et date sont lus sur la plateforme officielle le jour du relevé, faute de figurer dans le fichier."
             lignes={releve.petitions.map(
               (p): LignePetition => ({
                 identifiant: p.identifiant,
                 titre: p.titre,
-                tagLabel: "Absente du fichier",
-                tagType: "none",
+                ...etiquette(p),
                 nbVotes: p.nbVotes,
                 commission: p.commission,
                 date: p.datePublication,

@@ -43,8 +43,12 @@ export default async function PassagesEnCommission() {
   // Le croisement des champs passe par etatPetition(), comme sur la fiche : une
   // page ne qualifie plus une pétition avec ses propres conditions.
   const etats = new Map(passages.map((p) => [p.identifiant, etatPetition(p)]));
-  const sansDecision = passages.filter((p) => !p.decisionPubliee);
-  const avecDecisionLue = passages.filter((p) => etats.get(p.identifiant)?.decisionLue);
+  // Les pétitions absentes du fichier ne comptent pas dans ce qu'il « ne
+  // mentionne pas » : elles y manquent tout entières, et sont signalées à part.
+  const dansLeFichier = passages.filter((p) => !p.horsFichier);
+  const horsFichier = passages.length - dansLeFichier.length;
+  const sansDecision = dansLeFichier.filter((p) => !p.decisionPubliee);
+  const avecDecisionLue = sansDecision.filter((p) => etats.get(p.identifiant)?.decisionLue);
   const divergentes = passages.filter((p) => etats.get(p.identifiant)?.deuxTextesOfficiels);
 
   return (
@@ -71,7 +75,7 @@ export default async function PassagesEnCommission() {
         {sansDecision.length > 0 && (
           <p className={styles.encadre}>
             <strong>
-              Pour {sansDecision.length === passages.length ? "aucune" : sansDecision.length}{" "}
+              Pour {sansDecision.length === dansLeFichier.length ? "aucune" : sansDecision.length}{" "}
               d&apos;entre elles, le fichier public ne mentionne la moindre décision.
             </strong>{" "}
             {avecDecisionLue.length > 0 && (
@@ -84,6 +88,14 @@ export default async function PassagesEnCommission() {
             )}
             Une commission s&apos;en est saisie&nbsp;; le signataire n&apos;en saura rien par
             le fichier qu&apos;on lui donne à lire.
+          </p>
+        )}
+        {horsFichier > 0 && (
+          <p className={styles.lede}>
+            {horsFichier === 1 ? "L’une d’elles est absente" : `${horsFichier} d’entre elles sont absentes`}{" "}
+            du fichier public lui-même, bien que publiée{horsFichier === 1 ? "" : "s"} sur la
+            plateforme de l&apos;Assemblée nationale&nbsp;:{" "}
+            <Link href="/absentes-du-fichier">voir pourquoi</Link>.
           </p>
         )}
         {divergentes.length > 0 && (
@@ -108,9 +120,13 @@ export default async function PassagesEnCommission() {
                   {p.titre}
                 </Link>
                 <span
-                  className={`${cartes.tag} ${p.decisionPubliee ? cartes.tagExamined : cartes.tagNone}`}
+                  className={`${cartes.tag} ${p.decisionPubliee && !p.horsFichier ? cartes.tagExamined : cartes.tagNone}`}
                 >
-                  {p.decisionPubliee ? "Décision publiée au fichier" : "Décision non publiée"}
+                  {p.horsFichier
+                    ? "Absente du fichier"
+                    : p.decisionPubliee
+                      ? "Décision publiée au fichier"
+                      : "Décision non publiée"}
                 </span>
               </div>
               <div className={cartes.petitionMeta}>

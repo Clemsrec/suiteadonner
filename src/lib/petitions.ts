@@ -23,6 +23,7 @@ import { db } from "./firebase";
 export * from "./petitions-format";
 import { etatPetition } from "./petitions-format";
 import type {
+  MotifClassement,
   PassageEnCommission,
   Petition,
   SyntheseCommission,
@@ -304,13 +305,22 @@ export async function getPassagesEnCommission(max = 6): Promise<PassageEnCommiss
 // Pétitions publiées sur la plateforme de l'Assemblée nationale mais absentes
 // du fichier ouvert, relevées par scripts/relever-absentes.mjs. Champs lus sur
 // la plateforme, jamais dans le fichier : ils ne rejoignent pas la collection
-// `petitions`, qui décrit le fichier seul.
+// `petitions`, qui décrit le fichier seul. Les champs dérivés suivent les
+// règles du fichier (mapLigne).
 export type PetitionAbsente = {
   identifiant: string;
   titre: string;
   nbVotes: number | null;
   datePublication: string | null;
+  /** Absents des relevés antérieurs au 11/11/2026, qui ne lisaient pas ces champs. */
+  dateLimiteVote?: string | null;
   commission: string | null;
+  legislature?: string | null;
+  statutSource?: string;
+  statutLabel?: string;
+  recueilTermine?: boolean;
+  motifClassement?: MotifClassement;
+  decisionTexte?: string | null;
   url: string;
 };
 
@@ -322,6 +332,9 @@ export type ReleveAbsentes = {
   nbPubliees: number;
   totalSoutiens: number;
   soutiensInconnus: number;
+  /** Sort décidé ou recueil terminé. Absent des relevés antérieurs au 11/11/2026. */
+  nbDecidees: number | null;
+  nbSansDecision: number | null;
   petitions: PetitionAbsente[];
 };
 
@@ -337,6 +350,8 @@ export async function getReleveAbsentes(): Promise<ReleveAbsentes | null> {
     nbPubliees: d.nbPubliees ?? 0,
     totalSoutiens: d.totalSoutiens ?? 0,
     soutiensInconnus: d.soutiensInconnus ?? 0,
+    nbDecidees: d.nbDecidees ?? null,
+    nbSansDecision: d.nbSansDecision ?? null,
     petitions: (d.petitions as PetitionAbsente[]) ?? [],
   };
 }

@@ -157,6 +157,7 @@ function segmenter(item) {
 function titresAmbigus(petitions) {
   const compte = new Map();
   for (const p of petitions.values()) {
+    if (p.horsFichier) continue;
     compte.set(p.titreNorm, (compte.get(p.titreNorm) ?? 0) + 1);
   }
   return new Set([...compte].filter(([, n]) => n > 1).map(([t]) => t));
@@ -189,6 +190,9 @@ function apparier(item, petitions, ambigus, rejets) {
 
     const segNorm = normaliser(segment);
     for (const p of petitions.values()) {
+      // Une pétition absente du fichier n'est rapprochée que par son numéro :
+      // son titre vient de la plateforme, et n'a jamais été comparé aux autres.
+      if (p.horsFichier) continue;
       if (p.titreNorm.length < LONGUEUR_TITRE_MINIMALE) continue;
       if (!segNorm.includes(p.titreNorm)) continue;
       // Le titre ne suffit que s'il ne désigne qu'une seule pétition. Trois
@@ -229,6 +233,41 @@ async function chargerTousLesAgendas() {
     fichiers.push(...(await chargerAgenda(legislature)));
   }
   return fichiers;
+}
+
+// Pétitions publiées sur la plateforme mais absentes du fichier, relevées par
+// scripts/relever-absentes.mjs (meta/absentes). Lues par l'API REST publique de
+// Firestore, que les règles ouvrent en lecture : aucune clé nécessaire. Un
+// échec n'arrête rien, le script travaille alors sur le fichier seul, comme
+// avant le 11/11/2026.
+const ABSENTES_URL =
+  "https://firestore.googleapis.com/v1/projects/suiteadonner/databases/(default)/documents/meta/absentes";
+
+function valeurFirestore(v) {
+  if ("stringValue" in v) return v.stringValue;
+  if ("integerValue" in v) return Number(v.integerValue);
+  if ("doubleValue" in v) return v.doubleValue;
+  if ("booleanValue" in v) return v.booleanValue;
+  if ("nullValue" in v) return null;
+  if ("arrayValue" in v) return (v.arrayValue.values ?? []).map(valeurFirestore);
+  if ("mapValue" in v) {
+    return Object.fromEntries(
+      Object.entries(v.mapValue.fields ?? {}).map(([k, x]) => [k, valeurFirestore(x)])
+    );
+  }
+  return null;
+}
+
+async function chargerAbsentes() {
+  try {
+    const res = await fetch(ABSENTES_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const doc = valeurFirestore({ mapValue: { fields: (await res.json()).fields ?? {} } });
+    return doc.petitions ?? [];
+  } catch (err) {
+    console.warn(`meta/absentes illisible (${err instanceof Error ? err.message : err}) : fichier seul.`);
+    return [];
+  }
 }
 
 async function chargerPetitions() {
@@ -349,14 +388,16 @@ async function collecterDecisions(resultats, petitions, reunionsParCR) {
     for (const d of trouvees) {
       const p = petitions.get(d.numero);
       // Le compte rendu peut trancher sur une pétition absente du fichier
-      // public — c'est arrivé pour la n° 3603. Sans ligne au CSV, aucune fiche
-      // à enrichir : on ne l'invente pas.
+      // public — c'est arrivé pour la n° 3603. Elle n'est rattachée que si le
+      // relevé de la plateforme la connaît (meta/absentes) : sinon, aucune
+      // fiche à enrichir, et on ne l'invente pas.
       if (!p) continue;
 
       let entree = parIdentifiant.get(d.numero);
       if (!entree) {
         entree = {
           identifiant: p.identifiant,
+          horsFichier: Boolean(p.horsFichier),
           titre: p.titre,
           nbVotes: p.nbVotes,
           statut: p.statut,
@@ -452,14 +493,16 @@ async function collecterRapports(resultats, petitions) {
 
   for (const rapport of rapports) {
     const p = petitions.get(rapport.numeroPetition);
-    // Un rapport sur une pétition absente du fichier public ne peut enrichir
-    // aucune fiche : on ne fabrique pas la pétition manquante.
+    // Un rapport sur une pétition que ni le fichier ni le relevé de la
+    // plateforme ne connaissent ne peut enrichir aucune fiche : on ne
+    // fabrique pas la pétition manquante.
     if (!p) continue;
 
     let entree = parIdentifiant.get(rapport.numeroPetition);
     if (!entree) {
       entree = {
         identifiant: p.identifiant,
+        horsFichier: Boolean(p.horsFichier),
         titre: p.titre,
         nbVotes: p.nbVotes,
         statut: p.statut,
@@ -671,8 +714,37 @@ function itemsOrdreDuJour(reunion) {
 
 async function main() {
   await mkdir(path.join(CORPUS_DIR, "cache"), { recursive: true });
-  const [fichiers, petitions] = await Promise.all([chargerTousLesAgendas(), chargerPetitions()]);
-  console.log(`Agenda : ${fichiers.length} réunions · Pétitions : ${petitions.size}`);
+  const [fichiers, petitions, absentes] = await Promise.all([
+    chargerTousLesAgendas(),
+    chargerPetitions(),
+    chargerAbsentes(),
+  ]);
+  // Les pétitions que le fichier ignore mais que la plateforme publie : leur
+  // passage en commission est rattaché comme celui des autres, marqué
+  // `horsFichier`, et tenu à l'écart des chiffres de synthèse, qui décrivent
+  // le fichier. Elles n'ont pas de texte de décision du fichier (null).
+  let nbAbsentes = 0;
+  for (const a of absentes) {
+    if (petitions.has(a.identifiant)) continue;
+    nbAbsentes += 1;
+    petitions.set(a.identifiant, {
+      identifiant: a.identifiant,
+      titre: a.titre,
+      titreNorm: normaliser(a.titre),
+      nbVotes: a.nbVotes ?? null,
+      statut: a.statutSource ?? "",
+      commission: a.commission ?? "",
+      decisionPubliee: false,
+      decisionTexte: null,
+      dateLimiteVote: a.dateLimiteVote ?? null,
+      url: a.url,
+      horsFichier: true,
+    });
+  }
+  console.log(
+    `Agenda : ${fichiers.length} réunions · Pétitions : ${petitions.size - nbAbsentes} au fichier` +
+      ` + ${nbAbsentes} absentes du fichier`
+  );
 
   const ambigus = titresAmbigus(petitions);
   const rejets = [];
@@ -737,6 +809,7 @@ async function main() {
       );
       return {
         identifiant: id,
+        horsFichier: Boolean(p.horsFichier),
         titre: p.titre,
         nbVotes: p.nbVotes,
         statut: p.statut,
@@ -795,9 +868,20 @@ async function main() {
     for (const r of uniques) console.log(`  n°${r.identifiant} — ${r.motif} — ${r.titre.slice(0, 50)}`);
   }
 
-  const sansDecision = resultats.filter((r) => !r.decisionPubliee);
+  // Les chiffres de synthèse décrivent le fichier : les pétitions qui en sont
+  // absentes sont comptées à part, pour que ceux déjà publiés restent comparables.
+  const dansLeFichier = resultats.filter((r) => !r.horsFichier);
+  const horsFichier = resultats.filter((r) => r.horsFichier);
   console.log(
-    `  dont la décision reste vide dans le jeu public : ${sansDecision.length}/${resultats.length}`
+    `  dont absentes du fichier : ${horsFichier.length}` +
+      (horsFichier.length ? ` (${horsFichier.filter((r) => r.derniereDecision).length} avec une décision lue)` : "")
+  );
+  for (const r of horsFichier) {
+    console.log(`    n°${r.identifiant} · ${r.reunions.length} réunion(s) · décision : ${r.derniereDecision?.sens ?? "aucune"}`);
+  }
+  const sansDecision = dansLeFichier.filter((r) => !r.decisionPubliee);
+  console.log(
+    `  dont la décision reste vide dans le jeu public : ${sansDecision.length}/${dansLeFichier.length}`
   );
 
   if (cr) {
@@ -809,7 +893,7 @@ async function main() {
 
     // Le constat que ces décisions rendent possible : la commission a tranché,
     // le fichier réutilisable n'en dit rien.
-    const decidees = resultats.filter((r) => r.derniereDecision);
+    const decidees = dansLeFichier.filter((r) => r.derniereDecision);
     const muettes = decidees.filter((r) => !r.decisionPubliee);
     const divergentes = decidees.filter((r) => r.decisionPubliee);
     console.log(
@@ -839,7 +923,10 @@ async function main() {
 
   verifierDecisions(resultats);
 
-  const synthese = construireSynthese(resultats, cr?.classementsEnBloc ?? [], cr?.lus ?? 0);
+  const synthese = {
+    ...construireSynthese(dansLeFichier, cr?.classementsEnBloc ?? [], cr?.lus ?? 0),
+    nbHorsFichier: horsFichier.length,
+  };
   console.log(
     `\nSynthèse : ${synthese.nbDecisionsAbsentesDuFichier} décision(s) absente(s) du fichier, ` +
       `${(synthese.signaturesDecisionsAbsentes ?? 0).toLocaleString("fr-FR")} signatures cumulées` +

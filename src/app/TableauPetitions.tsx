@@ -122,6 +122,7 @@ function Entete({
 export default function TableauPetitions({
   lignes,
   enteteDate,
+  enteteStatut = "Ce qu'en dit le fichier",
   legende,
   complet = true,
 }: {
@@ -129,6 +130,9 @@ export default function TableauPetitions({
   /* Ce que mesure la colonne de droite : dépôt, clôture, date limite… Le
      libellé change d'une liste à l'autre, la colonne reste au même endroit. */
   enteteDate: string;
+  /* La colonne de statut dit d'où vient ce qu'elle affiche : le fichier, sauf
+     pour les pétitions qu'il ne contient pas, lues sur la plateforme. */
+  enteteStatut?: string;
   legende?: string;
   /* Le tableau tient-il toutes les pétitions dont il parle ? Le tri n'est
      proposé que dans ce cas. Un extrait — les six plus signées de l'accueil,
@@ -163,7 +167,7 @@ export default function TableauPetitions({
             Soutiens
           </Entete>
           <Entete colonne="statut" tri={tri} onTri={complet ? basculer : null} className={styles.colStatut}>
-            Ce qu&apos;en dit le fichier
+            {enteteStatut}
           </Entete>
           <Entete colonne="date" tri={tri} onTri={complet ? basculer : null} className={styles.colDate}>
             {enteteDate}

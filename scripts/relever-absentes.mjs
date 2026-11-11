@@ -17,24 +17,31 @@
 //
 // Méthode, identique à celle du pipeline amont : une requête HEAD par numéro
 // absent ; une redirection vers l'accueil signifie « non publié ». Les fiches
-// publiées sont lues pour leur titre, leurs signatures, leur date de
-// publication et leur commission, avec les mêmes repères HTML que l'amont.
+// publiées sont lues aux mêmes endroits que l'amont (titre, signatures, dates,
+// statut, commission, législature, texte de décision), remises au format d'une
+// ligne du fichier, puis passées par mapLigne() : les règles dérivées (recueil
+// terminé, motif du classement, seuil énoncé) sont exactement celles du fichier.
+// La description n'est pas conservée : elle ferait dépasser au document la
+// limite de 1 Mo de Firestore.
 //
 // Usage :
 //   node scripts/relever-absentes.mjs              # relève et écrit meta/absentes
 //   node scripts/relever-absentes.mjs --dry-run    # relève et résume, sans écrire
 //   node scripts/relever-absentes.mjs --force      # relève même si déjà fait aujourd'hui pour ce fichier
 //   node scripts/relever-absentes.mjs --dry-run --limite 50   # ne teste que 50 numéros (essai)
+//   node scripts/relever-absentes.mjs --numeros 3603,5820     # ne lit que ces fiches, sans écrire
 //
 // Auth Firestore : identique à scripts/import-petitions.mjs.
 
 import { parse } from "csv-parse/sync";
-import { CSV_URL, normaliserTexte, parseNombre } from "./lib/petitions-source.mjs";
+import { CSV_URL, libelleStatut, mapLigne, normaliserTexte } from "./lib/petitions-source.mjs";
 
 const dryRun = process.argv.includes("--dry-run");
 const force = process.argv.includes("--force");
 const indexLimite = process.argv.indexOf("--limite");
 const limite = indexLimite > -1 ? Number(process.argv[indexLimite + 1]) : null;
+const indexNumeros = process.argv.indexOf("--numeros");
+const numerosEssai = indexNumeros > -1 ? process.argv[indexNumeros + 1].split(",").map(Number) : null;
 
 const PLATEFORME = "https://petitions.assemblee-nationale.fr";
 const ENTETES = { "User-Agent": "suiteadonner/1.0" };
@@ -45,6 +52,8 @@ const DELAI_MS = 20000;
 // Au-delà, la plateforme est probablement en panne ou a changé : mieux vaut
 // garder le relevé précédent que publier une liste fausse.
 const TAUX_ERREUR_MAX = 0.05;
+// Firestore refuse un document de plus de 1 Mo.
+const TAILLE_MAX = 900_000;
 
 function decoderEntites(texte) {
   return texte
@@ -67,18 +76,69 @@ function dateIso(texte) {
   return m ? `${m[3]}-${m[2]}-${m[1]}` : null;
 }
 
-function lireFiche(html) {
-  const titre = /<h2 class="heading2"[^>]*>([\s\S]*?)<\/h2>/.exec(html);
-  const votes = /class="progress__bar__number">([^<]*)</.exec(html);
-  const publication = /class="publish-date">([\s\S]*?)<\/div>/.exec(html);
-  const commission = [...html.matchAll(/href="\/initiatives\?filter[^"]*"[^>]*>([^<]*)</g)]
-    .map((m) => nettoyer(m[1]))
-    .find((t) => t.startsWith("Commission"));
+// Les trois formes de décision que l'amont reconnaît, aux mêmes endroits.
+const MARQUES_DECISION = ["En application de l'article 148", "Conformément à la décision"];
+
+function lireDecision(html) {
+  for (const m of html.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/g)) {
+    const t = nettoyer(m[1]);
+    if (MARQUES_DECISION.some((marque) => t.includes(marque))) return t;
+  }
+  for (const m of html.matchAll(/<h5\b[^>]*>([\s\S]*?)<\/h5>/g)) {
+    const t = nettoyer(m[1]);
+    if (t.includes("Cette pétition a été rejetée")) return t;
+  }
+  return "";
+}
+
+// Même ordre de priorité que build_status() en amont.
+function lireStatut(html) {
+  if (/class="[^"]*archive-header/.test(html)) return "archivee";
+  if (/class="alert label initiative-status/.test(html)) return "classee";
+  if (/class="warning label initiative-status/.test(html)) return "expiree";
+  return "ouverte";
+}
+
+// Une fiche de la plateforme, sous la forme d'une ligne du fichier ouvert.
+function lireLigne(html, numero, url) {
+  const premier = (re) => re.exec(html)?.[1] ?? "";
+  const libelles = [...html.matchAll(/href="\/initiatives\?filter[^"]*"[^>]*>([^<]*)</g)].map((m) =>
+    nettoyer(m[1])
+  );
+  const legislature = libelles.find((t) => t.startsWith("Législature")) ?? "";
   return {
-    titre: titre ? nettoyer(titre[1]) : null,
-    nbVotes: votes ? parseNombre(votes[1].replace(/\s/g, "")) : null,
-    datePublication: publication ? dateIso(publication[1]) : null,
-    commission: commission ?? null,
+    identifiant: String(numero),
+    titre: nettoyer(premier(/<h2 class="heading2"[^>]*>([\s\S]*?)<\/h2>/)),
+    description: "",
+    date_publication: dateIso(premier(/class="publish-date">([\s\S]*?)<\/div>/)) ?? "",
+    nb_votes: premier(/class="progress__bar__number">([^<]*)</).replace(/\s/g, ""),
+    statut: lireStatut(html),
+    date_limite_vote: dateIso(premier(/class="phase-date"[^>]*>([\s\S]*?)<\//)) ?? "",
+    commission: libelles.find((t) => t.startsWith("Commission")) ?? "",
+    legislature: legislature.replace("Législature ", ""),
+    decision_commission: lireDecision(html),
+    url,
+  };
+}
+
+// Ce que le site affiche d'une pétition absente : les champs de la ligne et
+// les règles dérivées utiles à la page et à la fiche.
+function versAbsente(ligne, aujourdhui) {
+  const p = mapLigne(ligne, aujourdhui);
+  return {
+    identifiant: p.identifiant,
+    titre: p.titre,
+    nbVotes: p.nbVotes,
+    datePublication: p.datePublication,
+    dateLimiteVote: p.dateLimiteVote,
+    commission: p.commissionSource,
+    legislature: p.legislature,
+    statutSource: p.statutSource,
+    statutLabel: libelleStatut(p),
+    recueilTermine: p.recueilTermine,
+    motifClassement: p.motifClassement,
+    decisionTexte: p.decisionTexte,
+    url: p.url,
   };
 }
 
@@ -94,7 +154,7 @@ async function requete(url, options) {
 }
 
 // "publiee" | "non_publiee" | "erreur"
-async function sonder(numero) {
+async function sonder(numero, aujourdhui) {
   const url = `${PLATEFORME}/initiatives/i-${numero}`;
   try {
     const res = await requete(url, { method: "HEAD", redirect: "manual" });
@@ -105,9 +165,9 @@ async function sonder(numero) {
     if (res.status !== 200) return { etat: "erreur", detail: `HTTP ${res.status}` };
     const page = await requete(url, { method: "GET" });
     if (!page.ok) return { etat: "erreur", detail: `HTTP ${page.status} à la lecture` };
-    const fiche = lireFiche(await page.text());
-    if (!fiche.titre) return { etat: "erreur", detail: "titre introuvable dans la page" };
-    return { etat: "publiee", petition: { identifiant: String(numero), ...fiche, url } };
+    const ligne = lireLigne(await page.text(), numero, url);
+    if (!ligne.titre) return { etat: "erreur", detail: "titre introuvable dans la page" };
+    return { etat: "publiee", petition: versAbsente(ligne, aujourdhui) };
   } catch (err) {
     return { etat: "erreur", detail: err instanceof Error ? err.message : String(err) };
   }
@@ -153,6 +213,10 @@ async function connecterFirestore() {
 
 async function main() {
   const aujourdhui = new Date().toISOString().slice(0, 10);
+  if (numerosEssai) {
+    for (const n of numerosEssai) console.log(n, JSON.stringify(await sonder(n, aujourdhui), null, 2));
+    return;
+  }
   const { numeros, sourceModifieLe, nbLignes } = await lireNumerosDuFichier();
   if (!numeros.size) throw new Error("Aucun identifiant numérique dans le fichier : relevé impossible.");
   const numeroMax = Math.max(...numeros);
@@ -175,12 +239,25 @@ async function main() {
     console.log(`--limite : seuls les ${manquants.length} premiers sont testés.`);
   }
 
-  const resultats = await enParallele(manquants, CONCURRENCE, sonder);
+  const resultats = await enParallele(manquants, CONCURRENCE, (n) => sonder(n, aujourdhui));
+
+  // Une seconde lecture pour les compteurs illisibles : le 10/11/2026, les
+  // n° 5842 et 5856, dont le recueil se terminait ce jour-là, n'en affichaient
+  // pas ; ils étaient lisibles le lendemain.
+  for (let i = 0; i < resultats.length; i++) {
+    const r = resultats[i];
+    if (r.etat === "publiee" && r.petition.nbVotes === null) {
+      const relu = await sonder(manquants[i], aujourdhui);
+      if (relu.etat === "publiee" && relu.petition.nbVotes !== null) resultats[i] = relu;
+    }
+  }
   const publiees = resultats.filter((r) => r.etat === "publiee").map((r) => r.petition);
   const erreurs = resultats
     .map((r, i) => ({ ...r, numero: manquants[i] }))
     .filter((r) => r.etat === "erreur");
   const nbNonPubliees = resultats.filter((r) => r.etat === "non_publiee").length;
+  const decidees = publiees.filter((p) => p.statutSource !== "ouverte" || p.recueilTermine);
+  const nbSansDecision = decidees.filter((p) => !p.decisionTexte).length;
 
   publiees.sort((a, b) => (b.nbVotes ?? -1) - (a.nbVotes ?? -1) || Number(a.identifiant) - Number(b.identifiant));
   const totalSoutiens = publiees.reduce((s, p) => s + (p.nbVotes ?? 0), 0);
@@ -191,7 +268,10 @@ async function main() {
       `\nSignatures cumulées : ${totalSoutiens.toLocaleString("fr-FR")} (${soutiensInconnus} compteur(s) illisible(s))`
   );
   for (const e of erreurs.slice(0, 10)) console.log(`  erreur n° ${e.numero} : ${e.detail}`);
-  for (const p of publiees.slice(0, 5)) console.log(`  n° ${p.identifiant} · ${p.nbVotes ?? "?"} · ${p.titre}`);
+  console.log(`Sort décidé ou recueil terminé : ${decidees.length}, dont ${nbSansDecision} sans texte de décision.`);
+  for (const p of publiees.slice(0, 5)) {
+    console.log(`  n° ${p.identifiant} · ${p.nbVotes ?? "?"} · ${p.statutLabel} · ${p.titre}`);
+  }
 
   if (erreurs.length > manquants.length * TAUX_ERREUR_MAX) {
     console.error(
@@ -212,8 +292,18 @@ async function main() {
     nbPubliees: publiees.length,
     totalSoutiens,
     soutiensInconnus,
+    nbDecidees: decidees.length,
+    nbSansDecision,
     petitions: publiees,
   };
+
+  const taille = Buffer.byteLength(JSON.stringify(document));
+  console.log(`Taille du document : ${Math.round(taille / 1000)} ko.`);
+  if (taille > TAILLE_MAX) {
+    console.error(`Document trop lourd pour Firestore (${taille} octets) : relevé abandonné.`);
+    process.exitCode = 1;
+    return;
+  }
 
   if (dryRun || limite) {
     console.log(`\n${dryRun ? "--dry-run" : "--limite"} : aucune écriture.`);

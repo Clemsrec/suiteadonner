@@ -21,8 +21,8 @@
 import { parse } from "csv-parse/sync";
 import {
   CSV_URL,
-  MOTIFS,
   calculerStats,
+  libelleStatut,
   lirePetitions,
 } from "./lib/petitions-source.mjs";
 
@@ -35,18 +35,6 @@ const dryRun = process.argv.includes("--dry-run");
 // arrivé le 17/08/2026. Par défaut, un fichier inchangé ne déclenche donc
 // aucune écriture ; --force passe outre.
 const force = process.argv.includes("--force");
-
-// Libellé affiché. Il décrit un fait vérifiable et jamais ce que la plateforme
-// montre — vérification faite le 27/07/2026, elle affiche « Acceptées » et la
-// date limite, sans employer « en cours de signature ».
-function libelleStatut(p) {
-  if (p.motifClassement === MOTIFS.SEUIL) return "Classée d'office (seuil non atteint)";
-  if (p.statutSource === "ouverte") return p.recueilTermine ? "Recueil terminé" : "En cours de signature";
-  if (p.statutSource === "classee") return "Classée";
-  if (p.statutSource === "archivee") return "Classée d'office";
-  if (p.statutSource === "expiree") return "Expirée";
-  return p.statutSource;
-}
 
 // `last-modified` vient du stockage objet qui sert le fichier après redirection
 // (data.gouv.fr → OVH S3) ; c'est la date de dépôt de la version courante, et

@@ -359,9 +359,13 @@ export default async function Home() {
                     {p.titre}
                   </Link>
                   <span
-                    className={`${styles.tag} ${p.decisionPubliee ? styles.tagExamined : styles.tagNone}`}
+                    className={`${styles.tag} ${p.decisionPubliee && !p.horsFichier ? styles.tagExamined : styles.tagNone}`}
                   >
-                    {p.decisionPubliee ? "Décision publiée au fichier" : "Décision non publiée"}
+                    {p.horsFichier
+                    ? "Absente du fichier"
+                    : p.decisionPubliee
+                      ? "Décision publiée au fichier"
+                      : "Décision non publiée"}
                   </span>
                 </div>
                 <div className={styles.petitionMeta}>
