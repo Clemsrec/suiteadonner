@@ -1,5 +1,7 @@
 import Link from "next/link";
 import styles from "./page.module.css";
+import theme from "./theme.module.css";
+import BoutonTheme from "./BoutonTheme";
 import SearchBar from "./SearchBar";
 import TableauPetitions, { type LignePetition } from "./TableauPetitions";
 import EmpreinteCarbone from "./EmpreinteCarbone";
@@ -87,6 +89,7 @@ export default async function Home() {
     <>
       <header className={styles.site}>
         <div className={styles.siteInner}>
+          <div className={theme.ligne}>
           <a className={styles.wordmark} href="#">
             {/* Symbole inline plutôt qu'un <img> vers public/logo : les deux
                 traits reprennent les variables de thème, donc la bascule
@@ -124,6 +127,8 @@ export default async function Home() {
               <small>Observatoire des pétitions citoyennes</small>
             </span>
           </a>
+          <BoutonTheme />
+          </div>
           <nav className={styles.siteNav}>
             <a href="#constat">Le constat</a>
             <a href="#recherche">Rechercher</a>

@@ -268,13 +268,13 @@
       "note": "Vérifié le 12/09/2026 sur les 23 formulations distinctes des 1 560 textes de décision : aucune ne contient « pétition n° N » ni un titre de pétition du fichier."
     },
     {
-      "texte": "Ce stockage est strictement nécessaire à la mémorisation de votre choix ; c'est la seule chose que le site écrit dans votre navigateur sans consentement, et il est exempté à ce titre.",
+      "texte": "Le site n'écrit aucune autre donnée dans votre navigateur sans votre accord.",
       "page": "politique-cookies.html",
       "fonde": "nous",
-      "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
+      "note": "Les deux seuls accès en écriture au stockage du navigateur sont src/lib/consentement.ts (suiteadonner-consentement-audience) et src/lib/theme.ts (suiteadonner-theme, écrit seulement sur un clic « Clair » ou « Sombre », effacé par « Auto »). Phrase réécrite le 26/11/2026 avec l'ajout du bouton de thème.",
       "preuve": {
-        "fichier": "src/lib/consentement.ts",
-        "contient": "suiteadonner-consentement-audience"
+        "fichier": "src/lib/theme.ts",
+        "contient": "export const CLE_THEME = \"suiteadonner-theme\";"
       }
     },
     {

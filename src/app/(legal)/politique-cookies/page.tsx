@@ -69,15 +69,24 @@ export default function PolitiqueCookies() {
         <Link href="/politique-de-confidentialite">politique de confidentialité</Link>.
       </p>
 
-      <h2>3. La mémorisation de votre choix</h2>
+      <h2>3. La mémorisation de vos choix</h2>
       <p>
         Votre réponse à la bannière — acceptation comme refus — est enregistrée dans votre
         navigateur, dans une entrée <code>localStorage</code> nommée{" "}
         <code>suiteadonner-consentement-audience</code>. Elle ne contient que votre choix et
         sa date, n&apos;est transmise à personne, et expire après six mois : la bannière vous
-        sera alors reposée. Ce stockage est strictement nécessaire à la mémorisation de votre
-        choix ; c&apos;est la seule chose que le site écrit dans votre navigateur sans
-        consentement, et il est exempté à ce titre.
+        sera alors reposée.
+      </p>
+      <p>
+        Si vous choisissez « Clair » ou « Sombre » avec le bouton en haut de chaque page, ce
+        choix est enregistré de la même façon, dans une entrée nommée{" "}
+        <code>suiteadonner-theme</code>, qui ne contient que ce mot. Choisir « Auto » efface
+        l&apos;entrée : le site suit alors le réglage de votre appareil, sans rien garder.
+      </p>
+      <p>
+        Ces deux entrées sont strictement nécessaires à la mémorisation de choix que vous
+        avez faits vous-même, et exemptées de consentement à ce titre. Le site n&apos;écrit
+        aucune autre donnée dans votre navigateur sans votre accord.
       </p>
       <p>
         Le badge d&apos;<Link href="/empreinte-carbone">empreinte carbone</Link>{" "}
@@ -101,7 +110,7 @@ export default function PolitiqueCookies() {
         confiance envers l&apos;éditeur. Ouvrez les outils de développement de votre
         navigateur (<code>F12</code>), onglet <em>Application</em> ou <em>Stockage</em>{" "}
         : tant que vous n&apos;avez pas accepté, la rubrique Cookies est vide pour ce domaine,
-        et Local Storage ne contient au plus que l&apos;entrée mémorisant votre choix.
+        et Local Storage ne contient au plus que les entrées mémorisant vos choix.
         L&apos;onglet <em>Réseau</em>{" "}
         montre par ailleurs qu&apos;aucune requête ne part vers les domaines de Google
         Analytics.

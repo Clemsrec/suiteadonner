@@ -1,6 +1,8 @@
 import Link from "next/link";
 import styles from "./donnees.module.css";
 import EmpreinteCarbone from "../EmpreinteCarbone";
+import BoutonTheme from "../BoutonTheme";
+import theme from "../theme.module.css";
 import { LEGAL, SITE_NAME } from "@/lib/site";
 
 // En-tête et pied communs aux pages de données : fiches pétition, listes par
@@ -11,6 +13,7 @@ export default function DonneesLayout({ children }: Readonly<{ children: React.R
     <>
       <header className={styles.site}>
         <div className={styles.siteInner}>
+          <div className={theme.ligne}>
           <Link className={styles.wordmark} href="/">
             <svg
               className={styles.mark}
@@ -34,6 +37,8 @@ export default function DonneesLayout({ children }: Readonly<{ children: React.R
             </svg>
             {SITE_NAME}
           </Link>
+          <BoutonTheme />
+          </div>
           <nav className={styles.siteNav}>
             <Link href="/petitions">Les pétitions</Link>
             <Link href="/passages-en-commission">En commission</Link>

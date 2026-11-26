@@ -116,5 +116,5 @@ export const LEGAL = {
   // Firestore : l'application tourne en Europe, la base est aux États-Unis.
   regionApplication: "europe-west4 (Pays-Bas)",
   regionBaseDonnees: "nam5 (États-Unis)",
-  derniereMaj: "27 juillet 2026",
+  derniereMaj: "26 novembre 2026",
 } as const;

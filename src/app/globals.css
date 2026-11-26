@@ -1,22 +1,26 @@
 :root {
-  --bg: #e8eef0;
+  /* Palette « papier » : fond blanc cassé, encre presque noire, bleu foncé
+     pour les liens. Chaque couleur de texte atteint au moins 4,5:1 sur les
+     trois fonds (--bg, --surface, --surface-sunk), en clair comme en sombre. */
+  --bg: #faf7f2;
   --surface: #ffffff;
-  --surface-sunk: #dee6e9;
-  --ink: #172228;
-  --ink-muted: #51636b;
-  --ink-faint: #7c8b92;
-  --accent: #1e3a5f;
+  --surface-sunk: #f1ece3;
+  --ink: #1c1f24;
+  --ink-muted: #4a4f57;
+  --ink-faint: #62666e;
+  --accent: #1f4e8c;
   --accent-ink: #ffffff;
-  --rule: rgba(23, 34, 40, 0.16);
-  --rule-strong: rgba(23, 34, 40, 0.32);
-  --status-done-bg: #e4eee7;
-  --status-done-ink: #24593d;
-  --status-pending-bg: #ece7da;
-  --status-pending-ink: #6b5518;
-  --status-none-bg: #f3e2de;
-  --status-none-ink: #8b342a;
-  --status-examined-bg: #e2e9f1;
-  --status-examined-ink: #1e3a5f;
+  --rule: rgba(28, 31, 36, 0.14);
+  --rule-strong: rgba(28, 31, 36, 0.3);
+  --status-done-bg: #e6f2ea;
+  --status-done-ink: #1f6b45;
+  --status-pending-bg: #f7edd6;
+  --status-pending-ink: #8a5a00;
+  --status-none-bg: #f8e5e1;
+  --status-none-ink: #a33a2c;
+  --status-examined-bg: #e5edf7;
+  --status-examined-ink: #1f4e8c;
+  color-scheme: light;
 
   /* Ossature de mise en page, commune à l'accueil et aux pages de données.
      La page va chercher la largeur d'un quotidien en ligne ; le texte suivi,
@@ -28,30 +32,58 @@
 
   --font-serif: Georgia, "Iowan Old Style", "Palatino Linotype", "URW Palladio L", P052, serif;
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: Georgia, "Iowan Old Style", "Palatino Linotype", "URW Palladio L", P052, serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
 }
 
+/* Thème sombre : celui de l'appareil quand le visiteur n'a rien choisi
+   (aucun data-theme), ou le sien quand il a choisi « Sombre » avec le bouton
+   de l'en-tête (src/app/BoutonTheme.tsx). Les deux blocs portent les mêmes
+   valeurs : une requête média ne peut pas partager un sélecteur d'attribut. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f171b;
-    --surface: #162126;
-    --surface-sunk: #0b1215;
-    --ink: #e8eff1;
-    --ink-muted: #9fb1b8;
-    --ink-faint: #6e7f86;
-    --accent: #7fa6d1;
-    --accent-ink: #0f171b;
-    --rule: rgba(232, 239, 241, 0.16);
-    --rule-strong: rgba(232, 239, 241, 0.32);
-    --status-done-bg: #1b2e22;
-    --status-done-ink: #7fcb9c;
-    --status-pending-bg: #2b2417;
-    --status-pending-ink: #d9b968;
-    --status-none-bg: #301c19;
-    --status-none-ink: #e29184;
-    --status-examined-bg: #1c2733;
-    --status-examined-ink: #a8c3e0;
+  :root:not([data-theme="clair"]) {
+    --bg: #1a1d22;
+    --surface: #22262d;
+    --surface-sunk: #15171b;
+    --ink: #ece9e3;
+    --ink-muted: #bdb8b0;
+    --ink-faint: #98938b;
+    --accent: #93b6e8;
+    --accent-ink: #15171b;
+    --rule: rgba(236, 233, 227, 0.14);
+    --rule-strong: rgba(236, 233, 227, 0.3);
+    --status-done-bg: #1e3328;
+    --status-done-ink: #8fd3a8;
+    --status-pending-bg: #33291a;
+    --status-pending-ink: #e3c070;
+    --status-none-bg: #3a2320;
+    --status-none-ink: #f0a194;
+    --status-examined-bg: #1f2b3c;
+    --status-examined-ink: #a9c6ee;
+    color-scheme: dark;
   }
+}
+:root[data-theme="sombre"] {
+  --bg: #1a1d22;
+  --surface: #22262d;
+  --surface-sunk: #15171b;
+  --ink: #ece9e3;
+  --ink-muted: #bdb8b0;
+  --ink-faint: #98938b;
+  --accent: #93b6e8;
+  --accent-ink: #15171b;
+  --rule: rgba(236, 233, 227, 0.14);
+  --rule-strong: rgba(236, 233, 227, 0.3);
+  --status-done-bg: #1e3328;
+  --status-done-ink: #8fd3a8;
+  --status-pending-bg: #33291a;
+  --status-pending-ink: #e3c070;
+  --status-none-bg: #3a2320;
+  --status-none-ink: #f0a194;
+  --status-examined-bg: #1f2b3c;
+  --status-examined-ink: #a9c6ee;
+  color-scheme: dark;
 }
 
 * {
@@ -68,7 +100,6 @@ body {
 
 html {
   height: 100%;
-  color-scheme: light dark;
 }
 
 body {

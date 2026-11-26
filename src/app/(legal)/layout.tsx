@@ -1,6 +1,7 @@
 import Link from "next/link";
 import styles from "./legal.module.css";
 import EmpreinteCarbone from "../EmpreinteCarbone";
+import BoutonTheme from "../BoutonTheme";
 import { LEGAL, SITE_NAME } from "@/lib/site";
 
 // En-tête et pied communs aux trois pages réglementaires. Le groupe de routes
@@ -33,9 +34,12 @@ export default function LegalLayout({ children }: Readonly<{ children: React.Rea
             </svg>
             {SITE_NAME}
           </Link>
-          <Link className={styles.retour} href="/">
-            ← Retour au site
-          </Link>
+          <div className={styles.actions}>
+            <Link className={styles.retour} href="/">
+              ← Retour au site
+            </Link>
+            <BoutonTheme />
+          </div>
         </div>
       </header>
 

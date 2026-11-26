@@ -1,0 +1,64 @@
+/* Ligne du haut de l'en-tête : le nom du site à gauche, le choix des
+   couleurs à droite. Commune aux trois en-têtes (accueil, données, légal). */
+.ligne {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.ligne > :first-child {
+  min-width: 0;
+}
+/* Le sous-titre du nom passe sur deux lignes plutôt que de glisser sous le
+   bouton sur téléphone. */
+.ligne small {
+  white-space: normal;
+}
+
+.groupe {
+  display: inline-flex;
+  flex: none;
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+}
+
+.choix {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 40px;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-muted);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.choix + .choix {
+  border-left: 1px solid var(--rule);
+}
+.choix:hover {
+  color: var(--ink);
+}
+.choix:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.choix[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Sur téléphone, l'icône seule : les trois libellés ne tiennent pas à côté
+   du nom du site. Le nom accessible et l'infobulle restent. */
+.libelle {
+  display: none;
+}
+@media (min-width: 720px) {
+  .libelle {
+    display: inline;
+  }
+}

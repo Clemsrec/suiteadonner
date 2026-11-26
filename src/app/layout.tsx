@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import MesureAudience from "./MesureAudience";
+import { SCRIPT_THEME_INITIAL } from "@/lib/theme";
 import {
   LEGAL,
   SITE_DESCRIPTION as DESCRIPTION,
@@ -83,7 +84,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
+    // suppressHydrationWarning : le script ci-dessous pose data-theme sur
+    // <html> avant React, d'après le choix gardé dans le navigateur.
+    <html lang="fr" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: SCRIPT_THEME_INITIAL }} />
+      </head>
       <body>
         <script
           type="application/ld+json"
