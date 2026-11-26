@@ -82,12 +82,13 @@ export default function Methodologie() {
           par le jeu de données officiel, à son adresse stable.
         </p>
         <p>
-          <strong>Ce fichier n&apos;est pas complet.</strong>{" "}Des pétitions publiées sur
-          la plateforme n&apos;y sont jamais entrées, à cause d&apos;un défaut du programme
-          qui le produit. Elles sont absentes de nos chiffres, puisque nous ne les
-          ajoutons pas au fichier. Nous les relevons chaque semaine sur la plateforme et
-          les listons à part&nbsp;:{" "}
-          <Link href="/absentes-du-fichier">voir ces pétitions</Link>.
+          <strong>Ce fichier a longtemps été incomplet.</strong>{" "}Jusqu&apos;au
+          18&nbsp;novembre&nbsp;2026, des pétitions publiées sur la plateforme n&apos;y
+          entraient pas, à cause d&apos;un défaut du programme qui le produit, corrigé
+          depuis. Une pétition absente du fichier est absente de nos chiffres, puisque
+          nous ne l&apos;ajoutons pas nous-mêmes. Nous cherchons chaque semaine sur la
+          plateforme celles qui manqueraient, et les listons à part&nbsp;:{" "}
+          <Link href="/absentes-du-fichier">voir le dernier relevé</Link>.
         </p>
       </section>
 

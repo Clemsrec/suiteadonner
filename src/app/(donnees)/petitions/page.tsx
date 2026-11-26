@@ -89,8 +89,8 @@ export default async function IndexPetitions() {
           </li>
           <li>
             <Link href="/absentes-du-fichier">Absentes du fichier</Link>{" "}— publiées sur la
-            plateforme de l&apos;Assemblée nationale, mais jamais entrées dans le fichier
-            ouvert, et donc absentes de cette liste.
+            plateforme de l&apos;Assemblée nationale, mais absentes du fichier ouvert, et
+            donc de cette liste. Relevé chaque lundi.
           </li>
         </ul>
       </section>

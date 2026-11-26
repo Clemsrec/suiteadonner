@@ -330,6 +330,8 @@ export type ReleveAbsentes = {
   numeroMax: number;
   nbNumerosTestes: number;
   nbPubliees: number;
+  /** Numéros que la plateforme n'a pas permis de lire : non comptés comme non publiés. */
+  nbErreurs: number;
   totalSoutiens: number;
   soutiensInconnus: number;
   /** Sort décidé ou recueil terminé. Absent des relevés antérieurs au 11/11/2026. */
@@ -348,6 +350,7 @@ export async function getReleveAbsentes(): Promise<ReleveAbsentes | null> {
     numeroMax: d.numeroMax ?? 0,
     nbNumerosTestes: d.nbNumerosTestes ?? 0,
     nbPubliees: d.nbPubliees ?? 0,
+    nbErreurs: d.nbErreurs ?? 0,
     totalSoutiens: d.totalSoutiens ?? 0,
     soutiensInconnus: d.soutiensInconnus ?? 0,
     nbDecidees: d.nbDecidees ?? null,

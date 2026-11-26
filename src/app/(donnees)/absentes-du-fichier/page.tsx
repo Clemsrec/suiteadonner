@@ -14,20 +14,21 @@ import { SITE_NAME } from "@/lib/site";
 export const revalidate = 86400;
 
 const ISSUE_URL = "https://github.com/datagouv/datagouvfr_data_pipelines/issues/839";
+const ANNONCE_URL = "https://github.com/datagouv/datagouvfr_data_pipelines/issues/839#issuecomment-6977742826";
 
 export const metadata: Metadata = {
   title: `Pétitions absentes du fichier public — ${SITE_NAME}`,
   description:
-    "Les pétitions publiées sur la plateforme de l'Assemblée nationale qui n'ont jamais figuré dans le fichier de données ouvertes de data.gouv.fr, avec leurs signatures.",
+    "Les pétitions publiées sur la plateforme de l'Assemblée nationale qui manquent au fichier de données ouvertes de data.gouv.fr, relevées chaque semaine.",
   alternates: { canonical: "/absentes-du-fichier" },
   openGraph: {
     type: "article",
     locale: "fr_FR",
     url: "/absentes-du-fichier",
     siteName: SITE_NAME,
-    title: "Pétitions absentes du fichier public",
+    title: "Pétitions publiées absentes du fichier public",
     description:
-      "Des pétitions publiées, parfois très signées, que le fichier de données ouvertes ne contient pas.",
+      "Le relevé hebdomadaire des pétitions publiées que le fichier de données ouvertes ne contient pas, et l'histoire du défaut qui en a écarté plus de neuf cents.",
   },
 };
 
@@ -60,9 +61,21 @@ export default async function AbsentesDuFichier() {
           <Link href="/petitions">Les pétitions</Link>
           {" · "}par constat
         </p>
-        <h1>Des pétitions publiées manquent au fichier public</h1>
+        <h1>Pétitions publiées absentes du fichier public</h1>
         <p className={styles.lede}>
-          {releve ? (
+          {releve && releve.nbPubliees === 0 ? (
+            <>
+              Au relevé du {formatFrDate(releve.releveLe)}, aucun des{" "}
+              {n(releve.nbNumerosTestes - releve.nbErreurs)} numéros lus ne correspond à
+              une pétition publiée absente du fichier de données ouvertes.
+              {releve.nbErreurs > 0 && (
+                <>
+                  {" "}
+                  {n(releve.nbErreurs)} numéros n&apos;ont pas pu être lus sur la plateforme.
+                </>
+              )}
+            </>
+          ) : releve ? (
             <>
               Au relevé du {formatFrDate(releve.releveLe)},{" "}
               <strong>{n(releve.nbPubliees)} pétitions</strong> publiées sur la plateforme
@@ -78,11 +91,12 @@ export default async function AbsentesDuFichier() {
             </>
           ) : (
             <>
-              Certaines pétitions publiées sur la plateforme de l&apos;Assemblée
-              nationale n&apos;entrent jamais dans le fichier de données ouvertes.
+              Le relevé des pétitions publiées absentes du fichier de données ouvertes
+              est momentanément inaccessible.
             </>
           )}
         </p>
+        {releve && releve.nbPubliees > 0 && (
         <p className={styles.encadre}>
           Précision importante&nbsp;: <strong>ces pétitions sont bien en ligne sur la
           plateforme officielle</strong>, et on peut les signer. Seul le fichier
@@ -90,25 +104,36 @@ export default async function AbsentesDuFichier() {
           chercheurs, les journalistes et ce site. Elles n&apos;apparaissent donc ni
           dans nos statistiques ni dans notre recherche.
         </p>
+        )}
       </header>
 
       <section className={styles.section}>
-        <h2>Pourquoi elles manquent</h2>
+        <h2>D&apos;où venait le défaut</h2>
         <p>
           Le fichier est produit chaque semaine par un programme de data.gouv.fr qui
-          lit les pétitions numéro par numéro. Ce programme tient pour inutilisé tout
+          lit les pétitions numéro par numéro. Jusqu&apos;au 16&nbsp;novembre&nbsp;2026, ce
+          programme tenait pour inutilisé tout
           numéro absent du fichier précédent et inférieur au plus grand numéro déjà
-          vu, et ne le relit plus. Or un numéro peut être attribué avant que la
-          pétition soit publiée. Si un numéro plus élevé paraît entre-temps, la
-          pétition reste hors du fichier, même une fois en ligne.
+          vu, et ne le relisait plus. Or un numéro peut être attribué avant que la
+          pétition soit publiée. Si un numéro plus élevé paraissait entre-temps, la
+          pétition restait hors du fichier, même une fois en ligne.
         </p>
         <p>
           Le défaut a été signalé aux mainteneurs le 10&nbsp;novembre&nbsp;2026{" "}
           <a href={ISSUE_URL} target="_blank" rel="noopener noreferrer">
             sur le dépôt du programme
           </a>
-          . S&apos;il est corrigé, cette liste se videra d&apos;elle-même au relevé
-          suivant.
+          . Les mainteneurs l&apos;ont corrigé le 16&nbsp;novembre et ont mis le
+          fichier à jour le 18&nbsp;novembre&nbsp;:{" "}
+          <a href={ANNONCE_URL} target="_blank" rel="noopener noreferrer">
+            ils annoncent 933 pétitions de l&apos;Assemblée nationale ajoutées
+          </a>
+          . Depuis notre import du 23&nbsp;novembre, elles figurent dans nos chiffres et
+          dans notre recherche.
+        </p>
+        <p>
+          Nous continuons le relevé chaque lundi. Si une pétition publiée manque de
+          nouveau au fichier, elle apparaîtra dans la liste ci-dessous.
         </p>
       </section>
 
@@ -133,8 +158,9 @@ export default async function AbsentesDuFichier() {
           />
         ) : (
           <p>
-            Aucune pétition dans ce cas au dernier relevé, ou données momentanément
-            inaccessibles.
+            {releve
+              ? `Liste vide au relevé du ${formatFrDate(releve.releveLe)}.`
+              : "Relevé momentanément inaccessible."}
           </p>
         )}
       </section>

@@ -21,6 +21,16 @@
       }
     },
     {
+      "texte": "2026 , aucun des 2 838 numéros lus ne correspond à une pétition publiée absente du fichier de données ouvertes.",
+      "page": "absentes-du-fichier.html",
+      "fonde": "nous",
+      "note": "Relevé de scripts/relever-absentes.mjs : un numéro n'est compté non publié que si la plateforme le redirige vers l'accueil ; toute autre réponse est une erreur, comptée à part (nbErreurs) et retirée des numéros lus par la page. La phrase n'est affichée que si nbPubliees vaut 0.",
+      "preuve": {
+        "fichier": "scripts/relever-absentes.mjs",
+        "contient": "=== PLATEFORME ? { etat: \"non_publiee\" } : { etat: \"erreur\""
+      }
+    },
+    {
       "texte": "Accueil — le constat d'ensemble, les chiffres à jour et la recherche parmi toutes les pétitions.",
       "page": "plan-du-site.html",
       "fonde": "nous",
