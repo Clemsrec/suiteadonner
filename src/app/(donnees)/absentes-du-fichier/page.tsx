@@ -10,6 +10,7 @@ import {
   type StatutSource,
 } from "@/lib/petitions";
 import { SITE_NAME } from "@/lib/site";
+import { nombre } from "@/lib/nombre";
 
 export const revalidate = 86400;
 
@@ -52,7 +53,7 @@ async function loadReleve() {
 
 export default async function AbsentesDuFichier() {
   const releve = await loadReleve();
-  const n = (v: number) => v.toLocaleString("fr-FR");
+  const n = (v: number) => nombre(v);
 
   return (
     <>

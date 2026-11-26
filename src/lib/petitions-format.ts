@@ -10,6 +10,8 @@
 // par le serveur. Ce module isole ce qui est pur ; `petitions.ts` le réexporte,
 // donc rien ne change pour les Server Components.
 
+import { nombre } from "@/lib/nombre";
+
 export type StatutSource = "ouverte" | "archivee" | "classee" | "expiree";
 
 // Motif du classement, lu dans le texte de décision et jamais déduit du statut.
@@ -94,7 +96,7 @@ export const STATUT_TAG: Record<StatutSource, "pending" | "none" | "examined"> =
 
 // Un nombre de signatures absent ne vaut pas zéro : le fichier ne dit rien.
 export function formatSignatures(nbVotes: number | null): string {
-  return nbVotes === null ? "non renseigné" : nbVotes.toLocaleString("fr-FR");
+  return nbVotes === null ? "non renseigné" : nombre(nbVotes);
 }
 
 /**

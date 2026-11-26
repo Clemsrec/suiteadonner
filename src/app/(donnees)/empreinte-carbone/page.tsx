@@ -6,6 +6,7 @@ import propre from "./empreinte-page.module.css";
 import DetailEmpreinte from "./DetailEmpreinte";
 import { HEBERGEMENT } from "@/lib/empreinte";
 import { LEGAL, SITE_NAME } from "@/lib/site";
+import { nombre } from "@/lib/nombre";
 
 export const metadata: Metadata = {
   title: `Empreinte carbone du site — ${SITE_NAME}`,
@@ -104,7 +105,7 @@ export default function EmpreinteCarbonePage() {
           </dd>
           <dt>Coefficient d&apos;intensité</dt>
           <dd>
-            {GRAMMES_PAR_GO.toLocaleString("fr-FR")} g CO<sub>2</sub>e par gigaoctet
+            {nombre(GRAMMES_PAR_GO)} g CO<sub>2</sub>e par gigaoctet
             transféré, énergie de fonctionnement et de fabrication comprises
           </dd>
           <dt>Hébergement déclaré vert</dt>
@@ -142,7 +143,7 @@ export default function EmpreinteCarbonePage() {
               {VENTILATION.map((s) => (
                 <tr key={s.libelle}>
                   <td>{s.libelle}</td>
-                  <td>{s.grammes.toLocaleString("fr-FR", { maximumFractionDigits: 1 })}</td>
+                  <td>{nombre(s.grammes, { maximumFractionDigits: 1 })}</td>
                   <td>{s.part}&nbsp;%</td>
                 </tr>
               ))}

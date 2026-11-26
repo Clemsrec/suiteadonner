@@ -21,6 +21,7 @@ import {
   octetsTotal,
 } from "@/lib/empreinte";
 import { useEmpreinte } from "../../useEmpreinte";
+import { nombre } from "@/lib/nombre";
 
 // Le relevé n'existe que dans le navigateur : cette partie de la page est donc
 // la seule à ne pas être rendue côté serveur. Elle n'affiche rien tant qu'elle
@@ -136,7 +137,7 @@ export default function DetailEmpreinte() {
             <div className={propre.l}>reçus par votre navigateur</div>
           </div>
           <div className={propre.chiffre}>
-            <div className={propre.n}>{session.totalViews.toLocaleString("fr-FR")}</div>
+            <div className={propre.n}>{nombre(session.totalViews)}</div>
             <div className={propre.l}>
               {session.totalViews > 1 ? "pages affichées" : "page affichée"}
             </div>
@@ -165,7 +166,7 @@ export default function DetailEmpreinte() {
                 <td>
                   <code>{bloc.key}</code>
                 </td>
-                <td>{bloc.events.toLocaleString("fr-FR")}</td>
+                <td>{nombre(bloc.events)}</td>
                 <td>{formatGrammes(bloc.gramsCO2e)}</td>
               </tr>
             ))}
@@ -174,7 +175,7 @@ export default function DetailEmpreinte() {
 
         {enCache > 0 && (
           <p>
-            {enCache.toLocaleString("fr-FR")}{" "}
+            {nombre(enCache)}{" "}
             {enCache > 1
               ? "fichiers vous ont été servis par le cache"
               : "fichier vous a été servi par le cache"}{" "}
@@ -190,7 +191,7 @@ export default function DetailEmpreinte() {
         {unknownRequests > 0 && (
           <p>
             <strong>
-              {unknownRequests.toLocaleString("fr-FR")}{" "}
+              {nombre(unknownRequests)}{" "}
               {unknownRequests > 1
                 ? "requêtes ne sont pas comptées"
                 : "requête n'est pas comptée"}

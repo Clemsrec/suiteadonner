@@ -12,6 +12,7 @@ import {
   pointFinal,
 } from "@/lib/petitions";
 import { SITE_NAME } from "@/lib/site";
+import { nombre } from "@/lib/nombre";
 
 export const revalidate = 86400;
 
@@ -172,7 +173,7 @@ export default async function PassagesEnCommission() {
             et la commission n&apos;a aucune décision à motiver. Elle en traite plusieurs
             dizaines en une même séance — plus de deux cents le 1er juillet 2026. Les comptes
             rendus annoncent ainsi{" "}
-            {synthese.petitionsClasseesEnBloc.toLocaleString("fr-FR")} pétitions au total,
+            {nombre(synthese.petitionsClasseesEnBloc)} pétitions au total,
             contre {synthese.nbDecisions} pour lesquelles nous pouvons citer une décision
             individuelle.
           </p>
@@ -194,7 +195,7 @@ export default async function PassagesEnCommission() {
               <li key={c.compteRenduRef}>
                 <span className={cartes.friseDate}>{formatFrDate(c.date)}</span>
                 <span className={cartes.friseActe}>
-                  {c.nombre.toLocaleString("fr-FR")} pétitions —{" "}
+                  {nombre(c.nombre)} pétitions —{" "}
                   {c.nature === "accompli"
                     ? "classement d’office constaté"
                     : "classement d’office proposé par le rapporteur"}

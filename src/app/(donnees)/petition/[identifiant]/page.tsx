@@ -22,6 +22,7 @@ import {
   type Petition,
 } from "@/lib/petitions";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { nombre } from "@/lib/nombre";
 
 // Les données source ne changent qu'une fois par semaine (republication du
 // lundi) : chaque fiche est générée à la première visite puis servie depuis le
@@ -122,13 +123,13 @@ function constats(p: Petition, etat: EtatPetition): string[] {
   if (etat.seuil) {
     const delai = etat.seuil.sixMois ? " dans un délai de six mois après le dépôt" : "";
     faits.push(
-      `Son texte de décision énonce un seuil de ${etat.seuil.signatures.toLocaleString("fr-FR")} signatures${delai}.`
+      `Son texte de décision énonce un seuil de ${nombre(etat.seuil.signatures)} signatures${delai}.`
     );
     const lecture = etat.horsFichier ? `à la lecture du ${formatFrDate(p.calculeLe)}` : "au dernier import";
     faits.push(
       p.nbVotes === null
         ? "Le nombre de signatures n'est pas renseigné dans le fichier."
-        : `Le fichier lui en compte ${p.nbVotes.toLocaleString("fr-FR")} ${lecture}${etat.seuil.sixMois ? ", sans dire combien elle en avait au terme de ce délai" : ""}.`
+        : `Le fichier lui en compte ${nombre(p.nbVotes)} ${lecture}${etat.seuil.sixMois ? ", sans dire combien elle en avait au terme de ce délai" : ""}.`
     );
   } else if (p.seuilAtteint === null) {
     faits.push(
@@ -136,7 +137,7 @@ function constats(p: Petition, etat: EtatPetition): string[] {
     );
   } else {
     faits.push(
-      `${p.seuilAtteint ? "A dépassé" : "N'a pas dépassé"} ${SEUIL_SIGNATURES.toLocaleString("fr-FR")} signatures. Le seuil de classement d'office varie selon la commission, et le fichier ne l'énonce pas pour cette pétition.`
+      `${p.seuilAtteint ? "A dépassé" : "N'a pas dépassé"} ${nombre(SEUIL_SIGNATURES)} signatures. Le seuil de classement d'office varie selon la commission, et le fichier ne l'énonce pas pour cette pétition.`
     );
   }
 

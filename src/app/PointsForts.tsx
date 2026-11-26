@@ -8,6 +8,7 @@ import {
   pointFinal,
   type SyntheseCommission,
 } from "@/lib/petitions";
+import { nombre } from "@/lib/nombre";
 
 // Ce que le site a établi de plus marquant, en tête d'accueil. Tout vient du
 // document `meta/reunions`, calculé au moment de la collecte : aucun chiffre,
@@ -36,7 +37,7 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
       <p className={styles.eyebrow}>Ce que nous avons établi</p>
       <h2 id="etabli">
         <span className={styles.pfChiffre}>
-          {synthese.signaturesDecisionsAbsentes.toLocaleString("fr-FR")}
+          {nombre(synthese.signaturesDecisionsAbsentes)}
         </span>{" "}
         signatures portent une pétition sur laquelle une commission s&apos;est prononcée
         — sans que le fichier public en dise un mot.
@@ -83,7 +84,7 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
         {synthese.nbRapports > 0 && rapport && (
           <article className={styles.pfCarte}>
             <p className={styles.pfCarteTitre}>Pétitions ayant obtenu un rapport</p>
-            <p className={styles.pfCarteChiffre}>{synthese.nbRapports.toLocaleString("fr-FR")}</p>
+            <p className={styles.pfCarteChiffre}>{nombre(synthese.nbRapports)}</p>
             <p className={styles.pfCarteTexte}>
               {synthese.nbRapports === 1 ? "rapport publié" : "rapports publiés"} sur une
               pétition, dans les corpus que nous lisons. Le plus récent est le rapport
@@ -123,7 +124,7 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
           <article className={styles.pfCarte}>
             <p className={styles.pfCarteTitre}>Classement d&apos;office, en bloc</p>
             <p className={styles.pfCarteChiffre}>
-              {synthese.petitionsClasseesEnBloc.toLocaleString("fr-FR")}
+              {nombre(synthese.petitionsClasseesEnBloc)}
             </p>
             <p className={styles.pfCarteTexte}>
               pétitions visées par un classement d&apos;office en{" "}
@@ -163,13 +164,13 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
         {attendues > 0 && (
           <article className={styles.pfCarte}>
             <p className={styles.pfCarteTitre}>Décision inscrite, compte rendu introuvable</p>
-            <p className={styles.pfCarteChiffre}>{attendues.toLocaleString("fr-FR")}</p>
+            <p className={styles.pfCarteChiffre}>{nombre(attendues)}</p>
             <p className={styles.pfCarteTexte}>
               {attendues === 1
                 ? "pétition dont une réunion de commission annonçait la décision à son ordre du jour, sans qu’aucun compte rendu ne soit référencé pour cette réunion"
                 : "pétitions dont une réunion de commission annonçait la décision à son ordre du jour, sans qu’aucun compte rendu ne soit référencé pour ces réunions"}
               {synthese.signaturesDecisionsAttendues > 0
-                ? ` — ${synthese.signaturesDecisionsAttendues.toLocaleString("fr-FR")} signatures en attente d’une réponse lisible.`
+                ? ` — ${nombre(synthese.signaturesDecisionsAttendues)} signatures en attente d’une réponse lisible.`
                 : "."}{" "}
               Nous ignorons si la réunion s&apos;est tenue et si une décision a été prise&nbsp;:
               nous constatons qu&apos;aucun texte n&apos;est disponible.

@@ -3,6 +3,7 @@ import Link from "next/link";
 import styles from "../donnees.module.css";
 import { getSitemapMeta } from "@/lib/petitions";
 import { SITE_NAME } from "@/lib/site";
+import { nombre } from "@/lib/nombre";
 
 export const revalidate = 86400;
 
@@ -58,7 +59,7 @@ export default async function PlanDuSite() {
             {meta.annees.map((a) => (
               <li key={a.annee}>
                 <Link href={`/petitions/${a.annee}`}>Pétitions déposées en {a.annee}</Link>{" "}(
-                {a.nb.toLocaleString("fr-FR")})
+                {nombre(a.nb)})
               </li>
             ))}
           </ul>

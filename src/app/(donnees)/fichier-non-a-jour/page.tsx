@@ -4,6 +4,7 @@ import styles from "../donnees.module.css";
 import TableauPetitions, { type LignePetition } from "@/app/TableauPetitions";
 import { formatFrDate, getEcartStatutDates, getStats } from "@/lib/petitions";
 import { SITE_NAME } from "@/lib/site";
+import { nombre } from "@/lib/nombre";
 
 export const revalidate = 86400;
 
@@ -62,7 +63,7 @@ export default async function FichierNonAJour() {
             legende={
               petitions.length < LIMITE
                 ? "Liste complète. La date limite affichée est celle du fichier lui-même : elle est passée, et le statut n'en tient pas compte."
-                : `Lecture plafonnée à ${LIMITE.toLocaleString("fr-FR")} pétitions : cette liste n'est qu'une part de celles concernées, elle n'est donc pas triable.`
+                : `Lecture plafonnée à ${nombre(LIMITE)} pétitions : cette liste n'est qu'une part de celles concernées, elle n'est donc pas triable.`
             }
             lignes={petitions.map(
               (p): LignePetition => ({

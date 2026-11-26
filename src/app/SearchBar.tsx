@@ -5,6 +5,7 @@ import styles from "./page.module.css";
 import TableauPetitions, { type LignePetition } from "./TableauPetitions";
 import { STATUT_LABELS, STATUT_TAG } from "@/lib/petitions-format";
 import { algoliaConfigured, searchPetitionsIndex, type AlgoliaPetitionHit, type SearchFilter } from "@/lib/algolia";
+import { nombre } from "@/lib/nombre";
 
 const FILTERS: { key: SearchFilter; label: string }[] = [
   { key: "toutes", label: "Toutes" },
@@ -108,7 +109,7 @@ export default function SearchBar() {
             ) : (
               <>
                 <p className={styles.searchMeta}>
-                  {nbHits.toLocaleString("fr-FR")} résultat{nbHits > 1 ? "s" : ""}
+                  {nombre(nbHits)} résultat{nbHits > 1 ? "s" : ""}
                   {results.length < nbHits
                     ? ` (${results.length} affichés — affinez la recherche pour trier la totalité)`
                     : ""}

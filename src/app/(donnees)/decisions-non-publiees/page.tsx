@@ -4,6 +4,7 @@ import styles from "../donnees.module.css";
 import TableauPetitions, { type LignePetition } from "@/app/TableauPetitions";
 import { formatFrDate, getSansDecision, getStats } from "@/lib/petitions";
 import { SITE_NAME } from "@/lib/site";
+import { nombre } from "@/lib/nombre";
 
 export const revalidate = 86400;
 
@@ -50,10 +51,10 @@ export default async function DecisionsNonPubliees() {
         {stats?.signaturesClasseesSansTexte ? (
           <p className={styles.encadre}>
             <strong>
-              {Math.round(stats.signaturesClasseesSansTexte).toLocaleString("fr-FR")} signatures
+              {nombre(Math.round(stats.signaturesClasseesSansTexte))} signatures
               cumulées
             </strong>{" "}
-            pour les {stats.classeesHorsSeuilSansTexte.toLocaleString("fr-FR")}{" "}pétitions
+            pour les {nombre(stats.classeesHorsSeuilSansTexte)}{" "}pétitions
             de cette liste, sans qu&apos;aucune motivation ne soit publiée. Ce total est un
             minimum&nbsp;: les pétitions dont le fichier ne renseigne pas le nombre de
             signatures comptent pour zéro dans cette somme, faute de mieux.
@@ -68,8 +69,8 @@ export default async function DecisionsNonPubliees() {
             complet={petitions.length < LIMITE}
             legende={
               petitions.length < LIMITE
-                ? `Liste complète : ${petitions.length.toLocaleString("fr-FR")} pétitions, de la plus signée à la moins signée à l'ouverture de la page. Chaque colonne classe l'ensemble.`
-                : `Lecture plafonnée à ${LIMITE.toLocaleString("fr-FR")} pétitions : cette liste n'est qu'une part de celles concernées, elle n'est donc pas triable.`
+                ? `Liste complète : ${nombre(petitions.length)} pétitions, de la plus signée à la moins signée à l'ouverture de la page. Chaque colonne classe l'ensemble.`
+                : `Lecture plafonnée à ${nombre(LIMITE)} pétitions : cette liste n'est qu'une part de celles concernées, elle n'est donc pas triable.`
             }
             lignes={petitions.map(
               (p): LignePetition => ({

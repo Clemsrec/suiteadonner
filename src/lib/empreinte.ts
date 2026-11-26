@@ -14,6 +14,7 @@
 // est écrite sans consentement — le choix de la bannière — et cette mesure ne
 // doit jamais contredire cette affirmation.
 import type { WebPageviewEvent } from "carbone-cost";
+import { nombre } from "@/lib/nombre";
 
 // Hébergement de l'application, relevé sur l'infrastructure — voir LEGAL dans
 // src/lib/site.ts, qui documente les mêmes régions pour les mentions légales.
@@ -42,7 +43,7 @@ export function formatGrammes(grammes: number): string {
   if (grammes <= 0) return "0 g";
   if (grammes < 0.001) return "< 0,001 g";
   const decimales = grammes < 0.01 ? 4 : grammes < 1 ? 3 : 2;
-  return `≈ ${grammes.toLocaleString("fr-FR", { maximumFractionDigits: decimales })} g`;
+  return `≈ ${nombre(grammes, { maximumFractionDigits: decimales })} g`;
 }
 
 // Les équivalents (km de train, charges de téléphone) tombent vite sous le
@@ -50,15 +51,15 @@ export function formatGrammes(grammes: number): string {
 export function formatEquivalent(valeur: number): string {
   if (valeur <= 0) return "0";
   if (valeur < 0.01) return "< 0,01";
-  return valeur.toLocaleString("fr-FR", { maximumFractionDigits: 2 });
+  return nombre(valeur, { maximumFractionDigits: 2 });
 }
 
 export function formatOctets(octets: number): string {
-  if (octets < 1024) return `${octets.toLocaleString("fr-FR")} o`;
+  if (octets < 1024) return `${nombre(octets)} o`;
   if (octets < 1024 * 1024) {
-    return `${(octets / 1024).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} Ko`;
+    return `${nombre(octets / 1024, { maximumFractionDigits: 1 })} Ko`;
   }
-  return `${(octets / (1024 * 1024)).toLocaleString("fr-FR", { maximumFractionDigits: 2 })} Mo`;
+  return `${nombre(octets / (1024 * 1024), { maximumFractionDigits: 2 })} Mo`;
 }
 
 export function octetsTotal(evenements: WebPageviewEvent[]): number {

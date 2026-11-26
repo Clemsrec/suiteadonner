@@ -279,8 +279,13 @@
    colonnes dans le même ordre : le titre au fer à gauche, les soutiens alignés
    sur les unités, le constat du fichier, la date. On lit une colonne de haut
    en bas ; c'est ce qu'une suite de cartes empêchait de faire. */
+/* Largeurs de colonnes fixes : en calcul automatique, la commission (une
+   seule ligne, coupée par des points de suspension) imposait toute sa
+   longueur à la colonne du titre, et le tableau débordait de 250 px sur
+   tablette, emportant le statut et la date hors de l'écran. */
 .tableau {
   width: 100%;
+  table-layout: fixed;
   margin: 16px 0 0;
   border-collapse: collapse;
   border-top: 1px solid var(--rule-strong);
@@ -303,13 +308,14 @@
   text-align: left;
   padding: 9px 18px 9px 0;
   border-bottom: 1px solid var(--rule);
-  white-space: nowrap;
+  vertical-align: bottom;
 }
 /* En-têtes cliquables : le tri ne réordonne que les lignes affichées, il ne
    va rien rechercher de plus dans les données. La flèche reste discrète tant
    que la colonne n'est pas celle qui trie. */
 .triBouton {
   display: inline-flex;
+  max-width: 100%;
   align-items: baseline;
   gap: 5px;
   padding: 0;
@@ -386,23 +392,27 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* Largeurs en rem et non en ch : la largeur d'une colonne est lue sur son
+   intitulé, écrit dans une police bien plus petite que les chiffres. 6,5rem
+   tient « 2 131 368 » et la marge qui le sépare du statut ; 6,5rem tient
+   « 22 juil. 2026 ». Les nombres ne se coupent pas (espaces insécables, voir
+   lib/nombre.ts) ; « non renseigné » peut passer sur deux lignes. */
 .colNombre,
 .cellNombre {
-  width: 11ch;
+  width: 6.5rem;
   text-align: right;
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   font-size: 0.86rem;
   font-weight: 600;
   color: var(--ink);
-  white-space: nowrap;
 }
 .colStatut {
   width: 23%;
 }
 .colDate,
 .cellDate {
-  width: 13ch;
+  width: 6.5rem;
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   font-size: 0.76rem;

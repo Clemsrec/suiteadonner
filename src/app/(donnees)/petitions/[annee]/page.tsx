@@ -11,6 +11,7 @@ import {
   getSitemapMeta,
 } from "@/lib/petitions";
 import { SITE_NAME } from "@/lib/site";
+import { nombre } from "@/lib/nombre";
 
 export const revalidate = 86400;
 
@@ -35,7 +36,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!anneeValide(annee)) return { title: `Page introuvable — ${SITE_NAME}` };
   const petitions = await chargerAnnee(annee);
   return {
-    title: `Les ${petitions.length.toLocaleString("fr-FR")} pétitions déposées en ${annee} — ${SITE_NAME}`,
+    title: `Les ${nombre(petitions.length)} pétitions déposées en ${annee} — ${SITE_NAME}`,
     description:
       `Liste complète des pétitions citoyennes déposées à l'Assemblée nationale en ${annee}, ` +
       "avec pour chacune une fiche : statut, signatures et décision de la commission — ou son absence.",
@@ -66,7 +67,7 @@ export default async function PetitionsParAnnee({ params }: Params) {
           {" · "}année {annee}
         </p>
         <h1>
-          Les {petitions.length.toLocaleString("fr-FR")} pétitions déposées en {annee}
+          Les {nombre(petitions.length)} pétitions déposées en {annee}
         </h1>
         <p className={styles.lede}>
           À l&apos;ouverture, de la plus récente à la plus ancienne, telles

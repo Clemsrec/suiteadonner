@@ -3,6 +3,7 @@ import Link from "next/link";
 import styles from "../donnees.module.css";
 import { getSitemapMeta, getStats, formatFrDate } from "@/lib/petitions";
 import { SITE_NAME } from "@/lib/site";
+import { nombre } from "@/lib/nombre";
 
 export const revalidate = 86400;
 
@@ -36,7 +37,7 @@ export default async function IndexPetitions() {
         <h1>Toutes les pétitions, année par année</h1>
         <p className={styles.lede}>
           {stats
-            ? `${stats.total.toLocaleString("fr-FR")} pétitions déposées sur la plateforme de l'Assemblée nationale, suivies depuis le fichier officiel de data.gouv.fr.`
+            ? `${nombre(stats.total)} pétitions déposées sur la plateforme de l'Assemblée nationale, suivies depuis le fichier officiel de data.gouv.fr.`
             : "Les pétitions déposées sur la plateforme de l'Assemblée nationale, suivies depuis le fichier officiel de data.gouv.fr."}{" "}
           Chaque fiche rassemble ce que le fichier permet d&apos;établir&nbsp;: statut,
           signatures, décision de la commission — ou son absence, fréquente dès lors que le
@@ -53,7 +54,7 @@ export default async function IndexPetitions() {
                 <Link href={`/petitions/${a.annee}`}>
                   <span className={styles.anneeN}>{a.annee}</span>
                   <span className={styles.anneeNb}>
-                    {a.nb.toLocaleString("fr-FR")} pétition{a.nb > 1 ? "s" : ""}
+                    {nombre(a.nb)} pétition{a.nb > 1 ? "s" : ""}
                   </span>
                 </Link>
               </li>

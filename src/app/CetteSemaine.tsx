@@ -1,6 +1,7 @@
 import Link from "next/link";
 import styles from "./semaine.module.css";
 import { formatFrDate, formatSignatures, joursDepuis, type ImportDelta, type PetitionResume } from "@/lib/petitions";
+import { nombre } from "@/lib/nombre";
 
 // Un import réussi qui n'apporte presque rien ressemble à un import manqué :
 // ce bloc lève l'ambiguïté en disant, chiffres à l'appui, ce que le fichier
@@ -11,7 +12,7 @@ import { formatFrDate, formatSignatures, joursDepuis, type ImportDelta, type Pet
 const JOURS_AVANT_ALERTE = 9;
 
 function pluriel(n: number, un: string, plusieurs: string): string {
-  return `${n.toLocaleString("fr-FR")} ${n > 1 ? plusieurs : un}`;
+  return `${nombre(n)} ${n > 1 ? plusieurs : un}`;
 }
 
 function Liste({ items, total }: { items: PetitionResume[]; total: number }) {
@@ -80,14 +81,14 @@ export default function CetteSemaine({ delta }: { delta: ImportDelta | null }) {
           {sortiesComptees ? ", aucune pétition sortie du fichier" : ""} depuis la lecture
           précédente
           {delta.signaturesGagnees > 0
-            ? ` — seuls les compteurs de signatures ont augmenté (+${delta.signaturesGagnees.toLocaleString("fr-FR")}).`
+            ? ` — seuls les compteurs de signatures ont augmenté (+${nombre(delta.signaturesGagnees)}).`
             : "."}
         </p>
       ) : (
         <p className={styles.resume}>
           Depuis la lecture précédente&nbsp;: <strong>{faits.join(", ")}</strong>
           {delta.signaturesGagnees > 0
-            ? `, et ${delta.signaturesGagnees.toLocaleString("fr-FR")} signatures gagnées, hausses seules comptées.`
+            ? `, et ${nombre(delta.signaturesGagnees)} signatures gagnées, hausses seules comptées.`
             : "."}
         </p>
       )}

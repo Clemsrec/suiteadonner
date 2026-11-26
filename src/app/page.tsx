@@ -24,6 +24,7 @@ import {
   type Stats,
 } from "@/lib/petitions";
 import { LEGAL, RELEVE_PLATEFORME, SORT_PETITION, lienSortPetition } from "@/lib/site";
+import { nombre } from "@/lib/nombre";
 
 // Les données source ne changent qu'une fois par semaine (republication du
 // lundi côté data.gouv.fr) : rendre la page à chaque visite faisait 20 lectures
@@ -149,17 +150,17 @@ export default async function Home() {
           {stats ? (
             <div className={styles.stats}>
               <div className={styles.stat}>
-                <div className={styles.n}>{stats.total.toLocaleString("fr-FR")}</div>
+                <div className={styles.n}>{nombre(stats.total)}</div>
                 <div className={styles.l}>pétitions suivies</div>
               </div>
               <div className={styles.stat}>
                 <div className={styles.n}>
-                  {(stats.archivee + stats.expiree).toLocaleString("fr-FR")}
+                  {nombre(stats.archivee + stats.expiree)}
                 </div>
                 <div className={styles.l}>classées d&apos;office</div>
               </div>
               <div className={`${styles.stat} ${styles.statFlag}`}>
-                <div className={styles.n}>{stats.seuilAtteint.toLocaleString("fr-FR")}</div>
+                <div className={styles.n}>{nombre(stats.seuilAtteint)}</div>
                 <div className={styles.l}>ont dépassé 10&nbsp;000 signatures</div>
               </div>
             </div>
@@ -184,8 +185,8 @@ export default async function Home() {
             <h2>
               Quand le fichier ne rattache pas un classement au nombre de signatures, il
               n&apos;écrit le plus souvent aucune motivation&nbsp;:{" "}
-              {stats.classeesHorsSeuilSansTexte.toLocaleString("fr-FR")} fois sur{" "}
-              {stats.classeesHorsSeuil.toLocaleString("fr-FR")}.
+              {nombre(stats.classeesHorsSeuilSansTexte)} fois sur{" "}
+              {nombre(stats.classeesHorsSeuil)}.
             </h2>
 
             <p className={styles.constatLede}>
@@ -200,11 +201,11 @@ export default async function Home() {
             <div className={styles.faits}>
               <div className={styles.fait}>
                 <div className={styles.faitN}>
-                  {stats.formulationsDistinctes.toLocaleString("fr-FR")}
+                  {nombre(stats.formulationsDistinctes)}
                 </div>
                 <p>
                   formulations différentes pour l&apos;ensemble des{" "}
-                  {stats.textesDecision.toLocaleString("fr-FR")}{" "}
+                  {nombre(stats.textesDecision)}{" "}
                   décisions rédigées. Ce sont des formules types&nbsp;: aucune ne cite le numéro
                   ni le titre de la pétition qu&apos;elle concerne — nous les avons toutes
                   relues pour le vérifier.
@@ -213,7 +214,7 @@ export default async function Home() {
 
               <div className={styles.fait}>
                 <div className={styles.faitN}>
-                  {stats.motifAbsent.toLocaleString("fr-FR")}
+                  {nombre(stats.motifAbsent)}
                 </div>
                 <p>
                   pétitions dont le recueil est terminé et pour lesquelles l&apos;emplacement
@@ -224,26 +225,25 @@ export default async function Home() {
 
               <div className={styles.fait}>
                 <div className={styles.faitN}>
-                  {(Math.round((stats.seuilAtteint / stats.total) * 1000) / 10)
-                    .toLocaleString("fr-FR")}
+                  {nombre(Math.round((stats.seuilAtteint / stats.total) * 1000) / 10)}
                   &nbsp;%
                 </div>
                 <p>
                   des pétitions dépassent 10&nbsp;000 signatures —{" "}
-                  {stats.seuilAtteint.toLocaleString("fr-FR")} sur{" "}
-                  {stats.total.toLocaleString("fr-FR")}.
+                  {nombre(stats.seuilAtteint)} sur{" "}
+                  {nombre(stats.total)}.
                 </p>
               </div>
 
               <div className={styles.fait}>
                 <div className={styles.faitN}>
-                  {stats.clotureGroupee.toLocaleString("fr-FR")}
+                  {nombre(stats.clotureGroupee)}
                 </div>
                 <p>
                   pétitions dont le recueil s&apos;est arrêté le même jour qu&apos;au moins
                   cent autres
                   {stats.dateClotureMasse
-                    ? ` — la plus grosse vague en regroupe ${stats.nbClotureMasse.toLocaleString("fr-FR")} le ${formatFrDate(stats.dateClotureMasse)}`
+                    ? ` — la plus grosse vague en regroupe ${nombre(stats.nbClotureMasse)} le ${formatFrDate(stats.dateClotureMasse)}`
                     : ""}
                   . Leur nombre de signatures n&apos;y change rien.
                 </p>
@@ -287,7 +287,7 @@ export default async function Home() {
           {stats ? (
             <p className={styles.extrait}>
               Les {flagship.length} plus signées parmi les{" "}
-              {stats.classee.toLocaleString("fr-FR")} pétitions classées. Les autres sont
+              {nombre(stats.classee)} pétitions classées. Les autres sont
               accessibles par la recherche ci-dessus.
             </p>
           ) : null}
@@ -450,13 +450,13 @@ export default async function Home() {
               {stats ? (
                 <p className={styles.extrait}>
                   Les {sansDecision.length} plus signées parmi les{" "}
-                  {stats.classeesHorsSeuilSansTexte.toLocaleString("fr-FR")} pétitions concernées.
+                  {nombre(stats.classeesHorsSeuilSansTexte)} pétitions concernées.
                 </p>
               ) : null}
               {stats?.signaturesClasseesSansTexte ? (
                 <p className={styles.counter}>
                   <span className={styles.counterN}>
-                    {Math.round(stats.signaturesClasseesSansTexte).toLocaleString("fr-FR")}
+                    {nombre(Math.round(stats.signaturesClasseesSansTexte))}
                   </span>{" "}
                   signatures cumulées, aucune motivation publiée
                 </p>
@@ -513,7 +513,7 @@ export default async function Home() {
           </p>
           <h2>
             La plateforme prévoit de dire ce qu&apos;est devenue une pétition. Le jour de notre
-            relevé, aucune des {SORT_PETITION.total.toLocaleString("fr-FR")} initiatives
+            relevé, aucune des {nombre(SORT_PETITION.total)} initiatives
             qu&apos;elle listait n&apos;était rangée dans l&apos;une de ces trois issues.
           </h2>
 
@@ -523,8 +523,8 @@ export default async function Home() {
             seul. Le site propose un filtre «&nbsp;Sort de la pétition&nbsp;» avec trois
             issues possibles. Les trois renvoyaient zéro résultat lors de ce relevé. Le filtre
             lui-même répond&nbsp;: au même moment, «&nbsp;Archivée&nbsp;» renvoyait{" "}
-            {SORT_PETITION.archivees.toLocaleString("fr-FR")} pétitions, soit le nombre que le
-            fichier ouvert portait alors ({stats ? stats.archivee.toLocaleString("fr-FR") : "—"}{" "}
+            {nombre(SORT_PETITION.archivees)} pétitions, soit le nombre que le
+            fichier ouvert portait alors ({stats ? nombre(stats.archivee) : "—"}{" "}
             aujourd&apos;hui).
           </p>
 
@@ -535,7 +535,7 @@ export default async function Home() {
                   {e.libelle}
                 </a>
                 <span className={styles.suiviN}>
-                  {e.nombre.toLocaleString("fr-FR")}
+                  {nombre(e.nombre)}
                   {e.nombre === 0 ? "" : " pétitions"}
                 </span>
               </li>
@@ -607,7 +607,7 @@ export default async function Home() {
                 nombre de signatures absent s&apos;affiche « non renseigné » et
                 non «&nbsp;0&nbsp;»
                 {stats
-                  ? ` — cela concerne ${stats.signaturesInconnues.toLocaleString("fr-FR")} pétitions.`
+                  ? ` — cela concerne ${nombre(stats.signaturesInconnues)} pétitions.`
                   : "."}{" "}
                 Une date manquante
                 ne devient pas une date par défaut. Un regroupement de clôtures
@@ -620,10 +620,10 @@ export default async function Home() {
               <dd>
                 Quand le fichier se contredit, nous le signalons au lieu de
                 choisir à sa place. Aujourd&apos;hui&nbsp;:{" "}
-                {stats ? stats.ecartStatutDates.toLocaleString("fr-FR") : "—"}{" "}
+                {stats ? nombre(stats.ecartStatutDates) : "—"}{" "}
                 pétitions portent le statut
                 «&nbsp;ouverte&nbsp;» alors que leur date limite est passée, et{" "}
-                {stats ? (stats.classee - stats.classeesHorsSeuil).toLocaleString("fr-FR") : "—"}{" "}
+                {stats ? nombre(stats.classee - stats.classeesHorsSeuil) : "—"}{" "}
                 pétitions marquées «&nbsp;classée&nbsp;» ont un texte de décision indiquant
                 en réalité un classement d&apos;office. C&apos;est pourquoi nous
                 lisons le motif dans le texte, et jamais dans le statut.
@@ -658,7 +658,7 @@ export default async function Home() {
                 même temps, quel que soit leur nombre de signatures. La plus
                 importante en regroupe{" "}
                 {stats?.nbClotureMasse
-                  ? `${stats.nbClotureMasse.toLocaleString("fr-FR")} au ${formatFrDate(stats.dateClotureMasse)}`
+                  ? `${nombre(stats.nbClotureMasse)} au ${formatFrDate(stats.dateClotureMasse)}`
                   : "plusieurs centaines"}
                 . Nous constatons
                 ce regroupement dans les données&nbsp;; nous n&apos;affirmons pas
