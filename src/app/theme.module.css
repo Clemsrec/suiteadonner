@@ -8,6 +8,7 @@
 }
 .ligne > :first-child {
   min-width: 0;
+  min-height: 44px;
 }
 /* Le sous-titre du nom passe sur deux lignes plutôt que de glisser sous le
    bouton sur téléphone. */
@@ -27,8 +28,9 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  min-width: 40px;
-  min-height: 36px;
+  /* 44 px : la taille minimale d'une cible au doigt (RGAA, WCAG 2.5.5). */
+  min-width: 44px;
+  min-height: 44px;
   padding: 0 10px;
   border: 0;
   background: transparent;

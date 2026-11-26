@@ -3,7 +3,8 @@
    comme un enfant supplémentaire et hérite de leur taille de texte. */
 .badge {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
+  min-height: 44px;
   gap: 7px;
   text-decoration: none;
   color: var(--ink-muted);

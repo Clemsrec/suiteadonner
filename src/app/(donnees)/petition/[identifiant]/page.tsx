@@ -156,6 +156,82 @@ function constats(p: Petition, etat: EtatPetition): string[] {
   return faits;
 }
 
+// La réponse en une phrase, en tête de fiche, pour qui arrive d'un lien et ne
+// lira pas plus loin. Elle ne dit que ce que les sections suivantes établissent,
+// dans le même ordre de priorité : la sortie du fichier, puis ce qu'une
+// commission a écrit (rapport, compte rendu), puis ce que dit le fichier.
+function ouEnEst(p: Petition, etat: EtatPetition): { titre: string; texte: string } {
+  const { decisionLue, rapport } = etat;
+  if (etat.horsFichier) {
+    return {
+      titre: "Elle ne figure plus dans le fichier officiel",
+      texte: `Notre lecture du ${formatFrDate(etat.horsFichier.constateLe)} ne l'y a pas trouvée. Les informations ci-dessous sont celles de la dernière lecture qui la contenait.`,
+    };
+  }
+  if (rapport) {
+    return {
+      titre: "Examinée, avec un rapport publié",
+      texte: `La commission l'a examinée et un rapport a été déposé le ${formatFrDate(rapport.dateDepot)}.`,
+    };
+  }
+  if (decisionLue?.sens === "examen") {
+    return {
+      titre: "La commission a voté son examen",
+      texte: etat.attenteMesurable
+        ? `Vote du ${formatFrDate(decisionLue.date)}. Nous n'avons pas trouvé de rapport depuis.`
+        : `Vote du ${formatFrDate(decisionLue.date)}, alors que la signature est encore ouverte.`,
+    };
+  }
+  if (decisionLue?.sens === "classement") {
+    return {
+      titre: "Classée par la commission",
+      texte:
+        `D'après le compte rendu de sa réunion du ${formatFrDate(decisionLue.date)}.` +
+        (etat.decisionAuFichier === "absente" ? " Le fichier officiel, lui, ne l'indique pas." : ""),
+    };
+  }
+  if (p.ecartStatutDates) {
+    return {
+      titre: "Date limite passée, décision non indiquée",
+      texte: `La signature s'est terminée le ${formatFrDate(p.dateLimiteVote)}, mais le fichier officiel la marque encore « ouverte », sans décision.`,
+    };
+  }
+  if (etat.recueil === "en-cours") {
+    return {
+      titre: "Ouverte à la signature",
+      texte: `Vous pouvez la signer jusqu'au ${formatFrDate(p.dateLimiteVote)} sur la plateforme de l'Assemblée nationale.`,
+    };
+  }
+  if (p.motifClassement === "seuil") {
+    return {
+      titre: "Classée d'office",
+      texte: "Le texte de la décision invoque le nombre de signatures demandé par la commission.",
+    };
+  }
+  if (p.motifClassement === "constat") {
+    return {
+      titre: "Classée",
+      texte: "Le texte de la décision constate le classement sans en donner la raison.",
+    };
+  }
+  if (etat.classeeSansMotif) {
+    return {
+      titre: "Classée, sans explication",
+      texte: "Le fichier officiel prévoit une case pour expliquer la décision, et elle est restée vide.",
+    };
+  }
+  if (etat.recueil === "clos") {
+    return {
+      titre: "Signature terminée, décision non indiquée",
+      texte: `La signature s'est terminée le ${formatFrDate(p.dateLimiteVote)}. Le fichier officiel n'indique pas de décision.`,
+    };
+  }
+  return {
+    titre: p.statutLabel,
+    texte: "Le fichier officiel ne donne pas de date limite de signature pour cette pétition.",
+  };
+}
+
 export default async function FichePetition({ params }: Params) {
   const { identifiant } = await params;
   if (!identifiantValide(identifiant)) notFound();
@@ -180,6 +256,7 @@ export default async function FichePetition({ params }: Params) {
   // contredire ce que le reste de la fiche affiche depuis l'import plus récent.
   const etat = etatPetition({ ...passages, ...p });
   const { decisionLue, rapport } = etat;
+  const reponse = ouEnEst(p, etat);
 
   const filAriane = {
     "@context": "https://schema.org",
@@ -231,35 +308,13 @@ export default async function FichePetition({ params }: Params) {
           <span>{p.commissionSource || "Commission non précisée"}</span>
           <span>déposée le {formatFrDate(p.datePublication)}</span>
         </div>
+        <section className={styles.reponse} aria-labelledby="ou-en-est">
+          <h2 id="ou-en-est" className={styles.reponseQuestion}>Où en est-elle&nbsp;?</h2>
+          <p className={styles.reponseTitre}>{reponse.titre}</p>
+          <p className={styles.reponseTexte}>{reponse.texte}</p>
+        </section>
       </header>
 
-      {/* Colonne de repères : le fichier officiel champ par champ. Placée
-          avant le corps dans le document — sur écran étroit elle se lit donc
-          juste après le titre, comme avant la mise en colonnes. */}
-      <aside className={styles.rail}>
-        <div className={styles.railInner}>
-          <h2 className={styles.railTitre}>Le fichier officiel, champ par champ</h2>
-          <dl className={styles.reperes}>
-            <dt>Identifiant</dt>
-            <dd className={styles.mono}>{p.identifiant}</dd>
-            <dt>Statut brut</dt>
-            <dd className={styles.mono}>{p.statutSource}</dd>
-            <dt>Signatures</dt>
-            <dd className={styles.mono}>{formatSignatures(p.nbVotes)}</dd>
-            <dt>Date de dépôt</dt>
-            <dd>{formatFrDate(p.datePublication)}</dd>
-            <dt>Date limite de signature</dt>
-            <dd>{formatFrDate(p.dateLimiteVote)}</dd>
-            <dt>Commission</dt>
-            <dd>{p.commissionSource ?? <span className={styles.champVide}>non renseignée</span>}</dd>
-            <dt>Législature</dt>
-            <dd>{p.legislature ?? <span className={styles.champVide}>non renseignée</span>}</dd>
-          </dl>
-          <a className={styles.railLien} href={p.url} target="_blank" rel="noopener noreferrer">
-            Voir la pétition sur la plateforme de l&apos;Assemblée nationale →
-          </a>
-        </div>
-      </aside>
 
       <div className={styles.corps}>
         {etat.horsFichier && (
@@ -276,17 +331,15 @@ export default async function FichePetition({ params }: Params) {
         <section className={styles.section}>
           <h2>La décision de la commission</h2>
           <p>
-            Voici ce que le jeu de données ouvert de l&apos;Assemblée nationale consacre au
-            sort de cette pétition. Rien n&apos;est reformulé ni résumé&nbsp;; seules les
-            apostrophes typographiques et les espaces multiples sont normalisés, pour que
-            deux libellés identiques à l&apos;œil ne comptent pas pour deux. Un champ vide
-            est affiché vide.
+            Voici, mot pour mot, ce que le fichier officiel de l&apos;Assemblée nationale
+            écrit sur la décision. Une case vide est montrée vide.
           </p>
           {etat.decisionAuFichier === "publiee" ? (
             <blockquote className={styles.citation}>
               {p.decisionTexte}
               <span className={styles.citationSource}>
-                Champ «&nbsp;décision de la commission&nbsp;», reproduit intégralement.
+                Champ «&nbsp;décision de la commission&nbsp;», reproduit intégralement
+                (seules les apostrophes et les espaces en trop sont uniformisées).
               </span>
             </blockquote>
           ) : (
@@ -470,6 +523,35 @@ export default async function FichePetition({ params }: Params) {
           détaillées sur la page <Link href="/methodologie">méthodologie</Link>.
         </p>
       </div>
+
+      {/* Colonne de repères : le fichier officiel champ par champ. Placée
+          après le corps dans le document : sur téléphone, on lit d'abord où en
+          est la pétition, puis les données brutes. Sur grand écran, la grille
+          la place à droite du corps. */}
+      <aside className={styles.rail}>
+        <div className={styles.railInner}>
+          <h2 className={styles.railTitre}>Les données du fichier officiel</h2>
+          <dl className={styles.reperes}>
+            <dt>Numéro</dt>
+            <dd className={styles.mono}>{p.identifiant}</dd>
+            <dt>Statut dans le fichier</dt>
+            <dd className={styles.mono}>{p.statutSource}</dd>
+            <dt>Signatures</dt>
+            <dd className={styles.mono}>{formatSignatures(p.nbVotes)}</dd>
+            <dt>Date de dépôt</dt>
+            <dd>{formatFrDate(p.datePublication)}</dd>
+            <dt>Fin de la signature</dt>
+            <dd>{formatFrDate(p.dateLimiteVote)}</dd>
+            <dt>Commission</dt>
+            <dd>{p.commissionSource ?? <span className={styles.champVide}>non renseignée</span>}</dd>
+            <dt>Législature (mandat)</dt>
+            <dd>{p.legislature ?? <span className={styles.champVide}>non renseignée</span>}</dd>
+          </dl>
+          <a className={styles.railLien} href={p.url} target="_blank" rel="noopener noreferrer">
+            Voir la pétition sur la plateforme de l&apos;Assemblée nationale →
+          </a>
+        </div>
+      </aside>
     </article>
   );
 }

@@ -118,3 +118,13 @@ a {
   position: absolute;
   left: -9999px;
 }
+
+/* Cibles au doigt d'au moins 44 px de haut (règle NuCom, RGAA et WCAG 2.5.5)
+   pour les menus de l'en-tête et du pied de page des trois mises en page.
+   Posée ici, par élément, plutôt que dans chacun des trois modules. */
+header nav a,
+footer nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}

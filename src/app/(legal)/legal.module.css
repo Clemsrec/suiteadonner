@@ -21,6 +21,7 @@
 .wordmark {
   display: flex;
   align-items: center;
+  min-height: 44px;
   gap: 10px;
   font-family: var(--font-serif);
   font-size: 1.05rem;
@@ -37,6 +38,9 @@
   gap: 16px;
 }
 .retour {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   white-space: nowrap;
   font-size: 0.82rem;
   text-decoration: none;
@@ -167,7 +171,7 @@
 .footerNav {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 0 14px;
 }
 
 @media (max-width: 560px) {

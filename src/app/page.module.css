@@ -80,9 +80,8 @@
 .siteNav {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 20px;
+  gap: 0 20px;
   margin-top: 12px;
-  padding: 9px 0;
   border-top: 1px solid var(--rule);
   font-size: 0.82rem;
 }
@@ -169,6 +168,7 @@
 }
 .searchForm {
   display: flex;
+  min-height: 46px;
   max-width: 720px;
   border: 1px solid var(--rule-strong);
   background: var(--surface);
@@ -219,7 +219,8 @@
   color: var(--ink-muted);
   background: var(--surface-sunk);
   border: 1px solid transparent;
-  padding: 5px 10px;
+  min-height: 44px;
+  padding: 0 14px;
   cursor: pointer;
 }
 .filters button[aria-pressed="true"] {
@@ -306,9 +307,11 @@
   letter-spacing: 0.1em;
   color: var(--ink-faint);
   text-align: left;
-  padding: 9px 18px 9px 0;
+  /* 44 px : les en-têtes triables sont des boutons, à toucher au doigt. */
+  height: 44px;
+  padding: 0 18px 0 0;
   border-bottom: 1px solid var(--rule);
-  vertical-align: bottom;
+  vertical-align: middle;
 }
 /* En-têtes cliquables : le tri ne réordonne que les lignes affichées, il ne
    va rien rechercher de plus dans les données. La flèche reste discrète tant
@@ -316,7 +319,8 @@
 .triBouton {
   display: inline-flex;
   max-width: 100%;
-  align-items: baseline;
+  min-height: 44px;
+  align-items: center;
   gap: 5px;
   padding: 0;
   border: 0;
@@ -582,6 +586,8 @@
   font-size: 0.8rem;
 }
 .friseDetail summary {
+  /* Une ligne de 17 px plus 2 × 13 px : la cible fait 44 px de haut. */
+  padding: 13px 0;
   cursor: pointer;
   color: var(--ink-faint);
   font-size: 0.74rem;
@@ -880,7 +886,7 @@
 .footerNav {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 16px;
+  gap: 0 16px;
 }
 
 @media (min-width: 640px) {
