@@ -45,6 +45,7 @@ export default function DonneesLayout({ children }: Readonly<{ children: React.R
             <Link href="/decisions-non-publiees">Sans décision</Link>
             <Link href="/fichier-non-a-jour">Fichier non à jour</Link>
             <Link href="/absentes-du-fichier">Absentes du fichier</Link>
+            <Link href="/chiffres-en-detail">Les chiffres</Link>
             <Link href="/methodologie">Méthode</Link>
           </nav>
         </div>

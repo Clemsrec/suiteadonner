@@ -42,6 +42,11 @@ export default async function PlanDuSite() {
             année par année ; chaque pétition y a sa fiche détaillée.
           </li>
           <li>
+            <Link href="/chiffres-en-detail">Les chiffres en détail</Link>{" "}— le constat
+            chiffré complet, la comparaison avec la plateforme officielle et la façon de lire
+            chaque chiffre.
+          </li>
+          <li>
             <Link href="/methodologie">Méthodologie</Link>{" "}— la source canonique, les
             règles de lecture et ce que nous nous interdisons d&apos;affirmer.
           </li>

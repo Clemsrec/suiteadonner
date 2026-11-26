@@ -11,16 +11,6 @@
       }
     },
     {
-      "texte": "1 703 889 signatures cumulées, aucune motivation publiée",
-      "page": "index.html",
-      "fonde": "nous",
-      "note": "Somme des signatures des pétitions classées dont le champ de décision est vide (signaturesClasseesSansTexte) ; « aucune motivation publiée » veut dire que ce champ est vide.",
-      "preuve": {
-        "fichier": "scripts/lib/petitions-source.mjs",
-        "contient": "signaturesClasseesSansTexte"
-      }
-    },
-    {
       "texte": "2026 , aucun des 2 838 numéros lus ne correspond à une pétition publiée absente du fichier de données ouvertes.",
       "page": "absentes-du-fichier.html",
       "fonde": "nous",
@@ -177,13 +167,13 @@
     },
     {
       "texte": "C'est le seul motif pour lequel le fichier emploie une formule explicite : les autres classements y sont enregistrés sans qu'aucune raison soit écrite, ce qui est précisément ce qui les range dans les autres catégories.",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "source",
       "note": "Les 23 formulations du fichier : seules celles invoquant un classement d'office énoncent un motif ; les autres enregistrent le classement sans raison écrite."
     },
     {
       "texte": "C'est pourquoi nous lisons le motif dans le texte, et jamais dans le statut.",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "nous",
       "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
       "preuve": {
@@ -233,7 +223,7 @@
     },
     {
       "texte": "Ce que les données établissent, c'est que ce fichier n'en porte aucune trace, et que le citoyen qui s'y fie ne peut donc pas l'y lire .",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "nous",
       "note": "Le critere de la liste est ecrit une fois : statut « classee » et champ de decision vide. C'est ce que compte signaturesClasseesSansTexte, dans l'agregation partagee entre l'import et les controles. La phrase ne dit rien de plus que ce filtre. L'absence porte sur le fichier lu, jamais sur l'existence d'une trace ailleurs.",
       "preuve": {
@@ -243,7 +233,7 @@
     },
     {
       "texte": "Ce que nous ne calculons jamais",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "nous",
       "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
       "preuve": {
@@ -263,7 +253,7 @@
     },
     {
       "texte": "Ce sont des formules types : aucune ne cite le numéro ni le titre de la pétition qu'elle concerne — nous les avons toutes relues pour le vérifier.",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "source",
       "note": "Vérifié le 12/09/2026 sur les 23 formulations distinctes des 1 560 textes de décision : aucune ne contient « pétition n° N » ni un titre de pétition du fichier."
     },
@@ -279,13 +269,13 @@
     },
     {
       "texte": "Cela ne signifie pas qu'aucune pétition n'a jamais été examinée.",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "non-affirmation",
       "note": "Mise en garde : la phrase écarte une conclusion absolue que le relevé ne permet pas de tirer ; elle n'en affirme aucune."
     },
     {
       "texte": "Cela signifie que le suivi prévu pour l'expliquer au citoyen n'était renseigné pour aucune des initiatives listées ce jour-là : toutes restaient à l'état « Enregistrée ».",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "source",
       "note": "Relevé manuel daté du 27/07/2026 sur la plateforme, bornée à ce jour et à ces initiatives ; liens de vérification fournis sur la page."
     },
@@ -377,7 +367,7 @@
     },
     {
       "texte": "Et nous rapportons ce qu'un vote a écrit, jamais ce qu'il a voulu.",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "nous",
       "note": "Decrit notre propre comportement : le site ne publie que des citations de comptes rendus, jamais de motivation reconstituee. Relue lors de la revue du 12/09/2026.",
       "preuve": {
@@ -509,7 +499,7 @@
     },
     {
       "texte": "La plateforme officielle nous sert à comparer et à mettre en contexte, jamais à établir un chiffre.",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "nous",
       "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
       "preuve": {
@@ -534,12 +524,6 @@
       "note": "Mention juridique : porte sur la portee du texte affiche, pas sur un fait mesurable."
     },
     {
-      "texte": "Le constat Rechercher Le suivi En commission Fichier non à jour Sans décision Méthode Toutes les pétitions",
-      "page": "index.html",
-      "fonde": "non-affirmation",
-      "note": "Fragment de navigation ou de tableau concaténé par l'extraction, pas une phrase affirmée."
-    },
-    {
       "texte": "Le document ne porte aucun champ reliant au numéro de pétition : c'est son intitulé officiel qui la nomme, et sans ce numéro nous ne rattachons rien — voir les suites en commission .",
       "page": "methodologie.html",
       "fonde": "nous",
@@ -561,7 +545,7 @@
     },
     {
       "texte": "Le fichier ne renseigne pas toujours cette date : sans elle, nous ne signalons rien.",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "nous",
       "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
       "preuve": {
@@ -601,7 +585,7 @@
     },
     {
       "texte": "Le jour de notre relevé, aucune des 1 656 initiatives qu'elle listait n'était rangée dans l'une de ces trois issues.",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "nous",
       "note": "Releve manuel date et enregistre dans SORT_PETITION : la plateforme rejette les requetes automatisees, les chiffres sont donc releves a la main, avec le lien qui permet de refaire la verification. L'accueil signale lui-meme quand le releve a vieilli.",
       "preuve": {
@@ -774,7 +758,7 @@
     },
     {
       "texte": "Les trois zéros ci-dessus, eux, ne prêtent à aucune ambiguïté.",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "nous",
       "note": "Porte sur les trois valeurs du releve affiche juste au-dessus, lues depuis SORT_PETITION avec leur date.",
       "preuve": {
@@ -804,7 +788,7 @@
     },
     {
       "texte": "Nous constatons une absence, nous n'en déduisons rien : nous ignorons si une décision a été prise sans être rendue publique, ou si aucune ne l'a été.",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "nous",
       "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
       "preuve": {
@@ -874,7 +858,7 @@
     },
     {
       "texte": "Nous n'écrivons donc jamais « classée après examen », car rien dans les données ne prouve qu'un examen a eu lieu.",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "nous",
       "note": "Décrit notre propre comportement ou nos limites déclarées ; relue une par une lors de la revue du 12/09/2026.",
       "preuve": {
@@ -900,16 +884,6 @@
       "preuve": {
         "fichier": "src/app/MesureAudience.tsx",
         "contient": "if (choix === undefined) return null;"
-      }
-    },
-    {
-      "texte": "Pour aucune d'entre elles, le fichier public ne mentionne la moindre décision.",
-      "page": "index.html",
-      "fonde": "nous",
-      "note": "Calculé sur les pétitions affichées (decisionPubliee), plus écrit en dur.",
-      "preuve": {
-        "fichier": "src/app/page.tsx",
-        "contient": "commissionSansDecision"
       }
     },
     {
@@ -974,7 +948,7 @@
     },
     {
       "texte": "Quand le fichier ne rattache pas un classement au nombre de signatures, il n'écrit le plus souvent aucune motivation : 269 fois sur 271 .",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "nous",
       "note": "Les deux nombres sont calculés, classeesHorsSeuilSansTexte sur classeesHorsSeuil : « le plus souvent » est porté par eux, pas écrit à la main.",
       "preuve": {
@@ -1040,7 +1014,7 @@
     },
     {
       "texte": "Tous les chiffres ci-dessous proviennent du fichier officiel et peuvent être recomptés.",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "nous",
       "note": "Tous issus de meta/stats, calculé par calculerStats() sur le CSV canonique.",
       "preuve": {
@@ -1057,12 +1031,6 @@
         "fichier": "scripts/lib/petitions-source.mjs",
         "contient": "export const CSV_URL"
       }
-    },
-    {
-      "texte": "Tous les passages en commission →",
-      "page": "index.html",
-      "fonde": "non-affirmation",
-      "note": "Fragment de navigation, d'en-tête de tableau ou de liste, concaténé par l'extraction : ce n'est pas une phrase que le site affirme."
     },
     {
       "texte": "Toute erreur constatée peut être signalée à clement@nucom.fr ; elle sera corrigée ou documentée.",
@@ -1099,18 +1067,6 @@
       "note": "Libellés des filtres du champ de recherche."
     },
     {
-      "texte": "Toutes les pétitions classées sans décision publiée →",
-      "page": "index.html",
-      "fonde": "non-affirmation",
-      "note": "Fragment de navigation, d'en-tête de tableau ou de liste, concaténé par l'extraction : ce n'est pas une phrase que le site affirme."
-    },
-    {
-      "texte": "Toutes les pétitions Méthodologie clement@nucom.fr Mentions légales Confidentialité Cookies Empreinte carbone Plan du site",
-      "page": "index.html",
-      "fonde": "non-affirmation",
-      "note": "Fragment de navigation, d'en-tête de tableau ou de liste, concaténé par l'extraction : ce n'est pas une phrase que le site affirme."
-    },
-    {
       "texte": "Toutes les pétitions — l'index complet, année par année ; chaque pétition y a sa fiche détaillée.",
       "page": "plan-du-site.html",
       "fonde": "nous",
@@ -1144,7 +1100,7 @@
     },
     {
       "texte": "Une commission a pu auditionner, échanger, tenir compte d'une pétition dans un travail législatif dont le fichier ne garde aucune trace.",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "nous",
       "note": "Formule au conditionnel : decrit ce que le fichier lu ne permet pas d'exclure. L'absence porte sur le champ de decision, pas sur le travail parlementaire.",
       "preuve": {
@@ -1154,7 +1110,7 @@
     },
     {
       "texte": "Une commission classe des centaines de pétitions d'office en une séance sans en nommer aucune, et le compte rendu ne joint la liste que dans un cas sur les trente-quatre que nous avons lus : partout ailleurs, un signataire ne peut pas savoir si la sienne en faisait partie.",
-      "page": "index.html",
+      "page": "chiffres-en-detail.html",
       "fonde": "nous",
       "note": "Le nombre de comptes rendus lus est un champ des donnees (perimetre.comptesRendusLus), ecrit par la collecte ; le seul qui joigne la liste est nomme et date sur /passages-en-commission, avec le lien vers le texte officiel. La phrase borne donc sa portee a ce que nous avons lu.",
       "preuve": {
@@ -1223,6 +1179,12 @@
         "fichier": "src/lib/errata.ts",
         "contient": "export const ERRATA"
       }
+    },
+    {
+      "texte": "Toutes les pétitions Les chiffres en détail Méthodologie clement@nucom.fr Mentions légales Confidentialité Cookies Empreinte carbone Plan du site",
+      "page": "index.html",
+      "fonde": "non-affirmation",
+      "note": "Fragment de navigation, d'en-tête de tableau ou de liste, concaténé par l'extraction : ce n'est pas une phrase que le site affirme."
     }
   ]
 }

@@ -1107,3 +1107,116 @@
   line-height: 1.55;
   color: var(--ink-faint);
 }
+
+/* Parcours d'une pétition : quatre étapes côte à côte sur grand écran, l'une
+   sous l'autre sur téléphone. Chaque étape dit ce qui se passe, puis ce que
+   le site vérifie à ce moment-là. */
+.parcours {
+  margin-top: 40px;
+}
+.parcours h2,
+.explorer h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.35rem, 1.1rem + 1vw, 1.75rem);
+  line-height: 1.2;
+  margin: 0 0 18px;
+}
+.etapes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+}
+.etape {
+  position: relative;
+  padding: 18px 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--accent);
+}
+.etapeN {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.etape h3 {
+  margin: 12px 0 6px;
+  font-size: 1.05rem;
+  line-height: 1.3;
+}
+.etape p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+.etape .etapeNous {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--rule);
+  font-size: 0.88rem;
+  color: var(--ink);
+}
+
+/* Cartes vers les pages de constat : un chiffre, un titre, une phrase. Toute
+   la carte est cliquable, pour le doigt comme pour la souris. */
+.explorer {
+  margin-top: 48px;
+}
+.cartes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+.carte {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  text-decoration: none;
+  color: var(--ink);
+}
+.carte:hover,
+.carte:focus-visible {
+  border-color: var(--accent);
+}
+.carte:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.carteN {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+.carteTitre {
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+.carteTitre::after {
+  content: " →";
+  color: var(--accent);
+}
+.carteTexte {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+
+/* Page « Les chiffres en détail » : mêmes blocs que l'ancien accueil. */
+.detail {
+  padding-bottom: 24px;
+}

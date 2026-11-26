@@ -75,9 +75,11 @@ ces réunions produisent, et des rapports déposés au terme d'un examen.
 
 ## Pages
 
-- Accueil : https://suiteadonner.nucom.fr — ce que le site a établi, chiffres
-  d'ensemble, pétitions au statut figé, pétitions classées sans décision
-  publiée, méthode et limites.
+- Accueil : https://suiteadonner.nucom.fr — le parcours d'une pétition, ce que
+  le site a établi, les chiffres principaux et la recherche.
+- Les chiffres en détail : https://suiteadonner.nucom.fr/chiffres-en-detail —
+  constat d'ensemble sur les décisions, comparaison avec la plateforme
+  officielle, définitions et limites de chaque chiffre.
 - Index des pétitions : https://suiteadonner.nucom.fr/petitions — toutes les
   pétitions, année par année ; chaque pétition a une fiche sous
   https://suiteadonner.nucom.fr/petition/<identifiant> (identifiant du CSV
