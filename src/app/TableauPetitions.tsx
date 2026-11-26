@@ -124,6 +124,7 @@ export default function TableauPetitions({
   enteteDate,
   enteteStatut = "Ce qu'en dit le fichier",
   legende,
+  titreId,
   complet = true,
 }: {
   lignes: LignePetition[];
@@ -134,6 +135,9 @@ export default function TableauPetitions({
      pour les pétitions qu'il ne contient pas, lues sur la plateforme. */
   enteteStatut?: string;
   legende?: string;
+  /* Identifiant du titre qui nomme le tableau pour un lecteur d'écran quand
+     il n'a pas de légende (RGAA 5.4). */
+  titreId?: string;
   /* Le tableau tient-il toutes les pétitions dont il parle ? Le tri n'est
      proposé que dans ce cas. Un extrait — les six plus signées de l'accueil,
      les trente premiers résultats d'une recherche — n'est pas triable : le
@@ -156,7 +160,7 @@ export default function TableauPetitions({
   }
 
   return (
-    <table className={styles.tableau}>
+    <table className={styles.tableau} aria-labelledby={legende ? undefined : titreId}>
       {legende && <caption className={styles.tableauLegende}>{legende}</caption>}
       <thead>
         <tr>

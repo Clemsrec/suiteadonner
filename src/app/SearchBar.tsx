@@ -59,6 +59,17 @@ export default function SearchBar() {
 
   const hasSearched = results !== null;
 
+  // Lu par le lecteur d'écran à chaque nouvelle recherche : sans lui, la liste
+  // change à l'écran sans que rien ne soit annoncé (RGAA 7.5).
+  const annonce =
+    !hasSearched || loading
+      ? ""
+      : error
+        ? "Recherche indisponible pour le moment."
+        : nbHits === 0
+          ? "Aucune pétition ne correspond."
+          : `${nombre(nbHits)} résultat${nbHits > 1 ? "s" : ""}.`;
+
   return (
     <div className={styles.search} id="recherche">
       <form className={styles.searchForm} role="search" onSubmit={handleSubmit}>
@@ -80,7 +91,7 @@ export default function SearchBar() {
           {loading ? "Recherche…" : "Chercher"}
         </button>
       </form>
-      <div className={styles.filters}>
+      <div className={styles.filters} role="group" aria-label="Filtrer par statut">
         {FILTERS.map((f) => (
           <button
             key={f.key}
@@ -92,6 +103,9 @@ export default function SearchBar() {
           </button>
         ))}
       </div>
+      <p className="sr-only" role="status">
+        {annonce}
+      </p>
 
       {!algoliaConfigured ? (
         <div className={styles.searchResults}>
@@ -108,7 +122,7 @@ export default function SearchBar() {
               </p>
             ) : (
               <>
-                <p className={styles.searchMeta}>
+                <p className={styles.searchMeta} id="resultats-recherche">
                   {nombre(nbHits)} résultat{nbHits > 1 ? "s" : ""}
                   {results.length < nbHits
                     ? ` (${results.length} affichés — affinez la recherche pour trier la totalité)`
@@ -116,6 +130,7 @@ export default function SearchBar() {
                 </p>
                 <TableauPetitions
                   enteteDate="Déposée le"
+                  titreId="resultats-recherche"
                   complet={results.length >= nbHits}
                   lignes={results.map(
                     (p): LignePetition => ({

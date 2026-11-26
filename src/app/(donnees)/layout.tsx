@@ -52,7 +52,7 @@ export default function DonneesLayout({ children }: Readonly<{ children: React.R
       </header>
 
       <div className={styles.wrap}>
-        <main>{children}</main>
+        <main id="contenu" tabIndex={-1}>{children}</main>
 
         <footer className={styles.footer}>
           <span>
@@ -68,6 +68,7 @@ export default function DonneesLayout({ children }: Readonly<{ children: React.R
             <Link href="/mentions-legales">Mentions légales</Link>
             <Link href="/politique-de-confidentialite">Confidentialité</Link>
             <Link href="/politique-cookies">Cookies</Link>
+            <Link href="/accessibilite">Accessibilité : non conforme</Link>
             <Link href="/empreinte-carbone">Empreinte carbone</Link>
             <Link href="/plan-du-site">Plan du site</Link>
           </nav>

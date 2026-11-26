@@ -60,7 +60,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "yearly",
       priority: 0.4,
     },
-    ...["mentions-legales", "politique-de-confidentialite", "politique-cookies"].map((chemin) => ({
+    ...["mentions-legales", "politique-de-confidentialite", "politique-cookies", "accessibilite"].map((chemin) => ({
       url: `${SITE_URL}/${chemin}`,
       lastModified: maintenant,
       changeFrequency: "yearly" as const,

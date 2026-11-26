@@ -189,6 +189,12 @@
 .searchForm input:focus {
   outline: none;
 }
+/* Le contour passe sur tout le formulaire : le champ seul n'en a pas, faute
+   de place entre lui et le bouton (RGAA 10.7). */
+.searchForm:has(input:focus) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 .searchForm button {
   border: 0;
   border-left: 1px solid var(--rule-strong);
@@ -728,6 +734,7 @@
 }
 .suivi li {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
   gap: 16px;

@@ -23,7 +23,7 @@ export default function Methodologie() {
           crédibilité repose sur quatre règles, appliquées partout — dans le code
           d&apos;import, dans les contrôles de cohérence et dans chaque libellé
           affiché. Le code est{" "}
-          <a href="https://github.com/Clemsrec/suiteadonner" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/Clemsrec/suiteadonner" rel="noopener noreferrer">
             ouvert
           </a>
           &nbsp;: chacune de ces règles peut être relue et recontrôlée.
@@ -36,7 +36,6 @@ export default function Methodologie() {
           Tous les chiffres proviennent du{" "}
           <a
             href="https://www.data.gouv.fr/datasets/petitions-de-lassemblee-nationale"
-            target="_blank"
             rel="noopener noreferrer"
           >
             fichier officiel des pétitions de l&apos;Assemblée nationale
@@ -44,7 +43,6 @@ export default function Methodologie() {
           publié sur data.gouv.fr, complété par l&apos;
           <a
             href="https://data.assemblee-nationale.fr/reunions/reunions"
-            target="_blank"
             rel="noopener noreferrer"
           >
             agenda officiel des réunions de l&apos;Assemblée
@@ -54,13 +52,12 @@ export default function Methodologie() {
           le jeu des{" "}
           <a
             href="https://data.assemblee-nationale.fr/travaux-parlementaires/dossiers-legislatifs"
-            target="_blank"
             rel="noopener noreferrer"
           >
             dossiers législatifs
           </a>
           . La plateforme{" "}
-          <a href="https://petitions.assemblee-nationale.fr" target="_blank" rel="noopener noreferrer">
+          <a href="https://petitions.assemblee-nationale.fr" rel="noopener noreferrer">
             petitions.assemblee-nationale.fr
           </a>{" "}
           sert de contexte et de comparaison, jamais de référence.

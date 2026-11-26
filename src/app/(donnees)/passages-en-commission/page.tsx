@@ -211,7 +211,7 @@ export default async function PassagesEnCommission() {
                   {c.citation}
                   <span className={cartes.friseDecisionSource}>
                     Compte rendu {c.compteRenduRef}, phrase reproduite intégralement —{" "}
-                    <a href={c.url} target="_blank" rel="noopener noreferrer">
+                    <a href={c.url} rel="noopener noreferrer">
                       lire le compte rendu intégral
                     </a>
                     .

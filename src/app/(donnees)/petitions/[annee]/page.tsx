@@ -66,7 +66,7 @@ export default async function PetitionsParAnnee({ params }: Params) {
           <Link href="/petitions">Les pétitions</Link>
           {" · "}année {annee}
         </p>
-        <h1>
+        <h1 id="titre-annee">
           Les {nombre(petitions.length)} pétitions déposées en {annee}
         </h1>
         <p className={styles.lede}>
@@ -80,6 +80,7 @@ export default async function PetitionsParAnnee({ params }: Params) {
       <section className={styles.section}>
         <TableauPetitions
           enteteDate="Déposée le"
+          titreId="titre-annee"
           lignes={petitions.map(
             (p): LignePetition => ({
               identifiant: p.identifiant,

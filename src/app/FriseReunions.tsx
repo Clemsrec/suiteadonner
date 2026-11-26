@@ -59,7 +59,6 @@ export function FriseReunions({ reunions }: { reunions: ReunionCommission[] }) {
                       <a
                         className={styles.friseCrLien}
                         href={lienCompteRendu}
-                        target="_blank"
                         rel="noopener noreferrer"
                       >
                         Lire le compte rendu →

@@ -93,7 +93,7 @@ export function FicheAbsente({
                 {decisionLue.citation}
                 <span className={styles.citationSource}>
                   Compte rendu {decisionLue.compteRenduRef}, phrase reproduite intégralement —{" "}
-                  <a href={decisionLue.url} target="_blank" rel="noopener noreferrer">
+                  <a href={decisionLue.url} rel="noopener noreferrer">
                     lire le compte rendu intégral
                   </a>
                   .
@@ -103,7 +103,7 @@ export function FicheAbsente({
           )}
 
           <p>
-            <a href={p.url} target="_blank" rel="noopener noreferrer">
+            <a href={p.url} rel="noopener noreferrer">
               Voir la pétition sur la plateforme de l&apos;Assemblée nationale →
             </a>
           </p>

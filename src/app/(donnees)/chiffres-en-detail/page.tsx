@@ -195,7 +195,7 @@ export default async function ChiffresEnDetail() {
       <ul className={styles.suivi}>
         {SORT_PETITION.etats.map((e) => (
           <li key={e.cle} className={e.nombre === 0 ? styles.suiviZero : undefined}>
-            <a href={lienSortPetition(e.cle)} target="_blank" rel="noopener noreferrer">
+            <a href={lienSortPetition(e.cle)} rel="noopener noreferrer">
               {e.libelle}
             </a>
             <span className={styles.suiviN}>
@@ -245,7 +245,6 @@ export default async function ChiffresEnDetail() {
             De deux fichiers publiés par l&apos;État : la liste officielle des{" "}
             <a
               href="https://www.data.gouv.fr/datasets/petitions-de-lassemblee-nationale"
-              target="_blank"
               rel="noopener noreferrer"
             >
               pétitions déposées à l&apos;Assemblée nationale
@@ -359,7 +358,7 @@ export default async function ChiffresEnDetail() {
             {RELEVE_PLATEFORME.pages.map((p, i) => (
               <span key={p.identifiant}>
                 {i > 0 && (i === RELEVE_PLATEFORME.pages.length - 1 ? " et " : ", ")}
-                <a href={p.url} target="_blank" rel="noopener noreferrer">
+                <a href={p.url} rel="noopener noreferrer">
                   n<sup>o</sup>&nbsp;{p.identifiant}
                 </a>
               </span>

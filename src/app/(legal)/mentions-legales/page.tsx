@@ -25,7 +25,6 @@ export default function MentionsLegales() {
         <dd>
           <a
             href={`https://annuaire-entreprises.data.gouv.fr/entreprise/${LEGAL.siren.replace(/\s/g, "")}`}
-            target="_blank"
             rel="noopener noreferrer"
           >
             {LEGAL.siren}
@@ -117,7 +116,6 @@ export default function MentionsLegales() {
         <li>
           <a
             href="https://www.data.gouv.fr/datasets/petitions-de-lassemblee-nationale"
-            target="_blank"
             rel="noopener noreferrer"
           >
             Pétitions de l&apos;Assemblée nationale
@@ -127,7 +125,6 @@ export default function MentionsLegales() {
         <li>
           <a
             href="https://echanges.dila.gouv.fr/OPENDATA/Debats/AN/"
-            target="_blank"
             rel="noopener noreferrer"
           >
             Comptes rendus des débats de l&apos;Assemblée nationale

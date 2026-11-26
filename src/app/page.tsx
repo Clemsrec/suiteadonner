@@ -120,7 +120,7 @@ export default async function Home() {
       </header>
 
       <div className={styles.wrap}>
-        <main>
+        <main id="contenu" tabIndex={-1}>
         <section className={styles.hero}>
           <p className={styles.eyebrow}>Pétitions à l&apos;Assemblée nationale</p>
           <h1>Que devient votre pétition après la signature&nbsp;?</h1>
@@ -240,7 +240,7 @@ export default async function Home() {
 
         <section className={styles.ledger}>
           <div className={styles.sectionHead}>
-            <h2>Très signées, puis classées</h2>
+            <h2 id="tres-signees">Très signées, puis classées</h2>
             {stats?.updatedAt && (
               <span className={styles.meta}>maj {formatFrDate(stats.updatedAt.slice(0, 10))}</span>
             )}
@@ -256,6 +256,7 @@ export default async function Home() {
             <TableauPetitions
               enteteDate="Déposée le"
               complet={false}
+              titreId="tres-signees"
               lignes={flagship.map((p): LignePetition => ({
                 identifiant: p.identifiant,
                 titre: p.titre,
@@ -322,6 +323,7 @@ export default async function Home() {
             <Link href="/mentions-legales">Mentions légales</Link>
             <Link href="/politique-de-confidentialite">Confidentialité</Link>
             <Link href="/politique-cookies">Cookies</Link>
+            <Link href="/accessibilite">Accessibilité : non conforme</Link>
             <Link href="/empreinte-carbone">Empreinte carbone</Link>
             <Link href="/plan-du-site">Plan du site</Link>
           </nav>

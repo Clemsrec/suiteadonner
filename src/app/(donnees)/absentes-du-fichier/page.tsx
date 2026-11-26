@@ -121,12 +121,12 @@ export default async function AbsentesDuFichier() {
         </p>
         <p>
           Le défaut a été signalé aux mainteneurs le 10&nbsp;novembre&nbsp;2026{" "}
-          <a href={ISSUE_URL} target="_blank" rel="noopener noreferrer">
+          <a href={ISSUE_URL} rel="noopener noreferrer">
             sur le dépôt du programme
           </a>
           . Les mainteneurs l&apos;ont corrigé le 16&nbsp;novembre et ont mis le
           fichier à jour le 18&nbsp;novembre&nbsp;:{" "}
-          <a href={ANNONCE_URL} target="_blank" rel="noopener noreferrer">
+          <a href={ANNONCE_URL} rel="noopener noreferrer">
             ils annoncent 933 pétitions de l&apos;Assemblée nationale ajoutées
           </a>
           . Depuis notre import du 23&nbsp;novembre, elles figurent dans nos chiffres et

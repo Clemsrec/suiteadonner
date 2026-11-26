@@ -44,7 +44,7 @@ export default function LegalLayout({ children }: Readonly<{ children: React.Rea
       </header>
 
       <div className={styles.wrap}>
-        <main className={styles.doc}>{children}</main>
+        <main id="contenu" tabIndex={-1} className={styles.doc}>{children}</main>
 
         <footer className={styles.footer}>
           <span>
@@ -57,6 +57,7 @@ export default function LegalLayout({ children }: Readonly<{ children: React.Rea
             <Link href="/mentions-legales">Mentions légales</Link>
             <Link href="/politique-de-confidentialite">Confidentialité</Link>
             <Link href="/politique-cookies">Cookies</Link>
+            <Link href="/accessibilite">Accessibilité : non conforme</Link>
             <Link href="/empreinte-carbone">Empreinte carbone</Link>
             <Link href="/plan-du-site">Plan du site</Link>
           </nav>

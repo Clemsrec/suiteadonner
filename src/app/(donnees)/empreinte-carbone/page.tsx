@@ -86,7 +86,6 @@ export default function EmpreinteCarbonePage() {
           par l&apos;éditeur de ce site. Elle applique le{" "}
           <a
             href="https://sustainablewebdesign.org/estimating-digital-emissions/"
-            target="_blank"
             rel="noopener noreferrer"
           >
             Sustainable Web Design Model
@@ -246,7 +245,6 @@ export default function EmpreinteCarbonePage() {
           licence MIT sur{" "}
           <a
             href="https://github.com/Clemsrec/carboncost"
-            target="_blank"
             rel="noopener noreferrer"
           >
             GitHub

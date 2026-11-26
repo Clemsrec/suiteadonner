@@ -102,6 +102,10 @@ export default async function PlanDuSite() {
             <Link href="/politique-cookies">Politique de cookies</Link>
           </li>
           <li>
+            <Link href="/accessibilite">Déclaration d&apos;accessibilité</Link>{" "}— non conforme : ce
+            qui a été vérifié et ce qui reste à faire.
+          </li>
+          <li>
             <Link href="/empreinte-carbone">Empreinte carbone du site</Link>{" "}— ce que
             pèse votre consultation, comment c&apos;est calculé et ce que le calcul ignore.
           </li>

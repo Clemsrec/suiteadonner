@@ -364,7 +364,7 @@ export default async function FichePetition({ params }: Params) {
                 {decisionLue.citation}
                 <span className={styles.citationSource}>
                   Compte rendu {decisionLue.compteRenduRef}, phrase reproduite intégralement —{" "}
-                  <a href={decisionLue.url} target="_blank" rel="noopener noreferrer">
+                  <a href={decisionLue.url} rel="noopener noreferrer">
                     lire le compte rendu intégral
                   </a>
                   .
@@ -430,7 +430,7 @@ export default async function FichePetition({ params }: Params) {
                 {rapport.titre}
                 <span className={styles.citationSource}>
                   Intitulé officiel du document, reproduit sans modification —{" "}
-                  <a href={rapport.url} target="_blank" rel="noopener noreferrer">
+                  <a href={rapport.url} rel="noopener noreferrer">
                     lire le rapport intégral
                   </a>
                   .
@@ -504,13 +504,12 @@ export default async function FichePetition({ params }: Params) {
             Texte republié intégralement depuis le{" "}
             <a
               href="https://www.data.gouv.fr/datasets/petitions-de-lassemblee-nationale"
-              target="_blank"
               rel="noopener noreferrer"
             >
               jeu de données ouvert des pétitions
             </a>{" "}
             (Licence Ouverte 2.0). La pétition reste consultable sur{" "}
-            <a href={p.url} target="_blank" rel="noopener noreferrer">
+            <a href={p.url} rel="noopener noreferrer">
               la plateforme officielle de l&apos;Assemblée nationale
             </a>
             .
@@ -547,7 +546,7 @@ export default async function FichePetition({ params }: Params) {
             <dt>Législature (mandat)</dt>
             <dd>{p.legislature ?? <span className={styles.champVide}>non renseignée</span>}</dd>
           </dl>
-          <a className={styles.railLien} href={p.url} target="_blank" rel="noopener noreferrer">
+          <a className={styles.railLien} href={p.url} rel="noopener noreferrer">
             Voir la pétition sur la plateforme de l&apos;Assemblée nationale →
           </a>
         </div>

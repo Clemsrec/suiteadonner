@@ -216,7 +216,7 @@ export default function PolitiqueConfidentialite() {
       </p>
       <p>
         Vous pouvez à tout moment introduire une réclamation auprès de la{" "}
-        <a href="https://www.cnil.fr/fr/plaintes" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.cnil.fr/fr/plaintes" rel="noopener noreferrer">
           Commission nationale de l&apos;informatique et des libertés (CNIL)
         </a>
         .

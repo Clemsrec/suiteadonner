@@ -92,7 +92,7 @@ export function PointsForts({ synthese }: { synthese: SyntheseCommission | null 
               <Link href={`/petition/${rapport.identifiant}`}>{rapport.titrePetition}</Link>
               {pointFinal(rapport.titrePetition)} Ni le fichier de données ouvertes, ni la page
               où elle a été signée n&apos;y renvoient —{" "}
-              <a href={rapport.url} target="_blank" rel="noopener noreferrer">
+              <a href={rapport.url} rel="noopener noreferrer">
                 lire le rapport
               </a>
               .

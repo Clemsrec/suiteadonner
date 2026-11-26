@@ -91,6 +91,9 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: SCRIPT_THEME_INITIAL }} />
       </head>
       <body>
+        <a href="#contenu" className="lien-evitement">
+          Aller au contenu
+        </a>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(DONNEES_STRUCTUREES) }}

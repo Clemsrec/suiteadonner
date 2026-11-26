@@ -119,6 +119,40 @@ a {
   left: -9999px;
 }
 
+/* Premier lien de chaque page, pour passer le menu au clavier (RGAA 12.7).
+   Caché tant qu'on ne l'atteint pas avec la touche Tab. */
+.lien-evitement {
+  position: absolute;
+  left: 12px;
+  top: -200px;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+  text-decoration: none;
+}
+.lien-evitement:focus {
+  top: 12px;
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+main:focus {
+  outline: none;
+}
+
+/* Réserve sous le contenu tant que la bannière de mesure d'audience est
+   affichée (hauteur posée par MesureAudience). */
+html {
+  scroll-padding-bottom: calc(var(--hauteur-bandeau, 0px) + 12px);
+}
+body {
+  padding-bottom: var(--hauteur-bandeau, 0px);
+}
+
 /* Cibles au doigt d'au moins 44 px de haut (règle NuCom, RGAA et WCAG 2.5.5)
    pour les menus de l'en-tête et du pied de page des trois mises en page.
    Posée ici, par élément, plutôt que dans chacun des trois modules. */

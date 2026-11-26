@@ -38,7 +38,6 @@ export default function Corrections() {
           dans l&apos;historique du{" "}
           <a
             href="https://github.com/Clemsrec/suiteadonner"
-            target="_blank"
             rel="noopener noreferrer"
           >
             dépôt public

@@ -2,7 +2,7 @@
 
 import { GoogleAnalytics } from "@next/third-parties/google";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./consentement.module.css";
 import { GA_MESURE_ID } from "@/lib/site";
 import {
@@ -83,6 +83,23 @@ export default function MesureAudience() {
   // undefined = pas encore lu (rendu serveur et première passe d'hydratation),
   // null = aucun choix enregistré → bannière.
   const [choix, setChoix] = useState<ChoixConsentement | null | undefined>(undefined);
+  const banniere = useRef<HTMLElement>(null);
+
+  // La bannière est fixée en bas de l'écran : sans cette réserve, le lien
+  // atteint au clavier passe dessous et le pied de page reste caché.
+  useEffect(() => {
+    const element = banniere.current;
+    if (!element) return;
+    const racine = document.documentElement;
+    const mesurer = () => racine.style.setProperty("--hauteur-bandeau", `${element.offsetHeight}px`);
+    mesurer();
+    const observateur = new ResizeObserver(mesurer);
+    observateur.observe(element);
+    return () => {
+      observateur.disconnect();
+      racine.style.removeProperty("--hauteur-bandeau");
+    };
+  }, [choix]);
 
   useEffect(() => {
     const synchroniser = () => {
@@ -113,7 +130,7 @@ export default function MesureAudience() {
   if (choix === "refuse") return null;
 
   return (
-    <section className={styles.banniere} aria-label="Consentement à la mesure d'audience">
+    <section ref={banniere} className={styles.banniere} aria-label="Consentement à la mesure d'audience">
       <div className={styles.contenu}>
         <p className={styles.texte}>
           <strong>Mesure d&apos;audience.</strong>{" "}
